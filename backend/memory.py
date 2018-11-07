@@ -2,7 +2,7 @@
 
 '''
 系统内存，大小为MEMORYSIZE
-用list存储，每个位置代表4个bit，对应一位十六进制数，用字符串表示
+用list存储，每个位置代表1个byte，对应两位十六进制数，用字符串表示
 支持read和write操作
 
 read(addr)
@@ -24,31 +24,31 @@ class Memory:
 	'系统内存'
 	
 	def __init__(self):
-		self.mem = ['0']*MEMORYSIZE
+		self.mem = ['00']*MEMORYSIZE
 		
 	def	read(self, addr):
 		error, dataout = 0, ''
 		
-		if (addr not in range(0,MEMORYSIZE)) or (addr+0xE not in range(0,MEMORYSIZE)):
+		if (addr not in range(0,MEMORYSIZE)) or (addr+7 not in range(0,MEMORYSIZE)):
 			error = 1
 			raise Exception("Invalid addr: [%d, %d)"%(addr, addr+8))
 			
 		else:
-			for i in range(0,0xF,2):
-				dataout = self.mem[addr+i]+self.mem[addr+i+1]+dataout
+			for i in range(0,8):
+				dataout = self.mem[addr+i]+dataout
 		
 		return error, long(dataout, 16)
 		
 	def write(self, addr, datain):
 		error = 0
 		
-		if (addr not in range(0,MEMORYSIZE)) or (addr+0xE not in range(0,MEMORYSIZE)):
+		if (addr not in range(0,MEMORYSIZE)) or (addr+7 not in range(0,MEMORYSIZE)):
 			error = 1
 			raise Exception("Invalid addr: [%d, %d)"%(addr, addr+8))
 		
 		else:
-			for i in range(0,0xF,2):
-				self.mem[addr+i:addr+i+1] = [hex(datain%256/16)[2], hex(datain%16)[2]]
+			for i in range(0,8):
+				self.mem[addr+i] = hex(datain%256/16)[2]+hex(datain%16)[2]
 				datain /= 256
 		
 		return error	
@@ -57,6 +57,6 @@ if __name__ == "__main__":
 	print '测试Memory类'
 	mem = Memory()
 	mem.write(0x0, 0x0123456789abcdef)
-	mem.write(-1, 0x0123456789abcdef)
-	error, val = mem.read(0x8)
+	mem.write(0x8, 0x0123456789abcdef)
+	error, val = mem.read(0x4)
 	print error, hex(val)
