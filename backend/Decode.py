@@ -35,12 +35,35 @@ def Decode(lst, cur, reg)
 	else:
 		cur.regE['dstE'] = RNONE
 	
-	''''''''	
-	cur.regE['dstW'] = RNONE
-	''''''''
+	if icode in [IMRMOVQ, IPOPQ]:
+		cur.regE['dstM'] = lst.regD['rA']
+	else:
+		cur.regE['dstM'] = RNONE
 	
 	cur.regE['valA'], cur.regE['valB'] = reg.read(cur.regE['srcA'], cur.regE['srcB'])
-	
-	if icode == RCALL:
+	#forward valA
+	if icode in [ICALL, IJXX]:
 		cur.regE['valA'] = lst.regD['valP']
+	elif cur.regE['srcA'] == cur.regE['dstE']:
+		cur.regE['valA'] = cur.regE['valE']
+	elif cur.regE['srcA'] == lst.regM['dstM']:
+		cur.regE['valA'] = cur.regM['valM']
+	elif cur.regE['srcA'] == lst.regM['dstE']:
+		cur.regE['valA'] = lst.regM['valE']
+	elif cur.regE['srcA'] == lst.regW['dstM']:
+		cur.regE['valA'] = lst.regW['valM']
+	elif cur.regE['srcA'] == lst.regW['dstE']:
+		cur.regE['valA'] = lst.regW['valE']
+		
+	#forward valB
+	if cur.regE['srcB'] == cur.regE['dstE']:
+		cur.regE['valB'] = cur.regE['valE']
+	elif cur.regE['srcB'] == lst.regM['dstM']:
+		cur.regE['valB'] = cur.regM['valM']
+	elif cur.regE['srcB'] == lst.regM['dstE']:
+		cur.regE['valB'] = lst.regM['valE']
+	elif cur.regE['srcB'] == lst.regW['dstM']:
+		cur.regE['valB'] = lst.regW['valM']
+	elif cur.regE['srcB'] == lst.regW['dstE']:
+		cur.regE['valB'] = lst.regW['valE']
 	

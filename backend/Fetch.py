@@ -11,6 +11,8 @@ def Fetch(cur, InsCode, PC):
 	if icode not in range(0,0xC):
 		cur.regD['stat'] = 'INS'
 		return
+	elif icode == IHALT:
+		cur.regD['stat'] = 'HLT'
 	else:
 		cur.regD['stat'] = 'AOK'
 		cur.regD['icode'] = icode
@@ -40,6 +42,11 @@ def Fetch(cur, InsCode, PC):
 		cur.regD['valP'] = PC+9
 	else:
 		cur.regD['valP'] = PC+10
+	
+	if icode in [IJXX, ICALL]:
+		cur.regF['predPC'] = cur.regD['valC']
+	else:
+		cur.regF['predPC'] = cur.regD['valP']
 		
 		
 if __name__ == "__main__":
