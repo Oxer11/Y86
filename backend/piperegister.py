@@ -18,9 +18,9 @@ class PipeRegister:
 	def __init__(self):
 		self.regF = {'predPC':0}
 		self.regD = {'stat':'AOK', 'icode':0, 'ifun':0, 'rA':RNONE, 'rB':RNONE, 'valC':0, 'valP':0}
-		self.regE = {'stat':'AOK', 'icode':0, 'ifun':0, 'valC':0, 'valA':0, 'valB':0, 'dstE':RNONE, 'dstM':MEMORYSIZE, 'srcA':RNONE, 'srcB':RNONE}
-		self.regM = {'stat':'AOK', 'icode':0, 'Cnd':0, 'valE':0, 'valA':0, 'dstE':RNONE, 'dstM':MEMORYSIZE}
-		self.regW = {'stat':'AOK', 'icode':0, 'valE':0, 'valA':0, 'dstE':RNONE, 'dstM':MEMORYSIZE}
+		self.regE = {'stat':'AOK', 'icode':0, 'ifun':0, 'valC':0, 'valA':0, 'valB':0, 'dstE':RNONE, 'dstM':RNONE, 'srcA':RNONE, 'srcB':RNONE}
+		self.regM = {'stat':'AOK', 'icode':0, 'Cnd':0, 'valE':0, 'valA':0, 'dstE':RNONE, 'dstM':RNONE}
+		self.regW = {'stat':'AOK', 'icode':0, 'valE':0, 'valA':0, 'dstE':RNONE, 'dstM':RNONE}
 		
 	def write(self, Regid, NewReg):
 		if Regid=='F':
