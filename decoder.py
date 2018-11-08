@@ -1,4 +1,6 @@
-def decode(fname):
+# -*- coding: UTF-8 -*-
+
+def decoder(fname):
     codes = {}
     with open(fname) as fo:
         for line in fo:
@@ -6,10 +8,11 @@ def decode(fname):
             end = line.find("|")
             if beg == -1:
                 continue
-            addr = line[0:beg]
+            addr = line[2:beg]
             ins = line[beg + 1:end]
             ins = ins.strip()
             if len(ins) == 0:
                 continue
             codes[addr] = ins
     return codes
+
