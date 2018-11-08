@@ -4,18 +4,15 @@
 系统内存，大小为MEMORYSIZE
 用list存储，每个位置代表1个byte，对应两位十六进制数，用字符串表示
 支持read和write操作
-
 read(addr)
 读取内存中地址addr中存储的值，其中addr为一个十六进制整数
 返回值为error,dataout，
 当addr是合法地址时，error等于0；否则，error等于1
 dataout是十六进制整数
-
 write(addr, datain)
 向内存中地址addr写入datain，其中addr，datain均为十六进制整数
 返回值为error
 当addr是合法地址时，error等于0；否则，error等于1
-
 '''
 
 from constant import *
@@ -39,15 +36,15 @@ class Memory:
 		
 		return error, long(dataout, 16)
 		
-	def write(self, addr, datain):
+	def write(self, addr, datain, length = 8):
 		error = 0
 		
-		if (addr not in range(0,MEMORYSIZE)) or (addr+7 not in range(0,MEMORYSIZE)):
+		if (addr not in range(0,MEMORYSIZE)) or (addr+length-1 not in range(0,MEMORYSIZE)):
 			error = 1
 			raise Exception("Invalid addr: [%d, %d)"%(addr, addr+8))
 		
 		else:
-			for i in range(0,8):
+			for i in range(0,length):
 				self.mem[addr+i] = hex(datain%256/16)[2]+hex(datain%16)[2]
 				datain /= 256
 		
