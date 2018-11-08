@@ -3,7 +3,7 @@
 from piperegister import *
 from register import *
 
-def Decode(lst, cur, reg)
+def Decode(lst, cur, reg):
 	cur.regE['stat'] = lst.regD['stat']
 	if lst.regE['stat'] != 'AOK':
 		return
@@ -16,7 +16,7 @@ def Decode(lst, cur, reg)
 	
 	if icode in [IRRMOVQ, IRMMOVQ, IOPQ, IPUSHQ]:
 		cur.regE['srcA'] = lst.regD['rA']
-	elif icode in [IPOPL, IRET]:
+	elif icode in [IPOPQ, IRET]:
 		cur.regE['srcA'] = RRSP
 	else:
 		cur.regE['srcA'] = RNONE
@@ -45,9 +45,9 @@ def Decode(lst, cur, reg)
 	if icode in [ICALL, IJXX]:
 		cur.regE['valA'] = lst.regD['valP']
 	elif cur.regE['srcA'] == cur.regE['dstE']:
-		cur.regE['valA'] = cur.regE['valE']
+		cur.regE['valA'] = cur.regM['valE']
 	elif cur.regE['srcA'] == lst.regM['dstM']:
-		cur.regE['valA'] = cur.regM['valM']
+		cur.regE['valA'] = cur.regW['valM']
 	elif cur.regE['srcA'] == lst.regM['dstE']:
 		cur.regE['valA'] = lst.regM['valE']
 	elif cur.regE['srcA'] == lst.regW['dstM']:
@@ -57,9 +57,9 @@ def Decode(lst, cur, reg)
 		
 	#forward valB
 	if cur.regE['srcB'] == cur.regE['dstE']:
-		cur.regE['valB'] = cur.regE['valE']
+		cur.regE['valB'] = cur.regM['valE']
 	elif cur.regE['srcB'] == lst.regM['dstM']:
-		cur.regE['valB'] = cur.regM['valM']
+		cur.regE['valB'] = cur.regW['valM']
 	elif cur.regE['srcB'] == lst.regM['dstE']:
 		cur.regE['valB'] = lst.regM['valE']
 	elif cur.regE['srcB'] == lst.regW['dstM']:

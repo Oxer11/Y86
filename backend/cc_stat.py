@@ -15,12 +15,12 @@ stat为表示程序状态的字符串，共五种：
 '''
 
 class ConditionCode:
-	‘控制码’
+	'控制码'
 	def __init__(self):
-		self.ZF, self.SF, self.OF = 1, 0, 0
+		self.ZF, self.SF, self.OF = 0, 0, 0
 
 
 class Status:
-	‘程序状态’
+	'程序状态'
 	def __init__(self):
 		self.stat = 'AOK'

@@ -6,13 +6,10 @@
 支持read和write操作
 read(addr)
 读取内存中地址addr中存储的值，其中addr为一个十六进制整数
-返回值为error,dataout，
-当addr是合法地址时，error等于0；否则，error等于1
+返回值为dataout
 dataout是十六进制整数
 write(addr, datain)
 向内存中地址addr写入datain，其中addr，datain均为十六进制整数
-返回值为error
-当addr是合法地址时，error等于0；否则，error等于1
 '''
 
 from constant import *
@@ -24,23 +21,20 @@ class Memory:
 		self.mem = ['00']*MEMORYSIZE
 		
 	def	read(self, addr):
-		error, dataout = 0, ''
+		dataout = ''
 		
 		if (addr not in range(0,MEMORYSIZE)) or (addr+7 not in range(0,MEMORYSIZE)):
-			error = 1
 			raise Exception("Invalid addr: [%d, %d)"%(addr, addr+8))
 			
 		else:
 			for i in range(0,8):
 				dataout = self.mem[addr+i]+dataout
 		
-		return error, long(dataout, 16)
+		return long(dataout, 16)
 		
 	def write(self, addr, datain, length = 8):
-		error = 0
 		
 		if (addr not in range(0,MEMORYSIZE)) or (addr+length-1 not in range(0,MEMORYSIZE)):
-			error = 1
 			raise Exception("Invalid addr: [%d, %d)"%(addr, addr+8))
 		
 		else:
@@ -48,7 +42,6 @@ class Memory:
 				self.mem[addr+i] = hex(datain%256/16)[2]+hex(datain%16)[2]
 				datain /= 256
 		
-		return error	
 			
 if __name__ == "__main__":
 	print '测试Memory类'

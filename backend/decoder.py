@@ -8,11 +8,11 @@ def decoder(fname):
             end = line.find("|")
             if beg == -1:
                 continue
-            addr = line[2:beg]
+            addr = line[0:beg]
             ins = line[beg + 1:end]
             ins = ins.strip()
             if len(ins) == 0:
                 continue
-            codes[addr] = ins
+            codes[int(addr,16)] = ins
     return codes
 

@@ -2,7 +2,7 @@
 
 from memory import *
 
-def Memory(lst, cur, mem):
+def Memory_(lst, cur, mem):
 	cur.regW['stat'] = lst.regM['stat']
 	cur.regW['icode'] = lst.regM['icode']
 	cur.regW['dstE'] = lst.regM['dstE']

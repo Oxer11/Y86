@@ -43,7 +43,9 @@ def Fetch(cur, InsCode, PC):
 	else:
 		cur.regD['valP'] = PC+10
 	
-	if icode in [IJXX, ICALL]:
+	if icode == IRET:
+		cur.regF['predPC'] = PC
+	elif icode in [IJXX, ICALL]:
 		cur.regF['predPC'] = cur.regD['valC']
 	else:
 		cur.regF['predPC'] = cur.regD['valP']
