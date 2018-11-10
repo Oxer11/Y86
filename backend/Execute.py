@@ -7,7 +7,7 @@ def ALU(ALUA, ALUB, ALUfun):
 	if ALUfun == 0:
 		return ALUA+ALUB
 	elif ALUfun == 1:
-		return ALUA-ALUB
+		return ALUB-ALUA
 	elif ALUfun == 2:
 		return ALUA&ALUB
 	elif ALUfun == 3:
@@ -30,9 +30,9 @@ def Execute(lst, cur, CC):
 	elif icode in [IIRMOVQ, IRMMOVQ, IMRMOVQ]:
 		ALUA = lst.regE['valC']
 	elif icode in [IPUSHQ, ICALL]:
-		ALUA = -4
+		ALUA = -8
 	elif icode in [IPOPQ, IRET]:
-		ALUA = 4
+		ALUA = 8
 	else:
 		ALUA = 0
 	
@@ -44,12 +44,17 @@ def Execute(lst, cur, CC):
 	cur.regM['valE'] = ALU(ALUA, ALUB, ALUfun)
 	
 	#设置条件码
-	if lst.regW['stat'] == 'AOK' and cur.regM['stat'] == 'AOK':
+	if lst.regW['stat'] == 'AOK' and cur.regM['stat'] == 'AOK' and cur.regM['icode'] == IOPQ:
 		if cur.regM['valE']==0: CC.ZF = 1
+		else: CC.ZF = 0
 		if cur.regM['valE']<0 : CC.SF = 1
-		if ((ALUA<0) == (ALUB<0)) and ((cur.regM['valE']<0) != (ALUA<0)): CC.OF = 1
+		else: CC.SF = 0
+		if (ALUfun == 0) and ((ALUA<0) == (ALUB<0)) and ((cur.regM['valE']<0) != (ALUA<0)): CC.OF = 1
+		elif (ALUfun == 1) and ((ALUA<0) != (ALUB<0)) and (((ALUA<0) and (cur.regM['valE']>ALUA)) or ((ALUA>=0) and (cur.regM['valE']<ALUA))): CC.OF = 1
+		else: CC.OF = 0
 		
 	#设置Cnd
+	print CC.OF,' ',CC.ZF,' ',CC.SF
 	cur.regM['Cnd'] = 0
 	if icode in [IJXX, IRRMOVQ]:
 		if lst.regE['ifun'] == 0:

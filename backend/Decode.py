@@ -5,7 +5,7 @@ from register import *
 
 def Decode(lst, cur, reg):
 	cur.regE['stat'] = lst.regD['stat']
-	if lst.regE['stat'] != 'AOK':
+	if lst.regD['stat'] != 'AOK':
 		return
 	
 	icode = lst.regD['icode']
@@ -44,7 +44,9 @@ def Decode(lst, cur, reg):
 	#forward valA
 	if icode in [ICALL, IJXX]:
 		cur.regE['valA'] = lst.regD['valP']
-	elif cur.regE['srcA'] == cur.regE['dstE']:
+	elif cur.regE['srcA'] == RNONE:
+		pass
+	elif cur.regE['srcA'] == cur.regM['dstE']:
 		cur.regE['valA'] = cur.regM['valE']
 	elif cur.regE['srcA'] == lst.regM['dstM']:
 		cur.regE['valA'] = cur.regW['valM']
@@ -56,7 +58,9 @@ def Decode(lst, cur, reg):
 		cur.regE['valA'] = lst.regW['valE']
 		
 	#forward valB
-	if cur.regE['srcB'] == cur.regE['dstE']:
+	if cur.regE['srcB'] == RNONE:
+		pass
+	elif cur.regE['srcB'] == cur.regM['dstE']:
 		cur.regE['valB'] = cur.regM['valE']
 	elif cur.regE['srcB'] == lst.regM['dstM']:
 		cur.regE['valB'] = cur.regW['valM']

@@ -14,8 +14,8 @@ from WriteBack import WriteBack
 
 def Update(cur, lst):
 	#P1代表处理ret，P2代表加载/使用冒险，P3代表预测错误的分支
-	P1 = (lst.regE['icode'] in [IMRMOVQ, IPOPQ]) and (lst.regE['dstM'] in [cur.regE['srcA'], cur.regE['srcB']])
-	P2 = IRET in [lst.regD['icode'], lst.regE['icode'], lst.regM['icode']]
+	P1 = IRET in [lst.regD['icode'], lst.regE['icode'], lst.regM['icode']]
+	P2 = (lst.regE['icode'] in [IMRMOVQ, IPOPQ]) and (lst.regE['dstM'] in [cur.regE['srcA'], cur.regE['srcB']])
 	P3 = (lst.regE['icode'] == IJXX) and not cur.regM['Cnd']
 	print P1,' ',P2,' ',P3
 	#控制逻辑
@@ -24,12 +24,12 @@ def Update(cur, lst):
 	if P2:
 		pass
 	elif P1 or P3:
-		lst.write('D', {'stat':'BUB', 'icode':0, 'ifun':0, 'rA':RNONE, 'rB':RNONE, 'valC':0, 'valP':0})
+		lst.write('D', {'stat':'BUB', 'icode':1, 'ifun':0, 'rA':RNONE, 'rB':RNONE, 'valC':0, 'valP':0})
 	else:
 		lst.write('D', cur.regD)
 		
 	if P2 or P3:
-		lst.write('E', {'stat':'BUB', 'icode':0, 'ifun':0, 'valC':0, 'valA':0, 'valB':0, 'dstE':RNONE, 'dstM':RNONE, 'srcA':RNONE, 'srcB':RNONE})
+		lst.write('E', {'stat':'BUB', 'icode':1, 'ifun':0, 'valC':0, 'valA':0, 'valB':0, 'dstE':RNONE, 'dstM':RNONE, 'srcA':RNONE, 'srcB':RNONE})
 	else:
 		lst.write('E', cur.regE)
 	
@@ -55,9 +55,11 @@ CC = ConditionCode()
 Stat = Status()
 CLK = 0
 
+
 PC, f_pc = 0, 0
 while Stat.stat=='AOK' and CLK<=MAXCLOCK:
 	print 'Current Time:',PC
+	print 'Current Instruction:',InsCode[PC]
 	tmp_pipereg = PipeRegister()
 	WriteBack(pipereg, Stat, reg)
 	Memory_(pipereg, tmp_pipereg, mem)
@@ -69,9 +71,7 @@ while Stat.stat=='AOK' and CLK<=MAXCLOCK:
 	Update(cur=tmp_pipereg, lst=pipereg)
 	PC = UpdatePC(pipereg)
 	CLK += 1
-	'''
-	缺少判断PC是否合法的过程
-	'''
+	#缺少判断PC是否合法的过程
 	
 	print 'RegF:',pipereg.regF
 	print 'RegD:',pipereg.regD
@@ -79,5 +79,4 @@ while Stat.stat=='AOK' and CLK<=MAXCLOCK:
 	print 'RegM:',pipereg.regM
 	print 'RegW:',pipereg.regW
 	print ''
-	
 	

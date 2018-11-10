@@ -11,7 +11,7 @@ def Init(mem):
 	值为机器码，是一个十六进制字符串
 	Init函数，从output.txt文件中读取InsCode，并通过mem.write()操作，将机器码写入内存
 	'''
-	fname = "/home/oxer/ICS/project/Y86/backend/test/asum.yo"
+	fname = "/home/oxer/ICS/project/Y86/backend/test/prog10.yo"
 	InsCode = decoder(fname)
 	for addr, ins in InsCode.items():
 		length = len(ins)/2
