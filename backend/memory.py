@@ -41,7 +41,15 @@ class Memory:
 			for i in range(0,length):
 				self.mem[addr+i] = hex(datain%256/16)[2]+hex(datain%16)[2]
 				datain /= 256
+	
+	def load(self, addr, datain, length = 8):
+		if (addr not in range(0,MEMORYSIZE)) or (addr+length-1 not in range(0,MEMORYSIZE)):
+			raise Exception("Invalid addr: [%d, %d)"%(addr, addr+8))
 		
+		else:
+			for i in range(0,length):
+				self.mem[addr+i] = datain[2*i]+datain[2*i+1]
+				
 			
 if __name__ == "__main__":
 	print '测试Memory类'

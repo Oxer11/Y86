@@ -13,10 +13,9 @@ def Init(mem):
 	'''
 	fname = "/home/oxer/ICS/project/Y86/backend/test/asum.yo"
 	InsCode = decoder(fname)
-	for addr, i in InsCode.items():
-		length = len(i)/2
-		ins = int(i, 16)
-		mem.write(addr, ins, length)
+	for addr, ins in InsCode.items():
+		length = len(ins)/2
+		mem.load(addr, ins, length)
 	return InsCode
 
 
