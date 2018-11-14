@@ -1,0 +1,6 @@
+<span id="CPI">3.00</span>
+<span id="ZF">1</span>
+<span id="OF">0</span>
+<span id="SF">0</span>
+<span id="Stat">AOK</span>
+

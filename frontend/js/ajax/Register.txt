@@ -1,0 +1,18 @@
+<span id="RAX">0x100</span>
+<span id="RBX">0x100</span>
+<span id="RCX">0x100</span>
+<span id="RDX">0x100</span>
+<span id="RSI">0x100</span>
+<span id="RDI">0x100</span>
+<span id="RBP">0x100</span>
+<span id="RSP">0x100</span>
+<span id="R8">0x100</span>
+<span id="R9">0x100</span>
+<span id="R10">0x100</span>
+<span id="R11">0x100</span>
+<span id="R12">0x100</span>
+<span id="R13">0x100</span>
+<span id="R14">0x100</span>
+<span id="R15">0x100</span>
+<span id="R16">0x100</span>
+

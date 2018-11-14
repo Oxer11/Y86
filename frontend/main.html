@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<title>Y86模拟器</title>
+    <meta charset="utf-8">
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+  	<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+  	<script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+  	<script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+  	<script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+  	<script src="./js/Load.js"></script>
+  	<style>
+  		body 
+		{
+			margin: 0;
+			background:#e0ffff no-repeat fixed;
+		}
+		font
+		{
+			padding: 25px 50px;
+		}
+  	</style>
+  </head>
+  
+<body>
+
+<div class="container-fluid" style="margin:20px;">
+	<div style="min-width:1200px;">
+	<div style="float:left;min-width:900px;border-style:double;text-align:center">
+		<font style="font-family:arial;font-size:25pt;">Y86 Simulator</font>
+	</div>
+	<div style="float:right">
+		<button type="button" class="btn btn-primary" style="margin:10px">
+    		<h4>
+    		<strong>CPI</strong> <span class="badge badge-light"><span id="CPI">1.00</span></span>
+    		</h4>
+		</button>
+	</div>
+	</div>
+
+	<br><br><br>
+
+	<div style="float:left;width:300px;height:300px;border-style:solid;margin:10px;overflow:scroll;">
+		<p id="InsCode"></p>
+	</div>
+
+	<div style="float:left;width:550px;height:300px;border-style:solid;margin:10px 20px;overflow:scroll;">
+		<p id="Assembly"></p>
+	</div>
+
+	<div style="float:left;width:350px;height:300px;border-style:solid;margin:10px 20px;overflow:scroll;">
+		<h4>Register</h4>
+		<button type="button" class="btn btn-primary btn-sm" style="margin:5px 15px">
+    	<strong>%rax</strong> <span class="badge badge-light"><span id="RAX">1.00</span></span>
+    	</button>
+    	<button type="button" class="btn btn-primary btn-sm" style="margin:5px 15px">
+    	<strong>%rbx</strong> <span class="badge badge-light"><span id="RBX">1.00</span></span>
+    	</button>
+    	<button type="button" class="btn btn-primary btn-sm" style="margin:5px 15px">
+    	<strong>%rcx</strong> <span class="badge badge-light"><span id="RCX">1.00</span></span>
+    	</button>
+    	<button type="button" class="btn btn-primary btn-sm" style="margin:5px 15px">
+    	<strong>%rdx</strong> <span class="badge badge-light"><span id="RDX">1.00</span></span>
+    	</button>
+    	<button type="button" class="btn btn-primary btn-sm" style="margin:5px 15px">
+    	<strong>%rsi</strong> <span class="badge badge-light"><span id="RSI">1.00</span></span>
+    	</button>
+    	<button type="button" class="btn btn-primary btn-sm" style="margin:5px 15px">
+    	<strong>%rdi</strong> <span class="badge badge-light"><span id="RDI">1.00</span></span>
+    	</button>
+    	<button type="button" class="btn btn-primary btn-sm" style="margin:5px 15px">
+    	<strong>%rbp</strong> <span class="badge badge-light"><span id="RBP">1.00</span></span>
+    	</button>
+    	<button type="button" class="btn btn-primary btn-sm" style="margin:5px 15px">
+    	<strong>%rsp</strong> <span class="badge badge-light"><span id="RSP">1.00</span></span>
+    	</button>
+    	<button type="button" class="btn btn-primary btn-sm" style="margin:5px 15px">
+    	<strong>%r8</strong> <span class="badge badge-light"><span id="R8">1.00</span></span>
+    	</button>
+    	<button type="button" class="btn btn-primary btn-sm" style="margin:5px 15px">
+    	<strong>%r9</strong> <span class="badge badge-light"><span id="R9">1.00</span></span>
+    	</button>
+    	<button type="button" class="btn btn-primary btn-sm" style="margin:5px 15px">
+    	<strong>%r10</strong> <span class="badge badge-light"><span id="R10">1.00</span></span>
+    	</button>
+    	<button type="button" class="btn btn-primary btn-sm" style="margin:5px 15px">
+    	<strong>%r11</strong> <span class="badge badge-light"><span id="R11">1.00</span></span>
+    	</button>
+    	<button type="button" class="btn btn-primary btn-sm" style="margin:5px 15px">
+    	<strong>%r12</strong> <span class="badge badge-light"><span id="R12">1.00</span></span>
+    	</button>
+    	<button type="button" class="btn btn-primary btn-sm" style="margin:5px 15px">
+    	<strong>%r13</strong> <span class="badge badge-light"><span id="R13">1.00</span></span>
+    	</button>
+    	<button type="button" class="btn btn-primary btn-sm" style="margin:5px 15px">
+    	<strong>%r14</strong> <span class="badge badge-light"><span id="R14">1.00</span></span>
+    	</button>
+    	<button type="button" class="btn btn-primary btn-sm" style="margin:5px 15px">
+    	<strong>%r15</strong> <span class="badge badge-light"><span id="R15">1.00</span></span>
+    	</button>
+	</div>
+	
+	<div style="float:left;width:180px;height:200px;border-style:solid;margin:10px ;overflow:scroll;">
+		<h3>Cycle 0</h3>
+		<button type="button" class="btn btn-primary btn-sm" style="margin:5px 15px">
+    	<strong>ZF</strong> <span class="badge badge-light"><span id="ZF">1.00</span></span>
+    	</button>
+    	<button type="button" class="btn btn-primary btn-sm" style="margin:5px 15px">
+    	<strong>SF</strong> <span class="badge badge-light"><span id="SF">1.00</span></span>
+    	</button>
+    	<button type="button" class="btn btn-primary btn-sm" style="margin:5px 15px">
+    	<strong>OF</strong> <span class="badge badge-light"><span id="OF">1.00</span></span>
+    	</button>
+    	<button type="button" class="btn btn-primary btn-sm" style="margin:5px 15px">
+    	<strong>Stat</strong> <span class="badge badge-light"><span id="Stat">1.00</span></span>
+    	</button>
+	</div>
+	
+	<div style="float:left;width:1070px;height:200px;border-style:solid;margin:10px ;overflow:scroll;">
+		<pre>
+		<strong><big>Fetch:</big></strong>		predPC:<span id="regFpredPC"></span><br>
+		<strong><big>Decode:</big></strong>		icode:<span id="regDicode"></span>	ifun:<span id="regDifun"></span>	rA:<span id="regDrA"></span>	rB:<span id="regDrB"></span>	valC:<span id="regDvalC"></span>	valP:<span id="regDvalP"></span><br>
+		<strong><big>Execute:</big></strong>	icode:<span id="regEicode"></span>	ifun:<span id="regEifun"></span>	valC:<span id="regEvalC"></span>	valB:<span id="regEvalB"></span>	valA:<span id="regEvalA"></span>	dstE:<span id="regEdstE"></span>	dstM:<span id="regEdstM"></span>	srcA:<span id="regEsrcA"></span>	srcB:<span id="regEsrcB"></span><br>
+		<strong><big>Memory:</big></strong>		icode:<span id="regMicode"></span>	Cnd:<span id="regMCnd"></span>	valE:<span id="regMvalE"></span>	valA:<span id="regMvalA"></span>	dstE:<span id="regMdstE"></span>	dstM:<span id="regMdstM"></span><br>
+		<strong><big>Write:</big></strong>		icode:<span id="regWicode"></span>	valE:<span id="regWvalE"></span>	valM:<span id="regWvalM"></span>	dstE:<span id="regWdstE"></span>	dstM:<span id="regWdstM"></span><br>
+		</pre>
+	</div>
+	
+</div>
+
+</body>
+</html>
