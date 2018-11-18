@@ -16,11 +16,14 @@ def Init(mem):
 	值为机器码，是一个十六进制字符串
 	Init函数，从output.txt文件中读取InsCode，并通过mem.write()操作，将机器码写入内存
 	'''
-	fname = "./test/ret-hazard.yo"
+	fname = "./test/new/INS3.yo"
 	InsCode = decoder(fname)
 	for addr, ins in InsCode.items():
 		length = len(ins)/2
 		mem.load(addr, ins, length)
+		#if mem.insbeg == -1:
+		#	mem.insbeg = addr
+		#mem.insend = addr + length
 	return InsCode
 
 

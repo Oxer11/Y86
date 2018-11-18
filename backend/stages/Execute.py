@@ -10,15 +10,20 @@ from others.constant import *
 
 def ALU(ALUA, ALUB, ALUfun):
 	if ALUfun == 0:
-		return ALUA+ALUB
+		ans = ALUA+ALUB
 	elif ALUfun == 1:
-		return ALUB-ALUA
+		ans = ALUB-ALUA
 	elif ALUfun == 2:
-		return ALUA&ALUB
+		ans = ALUA&ALUB
 	elif ALUfun == 3:
-		return ALUA^ALUB
+		ans = ALUA^ALUB
 	else:
 		raise Exception("Invalid ALUfun: %d"%(ALUfun))
+	if ans < MININT:
+		ans = MAXINT - MININT + ans + 1
+	elif ans > MAXINT:
+		ans = MININT - MAXINT + ans - 1
+	return ans
 		
 
 def Execute(lst, cur, CC):
@@ -29,7 +34,10 @@ def Execute(lst, cur, CC):
 
 	cur.regM['dstM'] = lst.regE['dstM']
 	cur.regM['dstE'] = lst.regE['dstE']
-	cur.regM['valA'] = lst.regE['valA']
+	if lst.regE['icode'] in [IMRMOVQ, IPUSHQ] and lst.regM['dstM'] == cur.regE['srcA']:
+		cur.regM['valA'] = cur.regW['valM']
+	else:
+		cur.regM['valA'] = lst.regE['valA']
 	icode = lst.regE['icode']
 	
 	ALUB = lst.regE['valB']

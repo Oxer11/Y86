@@ -173,5 +173,5 @@ def encoder(fname):
 	#return codes, labels
 
 if __name__ == '__main__':
-	encoder("../test/ret-hazard.ys")
+	encoder("../test/new/load_forward.ys")
 	

@@ -7,7 +7,7 @@ o_path = os.getcwd()
 sys.path.append(o_path)
 
 '''
-系统内存，大小为MEMORYSIZE
+系统内存，大小为MEMORYSIZE，指令码存储在[insbeg, insend)地址中
 用list存储，每个位置代表1个byte，对应两位十六进制数，用字符串表示
 支持read和write操作
 read(addr)
@@ -25,6 +25,8 @@ class Memory:
 	
 	def __init__(self):
 		self.mem = ['00']*MEMORYSIZE
+		#self.insbeg = -1
+		#self.insend = -1
 		
 	def	read(self, addr):
 		dataout = ''
@@ -62,7 +64,7 @@ class Memory:
 				self.mem[addr+i] = datain[2*i]+datain[2*i+1]
 	
 	def valid(self,addr):
-		return (addr in range(0,MEMORYSIZE)) and (addr+7 in range(0,MEMORYSIZE))
+		return (addr in range(0,MEMORYSIZE)) and (addr+7 in range(0,MEMORYSIZE)) #and not (addr in range(self.insbeg, self.insend)) and not (addr+7 in range(self.insbeg, self.insend))
 			
 if __name__ == "__main__":
 	print '测试Memory类'

@@ -9,6 +9,38 @@ from others.little_endian import *
 from memory_sys.piperegister import *
 from others.constant import *
 
+def valid(InsCode):
+	icode = int(InsCode[0], 16)
+	ifun = int(InsCode[1], 16)
+	#检验icode
+	if icode not in range(0, 0xD): return 0
+	#检验指令格式
+	length = len(InsCode)
+	if icode in [IHALT, INOP, IRET]:
+		if length != 2: return 0
+	elif icode in [IRRMOVQ, IOPQ, IPUSHQ, IPOPQ]:
+		if length != 4: return 0
+	elif icode in [IJXX, ICALL]:
+		if length != 18: return 0
+	elif icode in [IIRMOVQ, IRMMOVQ, IMRMOVQ, IIADDQ]:
+		if length != 20: return 0
+	#检验ifun
+	if icode in [IOPQ, IJXX, IRRMOVQ]:
+		if (icode == IOPQ) and (ifun not in range(0,4)):
+			return 0
+		elif (icode in [IJXX, IRRMOVQ]) or (ifun not in range(0,7)):
+			return 0
+	elif ifun != 0:
+		return 0
+	#检验寄存器
+	if icode in [IPUSHQ, IPOPQ]:
+		if InsCode[3] != 'f':
+			return 0
+	elif icode in [IIRMOVQ, IIADDQ]:
+		if InsCode[2] != 'f':
+			return 0
+	return 1
+
 def Fetch(lst, cur, InsCode_dic, PC):
 	if not InsCode_dic.has_key(PC):
 		cur.regD['stat'] = 'ADR'
@@ -16,7 +48,7 @@ def Fetch(lst, cur, InsCode_dic, PC):
 	InsCode = InsCode_dic[PC]
 	icode = int(InsCode[0], 16)
 	
-	if icode not in range(0,0xD):
+	if not valid(InsCode):
 		cur.regD['stat'] = 'INS'
 		return
 	elif icode == IHALT or lst.regD['stat'] == 'HLT':

@@ -15,7 +15,7 @@ from stages.WriteBack import WriteBack
 def Update(cur, lst):
 	#P1代表处理ret，P2代表加载/使用冒险，P3代表预测错误的分支
 	P1 = IRET in [lst.regD['icode'], lst.regE['icode'], lst.regM['icode']]
-	P2 = (lst.regE['icode'] in [IMRMOVQ, IPOPQ]) and (lst.regE['dstM'] in [cur.regE['srcA'], cur.regE['srcB']]) and lst.regD['stat'] == 'AOK'
+	P2 = (lst.regE['icode'] in [IMRMOVQ, IPOPQ]) and (lst.regE['dstM'] in [cur.regE['srcA'], cur.regE['srcB']]) and lst.regD['stat'] == 'AOK' and not ((lst.regE['icode'] == IMRMOVQ) and (lst.regD['icode'] in [IRMMOVQ, IPUSHQ]))
 	P3 = (lst.regE['icode'] == IJXX) and not cur.regM['Cnd']
 	#print P1,' ',P2,' ',P3
 	#控制逻辑
@@ -76,4 +76,5 @@ while Stat.stat=='AOK' and CLK<=MAXCLOCK:
 	CLK += 1
 
 print Stat.stat
-	
+print reg.reg	
+print mem.mem[0]
