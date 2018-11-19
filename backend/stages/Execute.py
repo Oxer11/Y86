@@ -60,7 +60,7 @@ def Execute(lst, cur, CC):
 	cur.regM['valE'] = ALU(ALUA, ALUB, ALUfun)
 	
 	#设置条件码
-	if lst.regW['stat'] in ['AOK','BUB'] and cur.regM['stat'] in ['AOK','BUB'] and cur.regM['icode'] == IOPQ or cur.regM['icode'] == IIADDQ:
+	if lst.regW['stat'] in ['AOK','BUB'] and cur.regM['stat'] in ['AOK','BUB'] and cur.regM['icode'] in [IOPQ, IIADDQ]:
 		if cur.regM['valE']==0: CC.ZF = 1
 		else: CC.ZF = 0
 		if cur.regM['valE']<0 : CC.SF = 1

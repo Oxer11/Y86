@@ -34,10 +34,13 @@ def valid(InsCode):
 		return 0
 	#检验寄存器
 	if icode in [IPUSHQ, IPOPQ]:
-		if InsCode[3] != 'f':
+		if InsCode[3] != 'f' or InsCode[2] == 'f':
 			return 0
 	elif icode in [IIRMOVQ, IIADDQ]:
-		if InsCode[2] != 'f':
+		if InsCode[2] != 'f' or InsCode[3] == 'f':
+			return 0
+	else:
+		if InsCode[2] == 'f' or InsCode[3] == 'f':
 			return 0
 	return 1
 
