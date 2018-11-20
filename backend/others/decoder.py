@@ -6,8 +6,8 @@ def decoder(fname):
         for line in fo:
             beg = line.find(":")
             end = line.find("|")
-            if beg == -1:
-                continue
+            if beg == -1: continue
+            if end == -1: end = len(line)
             addr = line[0:beg]
             ins = line[beg + 1:end]
             ins = ins.strip()

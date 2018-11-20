@@ -12,10 +12,12 @@ from others.constant import *
 def valid(InsCode):
 	icode = int(InsCode[0], 16)
 	ifun = int(InsCode[1], 16)
+
 	#检验icode
 	if icode not in range(0, 0xD): return 0
 	#检验指令格式
 	length = len(InsCode)
+
 	if icode in [IHALT, INOP, IRET]:
 		if length != 2: return 0
 	elif icode in [IRRMOVQ, IOPQ, IPUSHQ, IPOPQ]:
@@ -28,10 +30,11 @@ def valid(InsCode):
 	if icode in [IOPQ, IJXX, IRRMOVQ]:
 		if (icode == IOPQ) and (ifun not in range(0,4)):
 			return 0
-		elif (icode in [IJXX, IRRMOVQ]) or (ifun not in range(0,7)):
+		elif (icode in [IJXX, IRRMOVQ]) and (ifun not in range(0,7)):
 			return 0
 	elif ifun != 0:
 		return 0
+
 	#检验寄存器
 	if icode in [IPUSHQ, IPOPQ]:
 		if InsCode[3] != 'f' or InsCode[2] == 'f':
@@ -39,14 +42,14 @@ def valid(InsCode):
 	elif icode in [IIRMOVQ, IIADDQ]:
 		if InsCode[2] != 'f' or InsCode[3] == 'f':
 			return 0
-	else:
+	elif icode in [IRRMOVQ, IOPQ, IRMMOVQ, IMRMOVQ]:
 		if InsCode[2] == 'f' or InsCode[3] == 'f':
 			return 0
 	return 1
 
 def Fetch(lst, cur, InsCode_dic, PC):
 	if not InsCode_dic.has_key(PC):
-		cur.regD['stat'] = 'ADR'
+		cur.regD['stat'] = 'NON'
 		return
 	InsCode = InsCode_dic[PC]
 	icode = int(InsCode[0], 16)

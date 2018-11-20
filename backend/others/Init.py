@@ -9,14 +9,13 @@ from memory_sys.memory import *
 from decoder import *
 
 
-def Init(mem):
+def Init(mem, fname):
 	'''
 	InsCode为指令集dictionary，
 	键为机器码的编号，是一个十六进制整数
 	值为机器码，是一个十六进制字符串
-	Init函数，从output.txt文件中读取InsCode，并通过mem.write()操作，将机器码写入内存
+	Init函数，从fname文件中读取InsCode，并通过mem.write()操作，将机器码写入内存
 	'''
-	fname = "./test/new/INS3.yo"
 	InsCode = decoder(fname)
 	for addr, ins in InsCode.items():
 		length = len(ins)/2
