@@ -1,4 +1,12 @@
 # -*- coding: UTF-8 -*-
+import sys
+sys.path.append("..")
+from frontend.js.WriteCode import *
+from frontend.js.WriteDisplay import *
+from frontend.js.WriteMemReg import *
+from frontend.js.WriteStack import *
+from frontend.js.WriteStage import *
+from frontend.js.WriteStat import *
 
 from encoder.encoder import *
 from memory_sys.memory import *
@@ -79,6 +87,38 @@ def Step(MAXSTEP=1, breakpoints=[], OP=0):
 	print 'CC.ZF=%d SF=%d OF=%d, Stat=%s'%(CC.ZF, CC.SF, CC.OF, Stat.stat)
 	
 def OUTPUT():
+	WriteStage(pipereg)
+	WriteStat(CLK, Stat.stat, 1.00, CC.ZF, CC.SF, CC.OF)
+	dis = {}
+	for i in range(0, len(Display)):
+		sep = Display[i].find(' ')
+		arg1 = Display[i][0:sep].strip()
+		arg2 = Display[i][sep+1:len(Display[i])].strip()
+		if arg1 == 'REG': 
+			dis.update({Display[i]:str(reg.reg[reg.map[arg2]])})
+		if arg1 == 'MEM': 
+			dis.update({Display[i]:str(mem.read(int(arg2,16)))})
+		if arg1 == 'STACK':
+			dis.update({Display[i]:str(mem.read(reg.reg[RRSP]-8*int(arg2,10)))})
+	WriteDisplay(dis)
+	lines_ins, lines_as= [], []
+	for line in Codes:
+		sep = line.find('|')
+		lines_ins.append(line[0:sep].strip()+"\n")
+		lines_as.append(line[sep+1:len(line)].strip()+"\n")
+	WriteCode(lines_ins, lines_as, PC)
+	stack = {}
+	rsp, rbp = reg.read(4, 5)
+	for i in range(rsp, rbp+1, 8):
+		stack.update({str(i):str(mem.read(i))})
+	WriteStack(stack, rsp, rbp)
+	MEM = {}
+	REG = {}
+	for i in range(0, 0xF):
+		val, V = reg.read(i, RNONE)
+		REG.update({reg.map[i]:str(val)})
+	WriteMemReg(MEM, REG)
+'''
 	fo = open('output.txt', "w")
 	fo.write('Codes:\n')
 	for line in Codes: fo.write(line.rstrip()+"\n")
@@ -86,17 +126,9 @@ def OUTPUT():
 	for i in range(0,0xF):
 		fo.write(reg.map[i].ljust(3)+' : '+str(reg.reg[i])+"\n")
 	fo.write('\nDisplay:\n')
-	for i in range(0, len(Display)):
-		sep = Display[i].find(' ')
-		arg1 = Display[i][0:sep].strip()
-		arg2 = Display[i][sep+1:len(Display[i])].strip()
-		if arg1 == 'REG': 
-			fo.write(Display[i].ljust(15)+' : '+str(reg.reg[reg.map[arg2]])+"\n")
-		if arg1 == 'MEM': 
-			fo.write(Display[i].ljust(15)+' : '+str(mem.read(int(arg2,16)))+"\n")
-		if arg1 == 'STACK':
-			fo.write(Display[i].ljust(15)+' : '+str(mem.read(reg.reg[RRSP]-8*int(arg2,10)))+"\n")
+
 	fo.close()
+'''
 	
 def Welcome():
 	print "=============================================================="
