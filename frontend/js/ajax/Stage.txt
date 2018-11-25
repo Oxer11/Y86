@@ -1,22 +1,22 @@
 <tr>
                 <td style="font-family:myFont;color:rgb(147,112,219)">Fetch</td>
-                <td>predPC:0x6a</span></td>
+                <td>predPC:0x14L</span></td>
             </tr><tr>
                 <td style="font-family:myFont;color:rgb(147,112,219)">Decode</td>
-                <td> icode:3</td>
+                <td> icode:0</td>
                 <td> ifun:0</td>
                 <td> rA:----</td>
-                <td>rB:%r9</td>
-                <td>valC:0x1</td>
-                <td>valP:0x6a</td>
+                <td>rB:----</td>
+                <td>valC:0x0</td>
+                <td>valP:0x14L</td>
             </tr><tr>
                 <td style="font-family:myFont;color:rgb(147,112,219)">Execute</td>
-                <td>icode:3</td>
+                <td>icode:0</td>
                 <td>ifun:0</td>
-                <td>valC:0x8</td>
+                <td>valC:0x0</td>
                 <td>valA:0x0</td>
                 <td>valB:0x0</td>
-                <td>dstE:%r8</td>
+                <td>dstE:----</td>
             </tr><tr>
                 <td> </td>
                 <td>dstM:----</td>
@@ -24,17 +24,17 @@
                 <td>srcB:----</td>
             </tr><tr>
                 <td style="font-family:myFont;color:rgb(147,112,219)">Memory</td>
-                <td>icode:8</td>
-                <td>Cnd:0</td>
-                <td>valE:0x1f0</td>
-                <td>valA:0x55</td>
-                <td>dstE:%rsp</td>
+                <td>icode:0</td>
+                <td>Cnd:False</td>
+                <td>valE:0x0</td>
+                <td>valA:0x0</td>
+                <td>dstE:----</td>
                 <td>dstM:----</td>
             </tr><tr>
                 <td style="font-family:myFont;color:rgb(147,112,219)">Write</td>
-                <td>icode:3</td>
-                <td>valE:0x4</td>
+                <td>icode:0</td>
+                <td>valE:0x0</td>
                 <td>valM:0x0</td>
-                <td>dstE:%rsi</td>
+                <td>dstE:----</td>
                 <td>dstM:----</td>
             </tr>

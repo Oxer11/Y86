@@ -4,7 +4,7 @@ mem:map，键为内存地址，值为内存内容，均为字符串
 Reg：map，键为寄存器名字，值为寄存器内容，均为字符串
 '''
 
-def WriteMem(mem,Reg):
+def WriteMemReg(mem,Reg):
     fr_m = open('../frontend/js/ajax/tab_content2.txt','w')
     fr_m.write('<table>')
     for addr in mem.keys():

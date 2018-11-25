@@ -34,8 +34,8 @@ def WriteCode(lines_ins,lines_as,PC):
     fr_a.write('<pre>')
     for i in range(0,len(lines_as)):
         if i != mark:
-            fr_a.write(line)
+            fr_a.write(lines_as[i])
         else:
-            fr_a.write('<mark>'+line+'<//mark>')
+            fr_a.write('<mark>'+lines_as[i]+'<//mark>')
     fr_a.write('<//pre>')
     fr_a.close()
