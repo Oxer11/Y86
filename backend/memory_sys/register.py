@@ -25,6 +25,7 @@ class Register:
 	
 	def __init__(self):
 		self.reg = [0]*0xF
+		self.map = {0:'%rax', 1:'%rcx', 2:'%rdx', 3:'%rbx', 4:'%rsp', 5:'%rbp', 6:'%rsi', 7:'%rdi', 8:'%r8', 9:'%r9', 10:'%r10', 11:'%r11', 12:'%r12', 13:'%r13', 14:'%r14', 15:'%rnone', '%rax':0, '%rcx':1, '%rdx':2, '%rbx':3, '%rsp':4, '%rbp':5, '%rsi':6, '%rdi':7, '%r8':8, '%r9':9, '%r10':10, '%r11':11, '%r12':12, '%r13':13, '%r14':14, '%rnone':15}
 	
 	def read(self, srcA, srcB):
 	

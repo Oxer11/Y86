@@ -6,6 +6,7 @@ from memory_sys.register import *
 from memory_sys.piperegister import *
 from others.cc_stat import *
 from others.Init import *
+from others.Help import *
 from stages.Fetch import Fetch
 from stages.Decode import Decode
 from stages.Execute import Execute
@@ -46,12 +47,14 @@ def UpdatePC(reg):
 		f_pc = reg.regF['predPC']
 	return f_pc
 
-def Step(MAXCLOCK, breakpoint={}):
+def Step(MAXSTEP=1, breakpoints=[], OP=0):
 	global PC, CC, Stat, CLK
-	while Stat.stat=='AOK' and CLK<MAXCLOCK:
-		if breakpoint.has_key(PC):
-			print 'Breakpoint '+hex(PC)
+	dep, STEP = 0, 0
+	while Stat.stat=='AOK' and STEP<MAXSTEP:
+		if [PC,'y',1] in breakpoints:
+			print 'Breakpoint %d, '%(breakpoints.index([PC,'y',1])+1)+hex(PC)
 			break
+		if (OP == 2) and (dep == -1): break
 		print ''
 		print 'Cycle %d. CC=Z=%d S=%d O=%d, Stat=%s'%(CLK, CC.ZF, CC.SF, CC.OF, Stat.stat)
 		pipereg.print_()
@@ -59,7 +62,8 @@ def Step(MAXCLOCK, breakpoint={}):
 		if pipereg.regW['stat'] in ['HLT', 'INS', 'ADR']:
 			Stat.stat = pipereg.regW['stat']
 			break
-
+		if pipereg.regW['icode'] == 8: dep += 1
+		if pipereg.regW['icode'] == 9: dep -= 1
 		WriteBack(pipereg, Stat, reg)
 		Memory_(pipereg, tmp_pipereg, mem)
 		CC = Execute(pipereg, tmp_pipereg, CC)
@@ -69,14 +73,44 @@ def Step(MAXCLOCK, breakpoint={}):
 		Update(cur=tmp_pipereg, lst=pipereg)
 		PC = UpdatePC(pipereg)
 		CLK += 1
+		if (OP != 1) or (dep == 0): STEP += 1
+		
 	print reg.reg
 	print 'CC.ZF=%d SF=%d OF=%d, Stat=%s'%(CC.ZF, CC.SF, CC.OF, Stat.stat)
 	
+def OUTPUT():
+	fo = open('output.txt', "w")
+	fo.write('Codes:\n')
+	for line in Codes: fo.write(line.rstrip()+"\n")
+	fo.write('\nRegister:\n')
+	for i in range(0,0xF):
+		fo.write(reg.map[i].ljust(3)+' : '+str(reg.reg[i])+"\n")
+	fo.write('\nDisplay:\n')
+	for i in range(0, len(Display)):
+		sep = Display[i].find(' ')
+		arg1 = Display[i][0:sep].strip()
+		arg2 = Display[i][sep+1:len(Display[i])].strip()
+		if arg1 == 'REG': 
+			fo.write(Display[i].ljust(15)+' : '+str(reg.reg[reg.map[arg2]])+"\n")
+		if arg1 == 'MEM': 
+			fo.write(Display[i].ljust(15)+' : '+str(mem.read(int(arg2,16)))+"\n")
+		if arg1 == 'STACK':
+			fo.write(Display[i].ljust(15)+' : '+str(mem.read(reg.reg[RRSP]-8*int(arg2,10)))+"\n")
+	fo.close()
 	
-print 'If you want to input a .yo file, please input 1'
-print 'If you want to input a .ys file, please input 2'
-print 'If you want to execute interactively, please input 3'
-mode = raw_input()
+def Welcome():
+	print "=============================================================="
+	print "|                                                            |"
+	print "|                       Y86-simulator                        |"
+	print "|                      Y86 Assembly IDE                      |"
+	print "|                                                            |"
+	print "|       Copyright (c) 2018 Zuobai Zhang and Xinyi Zhou       |"
+	print "|                                                            |"
+	print "=============================================================="
+
+
+Welcome()	
+Help('')
 
 mem = Memory()
 reg = Register()
@@ -87,64 +121,181 @@ tmp_pipereg = PipeRegister()
 labels = {}
 Codes = []
 InsCode = {}
-breakpoint = {}
+breakpoints = []
+Display = []
 CLK = 0
 PC, f_pc, maxPC= 0, 0, 0
 
-if mode == '1':
-	print 'Please input the address of the .yo file'
-	fname = raw_input()
-	InsCode = Init(mem, fname) 
-	with open(fname) as fi:
-		for line in fi:
-			Codes.append(line)
-	for addr, ins in InsCode.items():
-		length = len(ins)/2
-		mem.load(addr, ins, length)
-		if addr + length > maxPC:
-			maxPC = addr + length
-
-elif mode == '2':
-	print 'Please input the address of the .ys file'
-	fname = raw_input()
-	AssemblyCode = []
-	i = 0
-	with open(fname) as fi:
-		for line in fi:
-			AssemblyCode.append(line)
-			i += 1
-	Codes, maxPC = encoder(AssemblyCode, labels, maxPC)
-	fout = fname[0:len(fname)-2] + 'yo'
-	fo = open(fout, "w")
-	i = 0
-	for line in AssemblyCode:
-		fo.write(Codes[i])
-		i += 1
-	fo.close()
-	InsCode = Init(mem, fout)
-	
-print 'Please input your commands.'
-cmd = raw_input(">>")
+cmd = raw_input(">>>")
 while 1:
-	if cmd[0] == '-':
-		if cmd == '-quit': break
-		if cmd == '-step': 
-			if Stat.stat == 'NON': Stat.stat = 'AOK'
-			Step(CLK+1)
-		if cmd == '-continue': 
-			if Stat.stat == 'NON': Stat.stat = 'AOK'
-			Step(MAXCLOCK, breakpoint)
-		if cmd[0:6] == '-break':
-			breakpoint.update({int(cmd[6:len(cmd)].strip(),16):1})
-			print 'Breakpoint '+ cmd[6:len(cmd)].strip()
-		if cmd == '-show':
-			for line in Codes:
-				print line.rstrip()
-	else:
+	if len(cmd)==0 : cmd = lst_cmd
+	sep = cmd.find(' ')
+	if sep == -1: sep = len(cmd)
+	CMD = cmd[0:sep]
+	arg = cmd[sep:len(cmd)].strip()
+	
+	#Others
+	if (CMD == 'clear') or (CMD == 'load'): 
+		mem = Memory()
+		reg = Register()
+		pipereg = PipeRegister()
+		CC = ConditionCode()
+		Stat = Status()
+		tmp_pipereg = PipeRegister()
+		labels = {}
+		Codes = []
+		InsCode = {}
+		breakpoints = []
+		CLK = 0
+		PC, f_pc, maxPC= 0, 0, 0
+	
+	if (CMD == 'q') or (CMD == 'quit'): break
+	
+	if (CMD == 'h') or (CMD == 'help'): Help(arg)
+	
+	if (CMD == 'set'):
+		sep = arg.find(' ')
+		arg1 = arg[0:sep].strip()
+		arg2 = arg[sep+1:len(arg)].strip()
+		sep = arg2.find(' ')
+		arg3 = arg2[sep+1:len(arg)].strip()
+		arg2 = arg2[0:sep].strip()
+		if arg1 == 'REG': 
+			reg.write(reg.map[arg2],int(arg3))
+		if arg1 == 'MEM': 
+			mem.write(int(arg2,16),int(arg3))
+		if arg1 == 'STACK':
+			mem.write(reg.reg[RRSP]-8*int(arg2,10),int(arg3))
+	
+	#Display
+	if (CMD == 'display'): Display.append(arg)
+	
+	if (CMD == 'undisplay'): Display.remove(arg)
+	
+	#Step
+	if (CMD == 's') or (CMD == 'step'): 
+		if Stat.stat == 'NON': Stat.stat = 'AOK'
+		if len(arg) == 0: Step()
+		else: Step(int(arg,10))
+		
+	if (CMD == 'n') or (CMD == 'next'): 
+		if Stat.stat == 'NON': Stat.stat = 'AOK'
+		if len(arg) == 0: Step(OP = 1)
+		else: Step(int(arg,10), OP = 1)	
+		
+	if (CMD == 'c') or (CMD == 'continue'): 
+		if Stat.stat == 'NON': Stat.stat = 'AOK'
+		Step(MAXCLOCK, breakpoints)
+	
+	if (CMD == 'finish'):
+		if Stat.stat == 'NON': Stat.stat = 'AOK'
+		Step(MAXCLOCK, OP = 2)
+		
+	#Jump
+	if (CMD == 'j') or (CMD == 'jump'):
+		pipereg = PipeRegister()
+		if labels.has_key(arg): PC = int(labels[arg],16)
+		else: PC = int(arg,16)
+		
+	if (CMD == 'return'):
+		pipereg = PipeRegister()
+		rsp, rnone = reg.read(RRSP, RNONE)
+		addr = mem.read(rsp)
+		reg.write(RRSP, rsp+8)
+		PC = addr
+	
+	if (CMD == 'call'):
+		if labels.has_key(arg): addr = int(labels[arg],16)
+		else: addr = int(arg,16)
+		pipereg = PipeRegister()
+		rsp, rnone = reg.read(RRSP, RNONE)
+		rsp -= 8 
+		mem.write(rsp, PC)
+		reg.write(RRSP, rsp)
+		PC = addr
+	
+	#Breakpoints
+	
+	if (CMD == 'b') or (CMD == 'break'):
+		if labels.has_key(arg): breakpoints.append([int(labels[arg],16),'y',1])
+		else: breakpoints.append([int(arg,16),'y',1])
+		print 'Breakpoint %d at '%(len(breakpoints)) + arg
+	
+	if (CMD == 'info') and (arg == 'breakpoints'):
+		print 'Num'.ljust(8)+'Type'.ljust(15)+'Enb'.ljust(4)+'Address'
+		for i in range(0,len(breakpoints)):
+			if breakpoints[i][2]!=0:
+				print str(i+1).ljust(8)+'breakpoint'.ljust(15)+breakpoints[i][1].ljust(4)+hex(breakpoints[i][0])
+				
+	if (CMD == 'enable'): 
+		if len(arg) == 0:
+			for i in range(0,len(breakpoints)):
+				breakpoints[i][1] = 'y'
+		else: breakpoints[int(arg,10)-1][1] = 'y'
+	if (CMD == 'disable'): 
+		if len(arg) == 0:
+			for i in range(0,len(breakpoints)):
+				breakpoints[i][1] = 'n'
+		else: breakpoints[int(arg,10)-1][1] = 'n'
+	if (CMD == 'delete'): 
+		if len(arg) == 0:
+			for i in range(0,len(breakpoints)):
+				breakpoints[i][2] = 0
+		else: breakpoints[int(arg,10)-1][2] = 0
+
+	#I/O
+	if (CMD == 'w') or (CMD == 'write'):
+		fout = arg
+		fo = open(fout, "w")
+		for line in Codes:
+			fo.write(line.rstrip()+"\n")
+		fo.close()
+	
+	if (CMD == 'list'):
+		for line in Codes:
+			print line.rstrip()
+	
+	if (CMD == 'load'):
+		if arg[len(arg)-3:len(arg)] == '.yo':
+			fname = arg
+			InsCode = Init(mem, fname) 
+			with open(fname) as fi:
+				for line in fi:
+					Codes.append(line)
+			for addr, ins in InsCode.items():
+				length = len(ins)/2
+				mem.load(addr, ins, length)
+				if addr + length > maxPC: maxPC = addr + length
+					
+		elif arg[len(arg)-3:len(arg)] == '.ys':
+			AssemblyCode = []
+			fname = arg
+			with open(fname) as fi:
+				for line in fi:
+					AssemblyCode.append(line)
+			new_Codes, maxPC = encoder(AssemblyCode, labels, maxPC)
+			Codes.extend(new_Codes)
+			for line in new_Codes:
+				beg = line.find(":")
+				end = line.find("|")
+				if beg == -1: continue
+				if end == -1: end = len(line)
+				addr = line[0:beg]
+				ins = line[beg + 1:end]
+				ins = ins.strip()
+				if len(ins) == 0: continue
+				InsCode[int(addr,16)] = ins
+				length = len(ins)/2
+				mem.load(int(addr,16), ins, length)
+		else:
+			print "Please input an address of .yo/.ys file."
+	
+	if (CMD == 'read'):
 		AssemblyCode = []
-		while (len(cmd) > 0):
-			AssemblyCode.append(cmd)
-			cmd = raw_input()
+		ins = raw_input()
+		while (len(ins) > 0):
+			AssemblyCode.append(ins)
+			ins = raw_input()
 
 		new_Codes, maxPC = encoder(AssemblyCode, labels, maxPC)
 		Codes.extend(new_Codes)
@@ -160,7 +311,10 @@ while 1:
 			InsCode[int(addr,16)] = ins
 			length = len(ins)/2
 			mem.load(int(addr,16), ins, length)
-		
-	cmd = raw_input(">>")
+	
+	OUTPUT()
+	
+	lst_cmd = cmd	
+	cmd = raw_input(">>>")
 	
 	
