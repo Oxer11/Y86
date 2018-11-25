@@ -6,7 +6,7 @@ def WriteStage(pipereg):
     dic_reg = {0:'%rax', 1:'%rcx', 2:'%rdx', 3:'%rbx', 4:'%rsp', 5:'%rbp', 6:'%rsi', 7:'%rdi', 8:'%r8', 9:'%r9', 10:'%r10',\
         11:'%r11', 12:'%r12', 13:'%r13', 14:'%r14', 15:'----'}
     
-    fr = open('ajax/Stage.txt','w')
+    fr = open('../frontend/js/ajax/Stage.txt','w')
     s = '''<tr>
                 <td style="font-family:myFont;color:rgb(147,112,219)">Fetch</td>
                 <td>predPC:'''+hex(pipereg.regF['predPC'])+'''</span></td>

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 cycle：整数，周期数
 stat：字符串，状态
@@ -6,7 +7,7 @@ zf、sf、of：整数
 '''
 
 def WriteStat(cycle,stat,cpi,zf,sf,of):
-    fr = open('ajax/tab_content1.txt','w')
+    fr = open('../frontend/js/ajax/tab_content1.txt','w')
     s = '''<div><p id="cycle" style="font-size:80px;font-weight:700;text-align:center;color:white;background-color:rgb(147,112,219);padding-top:10px;padding-bottom:10px;">'''+str(cycle)+'''</p></div>
                     <div style="text-align:center;margin-top:0px;margin-bottom:0px;">
                         <button class="button">
@@ -21,7 +22,7 @@ def WriteStat(cycle,stat,cpi,zf,sf,of):
                     <div style="text-align:center;margin-left:10px;margin-top:0px;">
                         <button class="button">
                             <span style="font-size:15px;">ZF</span><br />
-                            <span style="font-weight:bold;"><span id="ZF">'''+str(zf)+'''1.00</span></span>
+                            <span style="font-weight:bold;"><span id="ZF">'''+str(zf)+'''</span></span>
                         </button>
                         <button class="button">
                             <span style="font-size:15px;">SF</span><br />

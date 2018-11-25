@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 <tr>
     <td>0x030</td>
@@ -12,7 +13,7 @@ rsp：%rsp的值，整数
 rbp：%rbp的值，整数
 '''
 def WriteStack(stack,rsp,rbp):
-	fr = open('ajax/Stack.txt','w')
+	fr = open('..frontend/js/ajax/Stack.txt','w')
 	for addr in stack.keys():
 		fr.write("<tr>")
 		fr.write("/t<td>"+addr+"<//td>")

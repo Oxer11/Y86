@@ -16,7 +16,7 @@ PC:整数，需要高亮行的地址
 '''
 
 def WriteCode(lines_ins,lines_as,PC):
-    fr_i = open('ajax/InsCode.txt','w')
+    fr_i = open('../frontend/js/ajax/InsCode.txt','w')
     count = -1
     mark = 0
     fr_i.write('<pre>')
@@ -30,7 +30,7 @@ def WriteCode(lines_ins,lines_as,PC):
             fr_i.write(line)
     fr_i.write('<//pre>')
     fr_i.close()
-    fr_a = open('ajax/Assembly.txt','w')
+    fr_a = open('../frontend/js/ajax/Assembly.txt','w')
     fr_a.write('<pre>')
     for i in range(0,len(lines_as)):
         if i != mark:

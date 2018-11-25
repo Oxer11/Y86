@@ -1,0 +1,4 @@
+<tr class="column" draggable="true">
+                <td>REG %rax</td>
+                <td>0</td>
+            </tr>
