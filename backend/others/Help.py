@@ -51,12 +51,12 @@ Commands:
 '''
 	if (arg == 's') or (arg == 'step'): print '''
 Step one instruction exactly.
-Usage: stepi [N]
+Usage: step [N]
 Argument N means step N times (or till program stops for another reason).
 '''
 	if (arg == 'n') or (arg == 'next'): print '''
 Step one instruction, but proceed through subroutine calls.
-Usage: nexti [N]
+Usage: next [N]
 Argument N means step N times (or till program stops for another reason).
 '''
 	if (arg == 'c') or (arg == 'continue'): print '''
