@@ -30,7 +30,7 @@ var Write_Display=function()
 
 var Load=function()
 {
-	var DELAY=1;
+	var DELAY=100;
 	setInterval(Write_Code,DELAY);
 	setInterval(Write_Register,DELAY);
 	setInterval(Write_CC_Status_CPI,DELAY);

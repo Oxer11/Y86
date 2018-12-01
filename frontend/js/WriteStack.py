@@ -17,7 +17,7 @@ def WriteStack(stack,rsp,rbp):
 	if rsp == rbp:
 		fr.close()
 		return 
-	l = sorted(stack.items(),key = lambda d:d[0],reverse = True)
+	l = sorted(stack.items(),key = lambda d:int(d[0],16),reverse = True)
 	for item in l:
 		fr.write('''<tr>''')
 		fr.write('''<td>'''+item[0]+'''</td>''')
