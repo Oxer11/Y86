@@ -24,9 +24,9 @@
 <h1 style="text-align:center;"> Y86 Simulator Project Report</h1>
 <hr style="height:10px;border:none;border-top:10px groove skyblue;">
 
-<h2> 1 Overview </h2>
+<h2> 1 概览 </h2>
 <div>
-<h3> 1.1 Development Environment </h3>
+<h3> 1.1 开发环境 </h3>
 <div>
 <table>
   <tbody>
@@ -42,7 +42,7 @@
   </tbody>
 </table>
 </div>
-<h3> 1.2 File Organization </h3>
+<h3> 1.2 文件组成 </h3>
 <div>
 本次project的后端代码均在backend目录下，说明如下：
 <table>
@@ -136,74 +136,82 @@
 
 <hr style=" height:2px;border:none;border-top:2px dotted #185598;" >
 
-<h2> 2 Usage </h2>
+<h2> 2 使用方法 </h2>
 <div>
-<p>
-  运行本Y86流水线模拟器需要安装python2.7，目前前端仍未完成，若需要调试，在backend目录下，在终端中输入命令python kernel.py即可。
-</p>
-<p>
-  进入界面后，可选择三种模式中任意一种：1.以.yo文件为输入 2.以.ys文件为输入 3.通过终端动态输入
-
-  选择1、2时，请输入合法的文件路径和文件类型！选择1时，文件名请以.yo为结尾，选择2时，文件名请以.ys为结尾，会在同目录下生成一个对应的.yo文件
-    
-  例：./test/asum.yo或./test/asum.ys
-</p>
-<p>
-  当前支持的调试功能：
-  <ul>
-    <li>-show       显示当前的指令集，格式同.yo文件</li>
-    <li>-step       步进功能，令流水线过程推进一个时钟周期</li>
-    <li>-break addr    设置断点，当程序运行到addr时会暂停执行，addr请使用十六进制表示 <br>  例：-break 0xa</li>
-    <li>-continue         执行流水线过程，直至遇到异常状态或断点</li>
-    <li>-quit       结束调试</li>
-    <li>Instruction Code    <br>支持输入合法的汇编代码，将其加在源代码之后。在该指令后，程序会一直读入汇编代码，直至读到空字符串<br>
-    例：<br>
-    addq %rax, %rax\n<br>
-    addq %rbx, %rbx\n<br>
-    \n</li>
-  </ul>
-</p>
+	<a href="./Usage.html" target="_blank">Y86 Assembly IDE 使用说明</a>
 </div>
 
 <hr style=" height:2px;border:none;border-top:2px dotted #185598;" >
 
-<h2> 3 Design </h2>
+<h2> 3 设计 </h2>
 <div>
-<h3> 3.1 Motivation </h3>
+<h3> 3.1 动机 </h3>
 <div>
+	<p>本次Project要求实现一个Y86 Simulator，要求有较清晰的显示方式。</p>
+	<p>
+	这是我们第一次写图形界面，几个可行的选择是各种语言自带的图形库、Web、Unity、uwp等等。我们最终选择Python+Web的组合，原因主要有以下几个：
+	</p>
+	<ol>
+		<li>Web自带图形界面，简洁精美</li>
+		<li>Web具有强大的前后端交互功能，后端可选择的语言较多</li>
+		<li>整个Project的核心是设计一个IDE，后端的代码量会比较大，所以后端选择了较容易上手的Python</li>
+		<li>Web和Python的学习资料较多，且未来的用处可能会更多，所以借此机会学习一下Web和Python</li>
+	</ol>
+	<p>本次Project使用的所有技术均是<strong>现学</strong>的！其中包括：</p>
+	<ul>
+		<li>Python</li>
+		<li>HTML5/CSS3/JavaScript</li>
+		<li>Flask/Django</li>
+		<li>jQuery/Bootstrap</li>
+		<li>JSON/ajax</li>
+		<li>Github</li>
+	</ul>
+	<p>虽然最后没有用到这么多的工具，但借此机会我们了解了前端开发的流程和技术。</p>
 </div>
-<h3> 3.2 Features </h3>
+<h3> 3.2 特点 </h3>
 <div>
 <ul>
   <li>实现Y86指令集的所有指令</li>
   <li>实现流水线的控制逻辑</li>
-  <li>实现<strong>iaddq</strong>操作</li>
+  <li>添加了<strong>iaddq</strong>操作</li>
   <li>加入了<strong>加载转发</strong>优化(见4.57)</li>
   <li>实现了<strong>Y86汇编器</strong></li>
-  <li>支持<strong>动态输入代码</strong>，<strong>动态调试</strong></li>
+  <li>支持<strong>动态输入汇编代码</strong></li>
+  <li>支持显示<strong>栈、内存、寄存器</strong>中的值</li>
+  <li>支持<strong>监控特定值</strong>的功能</li>
+  <li>支持<strong>设置断点、步进</strong>等功能</li>
+  <li>共支持<strong>22种</strong>动态调试功能</li>
 </ul>
 </div>
 </div>
 <hr style=" height:2px;border:none;border-top:2px dotted #185598;" >
 
-<h2> 4 Details </h2>
+<h2> 4 实现细节 </h2>
 <div>
-<h3> 4.1 Kernel </h3>
+	本节将对模拟器的各个部件的具体实现细节进行详述，对于没有提及的细节请查看代码中的注释。
+<h3> 4.1 流水线 </h3>
+<div>
+	<p>实现流程：</p>
+	<ol>
+		<li>将Register、PipeRegister、Memory、条件码和状态码封装成类，设置好接口以便调试。</li>
+		<li>按照Sequence分别实现五个阶段，为了更容易改成流水线版本，每个阶段以上个时间的流水线寄存器为输入，以下个时间的流水线寄存器为输出。</li>
+		<li>在Decode阶段中加入转发逻辑</li>
+		<li>在kernel.py中加入控制逻辑</li>
+	</ol>
+</div>
+<h3> 4.2 内存 </h3>
 <div>
 </div>
-<h3> 4.2 Memory </h3>
+<h3> 4.3 缓存 </h3>
 <div>
 </div>
-<h3> 4.3 Cache </h3>
+<h3> 4.4 汇编器 </h3>
 <div>
 </div>
-<h3> 4.4 Disassembler </h3>
+<h3> 4.5 Web界面 </h3>
 <div>
 </div>
-<h3> 4.5 Web UI </h3>
-<div>
-</div>
-<h3> 4.6 Performance Analysis </h3>
+<h3> 4.6 Debug功能 </h3>
 <div>
 </div>
 </div>
@@ -244,31 +252,35 @@ test目录下存放了sim中自带的样例，并在/test/new目录下构造了�
 </div>
 
 <hr style=" height:2px;border:none;border-top:2px dotted #185598;" >
-<h2> 6 Discussion </h2>
+<h2> 6 开发过程 </h2>
 <div>
+<h3> 6.1 开发流程</h3>
+<div>
+</div>
+<h3> 6.2 踩过的坑</h3>
+<div>
+<ul>
+	<li>Python中的long类型没有上界，不会发生溢出，需要进行人工溢出</li>
+	<li>五个stages需要倒序执行，因为前面的stage依赖于后面的stage中计算出的值</li>
+	<li>Python函数传参要注意是否是可更改</li>
+</ul>
+</div>
+<h3> 6.3 感想</h3>
+<div>
+</div>
 </div>
 
 <hr style=" height:2px;border:none;border-top:2px dotted #185598;" >
-<h2> 7 Acknowledgements </h2>
+<h2> 7 致谢 </h2>
 <div>
 <ul>
 	<li>感谢金城老师为我们解答流水线实现相关的问题</li>
 	<li>感谢几位助教给出了宝贵的建议</li>
-	<li>感谢胡志峰学长提供pj以参考</li>
+	<li>感谢胡志峰学长提供PJ以参考</li>
 	<li>感谢解润芃、王辰浩等几位同学提供了构造测试样例的思路</li>
 </ul>
 </div>
 
-<hr style=" height:2px;border:none;border-top:2px dotted #185598;" >
-<h2> To Do List </h2>
-<div>
-<ul>
-  <li>美化前端界面</li>
-  <li>完善调试功能，增加步退等功能</li>
-  <li>实现反汇编器</li>
-  <li>模拟储存器结构</li>
-</ul>
-</div>
 </body>
 </html>  
   
