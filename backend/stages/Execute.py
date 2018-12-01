@@ -26,15 +26,17 @@ def ALU(ALUA, ALUB, ALUfun):
 	return ans
 		
 
-def Execute(lst, cur, CC):
+def Execute(lst, cur, CC, NUM_INS, NUM_BUB):
 	cur.regM['stat'] = lst.regE['stat']
 	cur.regM['icode'] = lst.regE['icode']
+	NUM_INS += 1
+	if lst.regE['stat'] in ['BUB']: NUM_BUB += 1
 	if lst.regE['stat'] not in ['AOK','BUB'] or lst.regM['stat'] not in ['AOK','BUB'] or lst.regW['stat'] not in ['AOK','BUB'] or cur.regW['stat'] not in ['AOK','BUB']:
-		return CC
+		return CC, NUM_INS, NUM_BUB
 
 	cur.regM['dstM'] = lst.regE['dstM']
 	cur.regM['dstE'] = lst.regE['dstE']
-	if lst.regE['icode'] in [IMRMOVQ, IPUSHQ] and lst.regM['dstM'] == cur.regE['srcA']:
+	if lst.regE['icode'] in [IRMMOVQ, IPUSHQ] and lst.regM['dstM'] == cur.regE['srcA']:
 		cur.regM['valA'] = cur.regW['valM']
 	else:
 		cur.regM['valA'] = lst.regE['valA']
@@ -91,5 +93,5 @@ def Execute(lst, cur, CC):
 	#处理cmov
 	if icode == 2 and lst.regE['ifun'] != 0 and not cur.regM['Cnd']:
 		cur.regM['dstE'] = RNONE
-	return CC
+	return CC, NUM_INS, NUM_BUB
 	

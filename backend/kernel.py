@@ -56,7 +56,7 @@ def UpdatePC(reg):
 	return f_pc
 
 def Step(MAXSTEP=1, breakpoints=[], OP=0):
-	global PC, CC, Stat, CLK
+	global PC, CC, Stat, CLK, NUM_INS, NUM_BUB
 	dep, STEP = 0, 0
 	while Stat.stat=='AOK' and STEP<MAXSTEP:
 		if [PC,'y',1] in breakpoints:
@@ -74,7 +74,7 @@ def Step(MAXSTEP=1, breakpoints=[], OP=0):
 		if pipereg.regW['icode'] == 9: dep -= 1
 		WriteBack(pipereg, Stat, reg)
 		Memory_(pipereg, tmp_pipereg, mem)
-		CC = Execute(pipereg, tmp_pipereg, CC)
+		CC, NUM_INS, NUM_BUB = Execute(pipereg, tmp_pipereg, CC, NUM_INS, NUM_BUB)
 		#转发过程需要用到e_valE和m_valM，所以先执行Execute和Memory，实际电路中是同时执行的
 		Decode(pipereg, tmp_pipereg, reg)
 		Fetch(pipereg, tmp_pipereg, InsCode, PC)
@@ -89,7 +89,9 @@ def Step(MAXSTEP=1, breakpoints=[], OP=0):
 
 def OUTPUT():
 	WriteStage(pipereg)
-	WriteStat(CLK, Stat.stat, 1.00, CC.ZF, CC.SF, CC.OF)
+	if NUM_INS !=0 : CPI = (NUM_INS+NUM_BUB+0.0)/NUM_INS
+	else: CPI = 0.00 
+	WriteStat(CLK, Stat.stat, CPI, CC.ZF, CC.SF, CC.OF)
 	dis = []
 	for i in range(0, len(Display)):
 		sep = Display[i].find(' ')
@@ -113,27 +115,16 @@ def OUTPUT():
 		val, V = reg.read(i, RNONE)
 		REG.append((reg.map[i],hex(val)))
 	WriteReg(REG)
-'''
-	fo = open('output.txt', "w")
-	fo.write('Codes:\n')
-	for line in Codes: fo.write(line.rstrip()+"\n")
-	fo.write('\nRegister:\n')
-	for i in range(0,0xF):
-		fo.write(reg.map[i].ljust(3)+' : '+str(reg.reg[i])+"\n")
-	fo.write('\nDisplay:\n')
-
-	fo.close()
-'''
 	
 def Welcome():
-	print "=============================================================="
-	print "|                                                            |"
-	print "|                       Y86-simulator                        |"
-	print "|                      Y86 Assembly IDE                      |"
-	print "|                                                            |"
-	print "|       Copyright (c) 2018 Zuobai Zhang and Xinyi Zhou       |"
-	print "|                                                            |"
-	print "=============================================================="
+	print "==============================================================="
+	print "|                                                             |"
+	print "|                       Y86-simulator                         |"
+	print "|                      Y86 Assembly IDE                       |"
+	print "|                                                             |"
+	print "|       Copyright (c) 2018 Xinyi Zhou and Zuobai Zhang        |"
+	print "|                                                             |"
+	print "==============================================================="
 
 
 Welcome()	
@@ -151,7 +142,8 @@ InsCode = {}
 breakpoints = []
 Display = []
 CLK = 0
-PC, f_pc, maxPC= 0, 0, 0
+NUM_INS, NUM_BUB = 0, 0
+PC, f_pc, maxPC = 0, 0, 0
 
 cmd = raw_input(">>>")
 while 1:
@@ -174,6 +166,7 @@ while 1:
 		InsCode = {}
 		breakpoints = []
 		CLK = 0
+		NUM_INS, NUM_BUB = 0, 0
 		PC, f_pc, maxPC= 0, 0, 0
 	
 	if (CMD == 'q') or (CMD == 'quit'): break
@@ -288,7 +281,7 @@ while 1:
 			InsCode = Init(mem, fname) 
 			with open(fname) as fi:
 				for line in fi:
-					Codes.append(line)
+					Codes.append(line.rstrip())
 			for addr, ins in InsCode.items():
 				length = len(ins)/2
 				mem.load(addr, ins, length)
@@ -299,7 +292,7 @@ while 1:
 			fname = arg
 			with open(fname) as fi:
 				for line in fi:
-					AssemblyCode.append(line)
+					AssemblyCode.append(line.rstrip())
 			new_Codes, maxPC = encoder(AssemblyCode, labels, maxPC)
 			Codes.extend(new_Codes)
 			for line in new_Codes:
