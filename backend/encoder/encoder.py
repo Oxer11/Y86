@@ -45,10 +45,10 @@ def register(REG):
 def little_endian(v, length=0x8):
 	if len(v) == 0: v = '0'
 	if v[0:2] == '0x':
-		if not v[2:len(v)].isdigit():
+		if not re.match(r'^0x[0-9a-fA-F]+$', v):
 			global INS
 			INS = 1
-			print 'Error: Invalid Number!'
+			print v[2:len(v)]
 			return ''
 		x = long(v, 16)
 	else:
@@ -148,10 +148,10 @@ def encoder(AssemblyCode, labels, nowPC):
 		if cmd in ['.pos', '.align']:
 			pass
 		elif cmd in ['.byte', '.quad']:
-			if ins[end + 1:len(ins)].strip().isdigit():
-				ans += little_endian(ins[end + 1:len(ins)].strip(), 1)
+			if labels.has_key(ins[end + 1:len(ins)].strip()):
+				ans += little_endian(labels[ins[end + 1:len(ins)].strip()], 1)
 			else:
-				ans += little_endian(Label(labels, ins[end + 1:len(ins)].strip()), 1)
+				ans += little_endian(ins[end + 1:len(ins)].strip(), 1)
 		elif cmd == 'halt':
 			ans += '00'
 		elif cmd == 'nop':
