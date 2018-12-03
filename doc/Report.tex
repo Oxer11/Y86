@@ -4,7 +4,7 @@
 % This is a simple template for a LaTeX document using the "article" class.
 % See "book", "report", "letter" for other types of document.
 
-\documentclass[11pt]{article} % use larger type; default would be 10pt
+\documentclass[12pt]{article} % use larger type; default would be 10pt
 
 \usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
 
@@ -35,7 +35,7 @@
 %%% HEADERS & FOOTERS
 \usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
 \pagestyle{fancy} % options: empty , plain , fancy
-\renewcommand{\headrulewidth}{0pt} % customise the layout...
+%\renewcommand{\headrulewidth}{0pt} % customise the layout...
 \lhead{}\chead{}\rhead{}
 \lfoot{}\cfoot{\thepage}\rfoot{}
 
@@ -57,7 +57,6 @@
 \usepackage{titling}
 
 
-
 %%% END Article customizations
 
 %%% The "real" document content comes below...
@@ -68,8 +67,13 @@
          % otherwise the current date is printed 
 
 \begin{document}
+\begin{sloppypar}
 \maketitle
 
+\pagestyle{fancy}
+\lhead{\textbf{{\thetitle}}}
+\rhead{\textbf{\nouppercase{\firstleftmark}}}
+\cfoot{\thepage}
 
 \tableofcontents
 \clearpage
@@ -93,7 +97,9 @@
 \noindent
 本次Project的后端代码均在{\bf backend}目录下，说明如下：
 
+
 \begin{table}[h]
+\resizebox{\textwidth}{27mm}{
 \begin{tabular}{llll}
 {\bf kernel.py}          & 流水线控制逻辑  
 &{\bf others/cc\underline{\hspace{0.5em}}stat.py}       & 状态码与条件码类 \\
@@ -111,7 +117,7 @@
 &{\bf memory\underline{\hspace{0.5em}}sys/register.py} & 系统寄存器的实现 \\
 {\bf memory\underline{\hspace{0.5em}}sys/piperegister.py} & 流水线寄存器的实现  
 &{\bf encoder/encoder.py} & 汇编器 
-\end{tabular}
+\end{tabular}}
 \end{table}
 
 \noindent
@@ -134,6 +140,7 @@
 \section{使用方法}
 详见Manual.pdf
 
+\clearpage
 \section{设计}
 
 本节将叙述对本次Project的需求分析和开发选择，并列出最终实现的所有功能。
@@ -177,7 +184,7 @@
 \item 模仿gdb，实现了步进、断点等{\bf 22条动态调试指令}，调试功能强大。
 \end{itemize}
 
-
+\clearpage
 \section{实现细节}
 
 本节将对IDE的各个部件的具体实现细节进行详述，对于没有提及的细节请查看代码中的注释。
@@ -247,41 +254,12 @@
 
 暂未完成。
 
+\clearpage
 \section{测试}
 
 本节将叙述对模拟器的测试和性能评估。
 
 \subsection{测试样例}
-
-在{\bf test}目录下收录有我所使用的测试用例，说明如下：
-
-\begin{table}[h]
-\begin{tabular}{|l|l|l|}
-\hline
-{\bf \#} & {\bf 测试文件}                          & {\bf 描述}                   \\ 
-\hline
-1        & asum.yo/asumr.yo                   & 测试样例，包括.quad、循环和调用        \\ 
-\hline
-2        & asumi.yo                       & 测试iaddq操作            \\ 
-\hline
-3        & abs-asum-jmp/cmov.yo        & 测试条件码的设置            \\ 
-\hline
-4        & Load\_Use.ys          & 测试模拟器是否能处理Load/Use Hazard               \\ 
-\hline
-5        & Comb\_A.ys             & 测试模拟器是否能处理Combination A                   \\ 
-\hline
-6        & List\_Sum.ys            & 对链表中的三个元素进行求和，测试内存取值相关操作   \\ 
-\hline
-7        & List\_Sum\_R.ys & 同上，但用递归完成，测试调用和返回等操作                 \\ 
-\hline
-\end{tabular}
-\end{table}
-
-由于测试1包含了大部分情况，所以在模拟器通过测试1并且将结果与给出的{\bf asum.txt}对比发现基本一致后，可以认为逻辑大体上没有问题。
-
-再通过测试2到测试5，可以基本肯定流水线逻辑（Stall / Bubble / Forward）没有问题。
-
-最后的测试6和测试7是为了进一步验证模拟器的正确性，同时为性能分析提供更多例子。
 
 为了更好地检验Y86模拟器的正确性，我们构造了几组数据，收录与{\bf test/new}目录下，说明如下：
 
@@ -307,6 +285,7 @@
 
 暂未完成。
 
+\clearpage
 \section{开发过程}
 
 本节将叙述Project的详细开发过程、遇到的问题和感想。
@@ -353,7 +332,9 @@
 \item Python中的long类型是没有上界的，这导致整数相加时不会产生溢出，需要手动设置溢出。
 \item Python函数传参时，要注意对象是否可更改。
 \item Python的全局变量是指同一模块中的变量，对模块外的全局变量就没法用global声明了。
-\item 
+\item Python中不写函数返回值可能会报AttributeError: 'NoneType' object has no attribute的神奇错误。
+\item Python中几个空格连在一起和tab是不同的，混用会报SyntaxError。虽然是极智障的坑但是初学的时候很难发现。
+\item HTML排版时最好用百分比确定元素的大小以适应不用尺寸的屏幕。
 \end{itemize}
 
 \subsection{感想}
@@ -376,6 +357,19 @@
 
 \subsubsection{周芯怡} 
 
+做这个pj最大的感想就是真的学到了很多东西吧。这之前我根本不敢想象有朝一日我也能愉快地用python，用HTML、CSS、Bootstrap写自己的web还能写得（或许）挺好看（在此感恩队友包容我大面积使用骚气的紫色）。而且这些全新的知识都是自己一点点上网学来的，自学的过程确实很艰辛，自己反复摸索试错的时候也总是让人有砸电脑的冲动，但是最后学下来了还是有满满的成就感。不管最终做出来怎么样或者这门课能拿个什么成绩，这段经历一定是难忘的。
+
+至于代码本身，后端我做的主要是第一阶段的Debug，的确比较头疼，但由于队友的代码本身就没什么BUG，所以没有想象中的可怕。我写的比较多的是前端的部分，最大的感想就是要设计一个能入眼的界面真的太难了，尤其是在这种要展示的信息量特别大的情况下。我们的前端经历了两次大的改动，一直到现在的版本也不能说很漂亮。另外，排版过程中我对HTML的迷之定位深恶痛绝，或许是我自己不得其要领吧，整个排版工作是令人窒息的。除了界面的设计，功能上也还有不足的地方，比如我费尽心思做出来的拖拽功能被Load无情扼杀，用表单做选项卡的智障骚操作，还有到现在都没能实现的前端输入。希望接下来还能有机会继续完善。
+
+然后就要大篇幅感谢我的队友了。
+
+功利一点来说，以我这种水平，能和他一起做pj绝对是中彩票式的幸运。以我的实力，一个人能做出什么结果是不敢想的，过程肯定也是极其艰辛的。
+
+就算无关分数，整个过程中我的队友也给了我很多宽容支持和鼓励。一开始，如果没有他来找我，我可能现在正在和C++与QT死磕。我的队友让我能走出舒适区，去学习更多更好的技能。其次，整个合作中我多次怀疑他要提刀来找我了。不知道有多少次，我自己都说，这个东西今天再做不出来明天就只有带着电脑跑路。但是第二天见到队友时他还是告诉我没关系慢慢来。到今天，看到他在实验感想中依然在鼓励我，当即下泪。怎么说呢，如果队友的代码里闪烁的是理性的光辉，那么他的感想里闪烁的就是人性的光辉。
+
+做pj 也可以是一件有趣的事情呐。
+
+\clearpage
 \section{致谢}
 
 \begin{itemize}
@@ -386,4 +380,5 @@
 \end{itemize}
 
 
+\end{sloppypar}
 \end{document}

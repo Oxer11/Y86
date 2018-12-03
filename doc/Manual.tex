@@ -1,0 +1,275 @@
+% !TEX TS-program = pdflatex
+% !TEX encoding = UTF-8 Unicode
+
+% This is a simple template for a LaTeX document using the "article" class.
+% See "book", "report", "letter" for other types of document.
+
+\documentclass[12pt]{article} % use larger type; default would be 10pt
+
+\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+
+%%% Examples of Article customizations
+% These packages are optional, depending whether you want the features they provide.
+% See the LaTeX Companion or other references for full information.
+
+%%% PAGE DIMENSIONS
+\usepackage[top=1.15in, bottom=0.75in, left=1.00in, right=1.00in]{geometry}
+\geometry{a4paper} % or letterpaper (US) or a5paper or....
+% \geometry{margin=2in} % for example, change the margins to 2 inches all round
+% \geometry{landscape} % set up the page for landscape
+%   read geometry.pdf for detailed page layout information
+
+\usepackage{graphicx} % support the \includegraphics command and options
+
+% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+
+%%% PACKAGES
+\usepackage{booktabs} % for much better looking tables
+\usepackage{array} % for better arrays (eg matrices) in maths
+\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+% These packages are all incorporated in the memoir class to one degree or another...
+
+%%% HEADERS & FOOTERS
+\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+\pagestyle{fancy} % options: empty , plain , fancy
+\renewcommand{\headrulewidth}{0pt} % customise the layout...
+\lhead{}\chead{}\rhead{}
+\lfoot{}\cfoot{\thepage}\rfoot{}
+
+%%% SECTION TITLE APPEARANCE
+\usepackage{sectsty}
+\allsectionsfont{\sffamily\mdseries\upshape} % (See the fntguide.pdf for font help)
+% (This matches ConTeXt defaults)
+
+%%% ToC (table of contents) APPEARANCE
+\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
+\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
+\usepackage[UTF8]{ctex}
+\usepackage{fancyhdr}
+\usepackage{enumerate}
+\usepackage{indentfirst}
+\usepackage{extramarks}
+\usepackage{multirow}
+\usepackage{titling}
+\usepackage{amssymb}
+\usepackage{amsmath}
+
+%%% END Article customizations
+
+%%% The "real" document content comes below...
+
+\title{\textbf{Y86 Assembly IDE 使用说明}}
+\author{周芯怡 17307130354\\张作柏 17300240035}
+\date{\today}
+%\date{} % Activate to display a given date or no date (if empty),
+         % otherwise the current date is printed 
+
+\begin{document}
+\begin{sloppypar}
+\maketitle
+
+\section{简介}
+
+Y86 Assembly IDE提供书写Y86汇编代码与动态调试的基本功能：
+\begin{itemize}
+\item 支持从文件载入汇编代码或指令码和动态输入代码
+\item 支持将汇编代码和指令码以.yo文件的形式输出
+\item 支持动态运行程序
+\item 支持运行中跳转至任意语句
+\item 支持设置断点
+\item 支持监视特定值
+\item 支持设置特定值
+\item 强大的help功能
+\end{itemize}
+
+本Y86汇编IDE需要安装Python 2.7。使用时，请先通过用Chrome / Firefox / Safari等浏览器打开{\bf frontend/main.html}文件，作为前端的显示窗口。请尽量使用Linux系统打开！在Windows系统下由于Chrome浏览器对于ajax请求的限制，可能会无结果显示。在打开网页后，请进入backend目录，并用Python编译运行kernel.py。本IDE的所有操作均在后端通过指令进行，前端仅作为调试面板使用。
+
+\clearpage
+\section{指令说明}
+
+\subsection{\#Step指令集}
+
+\begin{table}[h]
+\begin{tabular}{|c|l|}
+\hline
+{\bf 指令} & {\bf 说明} \\ 
+\hline
+\multirow{4}{*}{step} & 格式： step [N] \\
+ & 不带参数时，执行下一个指令 \\
+ & 带参数时，参数[N]表示前进N步(除非程序中止) \\
+ & 可缩写为s \\ 
+\hline
+\multirow{4}{*}{next} & 格式： next [N] \\
+ & 不带参数时，执行下一个指令，不会进入子函数 \\
+ & 带参数时，参数[N]表示前进N步(除非程序中止) \\
+ & 可缩写为n \\ 
+\hline
+\multirow{3}{*}{continue} & 格式： continue \\
+ & 继续执行当前程序，直到遇到断点或中止信号 \\
+ & 可缩写为c \\
+\hline
+\multirow{2}{*}{finish} & 格式： finish \\
+ & 执行当前程序，直到退出当前函数 \\
+\hline
+\end{tabular}
+\end{table}
+
+\subsection{\#Jump指令集}
+
+\begin{table}[h]
+\begin{tabular}{|c|l|}
+\hline
+{\bf 指令} & {\bf 说明} \\ 
+\hline
+\multirow{3}{*}{jump} & 格式： jump $\langle location\rangle$ \\
+ & 令PC跳至位置$\langle location\rangle$处 \\
+ & $\langle location\rangle$可以是指令地址，可以是合法的label \\
+\hline
+\multirow{2}{*}{return} & 格式： return \\
+ & 直接跳出当前函数。 \\
+\hline
+\multirow{2}{*}{call} & 格式： call $\langle label\rangle$ \\
+ &  直接调用label函数。 \\
+\hline
+\end{tabular}
+\end{table}
+
+\clearpage
+\subsection{\#Breakpoints指令集}
+
+\begin{table}[!hbp]
+\resizebox{\textwidth}{45mm}{
+\begin{tabular}{|c|l|}
+\hline
+{\bf 指令} & {\bf 说明} \\ 
+\hline
+\multirow{2}{*}{break} & 格式： break $\langle location\rangle$ \\
+ & 在位置$\langle location\rangle$处设置断点。 \\
+\hline
+\multirow{2}{*}{info breakpoints} & 格式： info breakpoints \\
+ & 输出所有用户设置的未被删除的断点信息，包括断点编号、断点状态、断点位置。 \\
+\hline
+\multirow{3}{*}{enable} & 格式： enable $\langle NUM\rangle$ \\
+ & 使编号为$\langle NUM\rangle$的断点重新发挥作用，相对指令disable。 \\
+ & 若不带任何参数，则恢复所有断点。 \\
+\hline
+\multirow{3}{*}{disable} & 格式： disable $\langle NUM\rangle$ \\
+ & 使编号为$\langle NUM\rangle$的断点失去作用，即遇到该断点时不在停止，相对指令enable。 \\
+ & 若不带任何参数，则使所有断点失去作用。 \\
+\hline
+\multirow{3}{*}{delete} & 格式： delete $\langle NUM\rangle$ \\
+ & 删除编号为$\langle NUM\rangle$的断点，连其编号一同移除，即之后不再有编号为$\langle NUM\rangle$的断点。 \\
+ & 若不带任何参数，则删除所有断点。 \\
+\hline
+\end{tabular}}
+\end{table}
+
+\subsection{\#Display指令集}
+
+\begin{table}[!hbp]
+\resizebox{\textwidth}{55mm}{
+\begin{tabular}{|c|l|}
+\hline
+{\bf 指令} & {\bf 说明} \\ 
+\hline
+\multirow{9}{*}{display} & 格式： display $\langle EXP\rangle$ \\
+ & 在Display框中实时显示EXP变量的值。 \\
+ & 几种EXP的格式： \\
+ & REG $\langle REGNAME\rangle$ 例：REG \%rax \\
+ & 显示系统寄存器$\langle REGNAME\rangle$的值，注意$\langle REGNAME\rangle$必须以'\%'开头。 \\
+ & MEM $\langle ADDR\rangle$    例：MEM 0x200 \\
+ & 显示内存地址$\langle ADDR\rangle$中的值，注意$\langle ADDR\rangle$必须是十六进制表示。 \\
+ & STACK $\langle NUMID\rangle$ 例：STACK 0 \\
+ & 显示系统栈顶第$\langle NUMID\rangle$个元素的值，下标从0开始，注意$\langle NUMID\rangle$必须是十进制表示。 \\
+\hline
+\multirow{9}{*}{undisplay} & 格式： undisplay $\langle EXP\rangle$ \\
+ & 在Display框中取消显示EXP变量的值。 \\
+ & 几种EXP的格式： \\
+ & REG $\langle REGNAME\rangle$ 例：REG \%rax \\
+ & 显示系统寄存器$\langle REGNAME\rangle$的值，注意$\langle REGNAME\rangle$必须以'\%'开头。 \\
+ & MEM $\langle ADDR\rangle$    例：MEM 0x200 \\
+ & 显示内存地址$\langle ADDR\rangle$中的值，注意$\langle ADDR\rangle$必须是十六进制表示。 \\
+ & STACK $\langle NUMID\rangle$ 例：STACK 0 \\
+ & 显示系统栈顶第$\langle NUMID\rangle$个元素的值，下标从0开始，注意$\langle NUMID\rangle$必须是十进制表示。 \\
+\hline
+\end{tabular}}
+\end{table}
+
+\clearpage
+\subsection{\#I/O指令集}
+
+\begin{table}[!hbp]
+\resizebox{\textwidth}{45mm}{
+\begin{tabular}{|c|l|}
+\hline
+{\bf 指令} & {\bf 说明} \\ 
+\hline
+\multirow{2}{*}{write} & 格式： write $\langle FILENAME\rangle$ \\
+ & 将指令码与汇编代码以.yo文件的格式写入文件$\langle FILENAME\rangle$中。 \\
+\hline
+\multirow{2}{*}{list} & 格式： list \\
+ & 将指令码与汇编代码以.yo文件的格式显示在屏幕上。 \\
+\hline
+\multirow{5}{*}{load} & 格式： load $\langle FILENAME\rangle$ \\
+ & 清除之前所有的代码和状态。 \\
+ & 从$\langle FILENAME\rangle$中加载指令码和汇编码，$\langle FILENAME\rangle$必须是.yo文件或.ys文件。 \\
+ & 当加载.yo类型文件时，可直接从中提取指令码。 \\
+ & 当加载.ys类型文件时，调用YAS生成指令码，并记录所有label。 \\
+\hline
+\multirow{4}{*}{read} & 格式： read [Enter] \\
+ & $\langle Assembly Code\rangle$ \\
+ & [Enter] \\
+ & 动态输入汇编代码，附加在当前代码集合之后，可以调用之前的label，可以新建label。 \\
+\hline
+\end{tabular}}
+\end{table}
+
+\subsection{\#Others指令集}
+
+\begin{table}[!hbp]
+\resizebox{\textwidth}{55mm}{
+\begin{tabular}{|c|l|}
+\hline
+{\bf 指令} & {\bf 说明} \\ 
+\hline
+\multirow{9}{*}{set} & 格式： set $\langle EXP\rangle$ $\langle value\rangle$ \\
+ & 几种EXP的格式： \\
+ & REG $\langle REGNAME\rangle$ 例：REG \%rax \\
+ & 显示系统寄存器$\langle REGNAME\rangle$的值，注意$\langle REGNAME\rangle$必须以'\%'开头。 \\
+ & MEM $\langle ADDR\rangle$    例：MEM 0x200 \\
+ & 显示内存地址$\langle ADDR\rangle$中的值，注意$\langle ADDR\rangle$必须是十六进制表示。 \\
+ & STACK $\langle NUMID\rangle$ 例：STACK 0 \\
+ & 显示系统栈顶第$\langle NUMID\rangle$个元素的值，下标从0开始，注意$\langle NUMID\rangle$必须是十进制表示。 \\
+ & 将表达式$\langle EXP\rangle$指定的值设为$\langle value\rangle$。 \\
+\hline
+\multirow{2}{*}{clear} & 格式： clear \\
+ & 清除当前所有代码和状态。 \\
+\hline
+\multirow{5}{*}{help} & 格式： help $\langle CMD\rangle$ \\
+ & 显示$\langle CMD\rangle$指令的使用说明。 \\
+ & 当不加参数时，显示所有指令组。 \\
+ & 当$\langle CMD\rangle$为指令组时，显示该指令组内的所有指令简介。 \\
+ & 当$\langle CMD\rangle$为某个指令时，显示该指令的使用方法。 \\
+\hline
+\multirow{2}{*}{quit} & 格式： quit \\
+ & 退出Y86 Assembly IDE。 \\
+\hline
+\end{tabular}}
+\end{table}
+
+\clearpage
+\section{注意事项}
+
+\begin{itemize}
+\item 载入.yo文件时，不支持任何label操作。因为载入时直接读取指令码，所以无法对应label。
+\item 直接输入回车[Enter]时，会执行上一条指令。
+\item 载入文件时，会自动清除之前的所有代码与状态。
+\item 支持\#和/**/两种注释格式，暂不支持分行注释。
+\end{itemize}
+
+\end{sloppypar}
+\end{document}
