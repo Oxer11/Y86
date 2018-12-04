@@ -89,9 +89,12 @@
             height: 190px;
             border: none;
             padding: 10px;
+	    padding-top:7px;
+	    padding-bottom:13px;
             margin: 0px;
             margin-top: 3px;
-            overflow: scroll;
+            overflow-y:hidden;
+	    overflow-x:auto;
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         }
 
@@ -237,13 +240,13 @@
             </li>
             <li>
                 <input type="radio" name="tabs" id="tab3" />
-                <label for="tab3" id="last">Regiser</label>
+                <label for="tab3" id="last">Register</label>
                 <div class="tab_content" id="tab_content3">
                 </div>
             </li>
         </ul>
 
-        <div class="stages" style="overflow:hidden;">
+        <div class="stages">
             <table id="Stage" style="border:none;"></table>
         </div>
 
