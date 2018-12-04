@@ -22,9 +22,9 @@ def WriteStack(stack,rsp,rbp):
 		fr.write('''<tr>''')
 		fr.write('''<td>'''+item[0]+'''</td>''')
 		fr.write('''<td>'''+item[1]+'''</td>''')
-		if hex(rsp) == item[0]:
+		if rsp == int(item[0], 16):
 			fr.write('''<td class="pointer">%rsp</td>''')
-		elif hex(rbp) == item[0]:
+		elif rbp == int(item[0], 16):
 			fr.write('''<td class="pointer">%rbp</td>''')
 		else:
 			fr.write('''<td></td>''')
