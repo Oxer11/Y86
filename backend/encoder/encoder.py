@@ -43,17 +43,16 @@ def register(REG):
 
 
 def little_endian(v, length=0x8):
+	global INS
 	if len(v) == 0: v = '0'
 	if v[0:2] == '0x':
 		if not re.match(r'^0x[0-9a-fA-F]+$', v):
-			global INS
 			INS = 1
 			print v[2:len(v)]
 			return ''
 		x = long(v, 16)
 	else:
-		if not v.isdigit():
-			global INS
+		if not v.isdigit() and not (v[0] == '-' and v[1:len(v)].isdigit()):
 			INS = 1
 			print 'Error: Invalid Number!'
 			return ''
