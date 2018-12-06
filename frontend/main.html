@@ -15,45 +15,6 @@
         * {
             list-style: none;
         }
-		
-		.title{
-			animation: disapp 0.5s;
-			-webkit-animation:disapp 1s;
-			animation-fill-mode:forwards;
-			animation-delay:1.5s;
-		}
-		
-		.main_body{
-			opacity:0;
-			animation: show 0.5s;
-			-webkit-animation:show 1s;
-			animation-fill-mode:forwards;
-			animation-delay:2s;
-		}
-		
-		@keyframes disapp
-		{
-			from {opacity:1;}
-			to {opacity:0;}
-		}
-		
-		@-webkit-keyframes disapp
-		{
-			from {opacity:1;}
-			to {opacity:0;}
-		}
-		
-		@keyframes show
-		{
-			from {opacity:0;}
-			to {opacity:1;}
-		}
-		
-		@-webkit-keyframes show
-		{
-			from {opacity:0;}
-			to {opacity:1;}
-		}
 
         .column {
             cursor: move;
@@ -124,16 +85,13 @@
             display: inline-block;
             background-color: rgb(255,250,250);
             float: left;
-            width: 74%;
-            height: 240px;
+            width: 54%;
+            height: 190px;
             border: none;
             padding: 10px;
-	        padding-top:7px;
-	        padding-bottom:13px;
             margin: 0px;
             margin-top: 3px;
-            overflow-y:auto;
-	    overflow-x:hidden;
+            overflow: scroll;
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         }
 
@@ -141,27 +99,6 @@
                 border: none;
                 height: 30px;
             }
-			
-			.stages td:hover{
-				background-color: rgb(255,250,250);
-			}
-			
-			.stages .button{
-				padding-top: 2px;
-				padding-bottom: 5px;
-				width: 120px;
-			}
-			
-		.name{
-			font-size:14px;
-			opacity:1;
-			color:rgb(147,112,219)
-		}
-			
-		.value{
-			font-size:16px;
-			font-weight:bold;
-		}
 
         table {
             width: 100%;
@@ -266,17 +203,34 @@
             font-weight: bold;
         }
     </style>
+</head>
+
 
 <body>
+    <script>
+$(document).keyup(function(event){
+  if(event.keyCode ==13){
+    $("#submit").trigger("click");
+  }
+});
+    </script>
+
     <div class="container-fluid" style="margin:20px;">
-        <div class="title" style="max-width:1335px;z-index:-1;position:absolute;left:350px;top:250px;">
-            <div style="width:900px;">
-                <font style="font-family:myFont;font-size:40pt;"><span style="color:rgb(147,112,219);">Y86</span> Simulator</font>
+        <div style="max-width:1335px;">
+            <div style="float:left;width:900px;position:relative;left:-35px;">
+                <font style="font-family:myFont;font-size:35pt;"><span style="color:rgb(147,112,219);">Y86</span> Simulator</font>
             </div>
         </div>
 
-	<div class="main_body" style="float:top;">
-        <div class="container" style="float:left;width:22.5%;height:330px;margin:15px;padding:0px;overflow-x:hidden;overflow-y:auto;background-color:rgb(255,250,250);box-shadow:0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+        <form role="form" name="input" action="phpdemo.php" method="post" target="nm_iframe" style="display:inline-block;width:300px;float:right;">
+            <textarea class="form-control" rows="2" name="ins"></textarea>
+            <button type="submit" id="submit" class="btn btn-default" style="display:none;"></button>
+        </form>
+        <iframe id="id_iframe" name="nm_iframe" style="display:none;"></iframe>
+
+        <br><br><br>
+
+        <div class="container" style="float:left;width:22.5%;height:540px;margin:15px;padding:0px;overflow-x:hidden;overflow-y:auto;background-color:rgb(255,250,250);box-shadow:0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
             <p style="color:rgb(147,112,219);font-size:20px;font-family:myFont;font-weight:bold;margin:10px;">Stack</p>
             <table class="stack" id="Stack"></table>
         </div>
@@ -298,21 +252,20 @@
             </li>
             <li>
                 <input type="radio" name="tabs" id="tab3" />
-                <label for="tab3" id="last">Register</label>
+                <label for="tab3" id="last">Regiser</label>
                 <div class="tab_content" id="tab_content3">
                 </div>
             </li>
         </ul>
-		
-		<div class="container" style="border: none;float:left;width:22.5%;height:240px;margin:15px;margin-top:3px;padding:0px;overflow-x:hidden;overflow-y:auto;background-color: rgb(255,250,250);box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+
+        <div class="stages" style="overflow:hidden;">
+            <table id="Stage" style="border:none;"></table>
+        </div>
+
+        <div class="container" style="border: none;float:left;width:18.5%;height:190px;margin:15px;margin-top:3px;padding:0px;overflow-x:hidden;overflow-y:auto;background-color: rgb(255,250,250);box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
             <p style="color:rgb(147,112,219);font-size:20px;font-family:myFont;font-weight:bold;margin:10px;">Display</p>
             <table id="columns"></table>
         </div>
-
-        <div class="stages" id="Stage">
-			<table id="Stage" style="border:none;"></table>
-        </div>
-		</div>
 
     </div>
 </body>

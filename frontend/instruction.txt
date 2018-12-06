@@ -1,0 +1,8 @@
+load ./test/asum.yo
+step
+
+
+
+display REG %rsp
+set REG %rbp 512
+display REG %rbp
