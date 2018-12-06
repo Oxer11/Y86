@@ -1,5 +1,7 @@
 # -*- coding: UTF-8 -*-
 import sys
+import time
+import os
 sys.path.append("..")
 from frontend.js.WriteCode import *
 from frontend.js.WriteDisplay import *
@@ -146,12 +148,28 @@ CLK = 0
 NUM_INS, NUM_BUB = 0, 0
 PC, f_pc, maxPC = 0, 0, 0
 
-cmd = raw_input(">>>")
+#cmd = raw_input(">>>")
+t = -1
+lst_cmd = ''
 while 1:
-	if len(cmd)==0 : cmd = lst_cmd
+	time.sleep(0.05)
+	lst_time=os.path.getmtime('../frontend/instruction.txt')
+	if lst_time == t:
+		OUTPUT()
+		continue
+	t=lst_time
+	f_ins = open('../frontend/instruction.txt','r')
+	lines = f_ins.readlines()
+	f_ins.close()
+	if len(lines)==0:
+		OUTPUT()
+		continue
+	cmd = lines[-1]
+	if cmd=='\n' : cmd = lst_cmd
 	sep = cmd.find(' ')
 	if sep == -1: sep = len(cmd)
 	CMD = cmd[0:sep]
+	CMD = CMD.strip()
 	arg = cmd[sep:len(cmd)].strip()
 	
 	#Others
@@ -336,6 +354,6 @@ while 1:
 	OUTPUT()
 	
 	lst_cmd = cmd	
-	cmd = raw_input(">>>")
+	#cmd = raw_input(">>>")
 	
 	
