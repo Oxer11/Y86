@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Y86模拟器</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/popper.js/1.12.5/umd/popper.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/4.1.0/js/bootstrap.min.js"></script>
+    {% load static %}
+ <!--   <script src="{% static 'IDE/js/Load.js' %}"></script> -->
+    <link rel="stylesheet" href="{% static 'IDE/style.css' %}">
+    <script type="text/javascript">
+	$(document).ready(function(){
+ 		$("#btn_input").click(function(){
+  			var content=$(".form-control").val();                
+  		$.post("/IDE/",{'type':'code', 'content':content},     
+    		function(data,status){              
+         	$(".input_yo").html(data);      
+  			});
+		});
+	});
+	</script>
+</head>
+<body>
+	<div style="display:inline-block;position:fixed;top:15px;left:10px;">
+	<image src="{% static 'IDE/write_hover.png' %}" id="sb_w" class="switch_button" onclick="write_()">
+	<br><br>
+	<image src="{% static 'IDE/debug_chosen.png' %}" id="sb_d" class="switch_button"  onclick="debug()">
+	</div>
+	
+	<div class="title" style="max-width:1335px;z-index:-1;position:absolute;left:350px;top:250px;">
+            <div style="width:900px;">
+                <font style="font-family:myFont;font-size:40pt;"><span style="color:rgb(147,112,219);">Y86</span> Simulator</font>
+            </div>
+    </div>
+	<div class="container-fluid" style="margin:15px;float:top;" id="write">
+		<div class="input_ys">
+		<form role="form" style="display:inline-block;width:100%;height:100%;margin:0px;position:relative;top:-2px;">
+			<textarea class="form-control" style="border:none;height:100%;"></textarea>
+		</form>
+		</div>
+		<div class="input_yo">
+			<p>yo_code</p>
+		</div>
+		<br>
+		<button type="button" class="btn btn-success" style="display:inline-block;position:relative;padding-top:3px;top:25px;right:12px;text-weight:bold;float:right;mergin-top:10px;" id="btn_input">submit</button>
+	</div>
+	
+	<div id="debug">
+    <div class="container-fluid" style="margin:20px;">
+	<div class="main_body" id="main_body" style="float:top;">
+        <div class="container" style="float:left;width:21%;height:330px;margin:15px;margin-left:28px;padding:0px;overflow-x:hidden;overflow-y:auto;background-color:rgb(255,250,250);box-shadow:0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+            <p style="color:rgb(147,112,219);font-size:20px;font-family:myFont;font-weight:bold;margin:10px;">Stack</p>
+            <table class="stack" id="Stack"></table>
+        </div>
+
+        <div class="code" style="display:block;">
+            <table>
+                <tr>
+                    <td id="Codes" style="border:none;"></td>
+                </tr>
+            </table>
+        </div>
+
+        <ul class="tabs">
+            <li>
+                <input type="radio" name="tabs" id="tab1" checked />
+                <label for="tab1">Stat</label>
+                <div class="tab_content" id="tab_content1">
+                </div>
+            </li>
+            <li>
+                <input type="radio" name="tabs" id="tab3" />
+                <label for="tab3" id="last">Register</label>
+                <div class="tab_content" id="tab_content3">
+                </div>
+            </li>
+        </ul>
+		
+		<div class="container" style="border: none;float:left;width:21%;height:240px;margin:15px;margin-left:28px;margin-top:3px;padding:0px;overflow-x:hidden;overflow-y:auto;background-color: rgb(255,250,250);box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+            <p style="color:rgb(147,112,219);font-size:20px;font-family:myFont;font-weight:bold;margin:10px;">Display</p>
+            <table id="columns"></table>
+        </div>
+
+        <div class="stages">
+			<table id="Stage" style="border:none;"></table>
+        </div>
+		
+		<div class="cmd" id="cmd">
+			<form role="form" class="input_ys" style="display:inline-block;width:100%;height:100%;margin:0px;position:relative;top:-2px;">
+			<textarea class="form-control" style="border:none;height:100%;"></textarea>
+			</form>
+		</div>
+		
+		</div>
+
+    </div>
+	</div>
+</body>
+
+<script>
+		function write_(){
+			document.getElementById("write").style="display:block";
+			document.getElementById("debug").style="display:none";
+			document.getElementById("sb_w").src="{% static 'IDE/write_chosen.png' %}";
+			document.getElementById("sb_d").src="{% static 'IDE/debug_hover.png' %}";
+		}
+		function debug(){
+			document.getElementById("write").style="display:none";
+			document.getElementById("debug").style="display:block";
+			document.getElementById("main_body").style="opacity:1;animation:none;";
+			document.getElementById("sb_w").src="{% static 'IDE/write_hover.png' %}";
+			document.getElementById("sb_d").src="{% static 'IDE/debug_chosen.png' %}";
+		}
+        var columns = document.querySelectorAll('#columns .column');
+        var dragEl = null;
+
+        [].forEach.call(columns,function(column){
+             column.addEventListener("dragstart",domdrugstart,false);
+             column.addEventListener('dragenter', domdrugenter, false);
+             column.addEventListener('dragover', domdrugover, false);
+             column.addEventListener('dragleave', domdrugleave, false);
+            column.addEventListener('drop', domdrop, false);
+            column.addEventListener('dragend', domdrapend, false);
+        });
+
+        function domdrugstart(e) {
+            e.target.style.opacity = '0.5';
+            dragEl = this;
+            e.dataTransfer.effectAllowed = "move";
+            e.dataTransfer.setData("text/html", this.innerHTML);
+        }
+
+        function domdrugenter(e) {
+            e.target.classList.add('over');
+        }
+
+        function domdrugover(e) {
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+
+            e.dataTransfer.dropEffect = 'move';
+
+            return false;
+         }
+
+       function domdrugleave(e) {
+            e.target.classList.remove('over');
+         }
+
+        function domdrop(e) {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+             }
+
+            if (dragEl != this) {
+                dragEl.innerHTML = this.innerHTML;
+                this.innerHTML = e.dataTransfer.getData('text/html');
+             }
+
+            return false;
+         }
+
+        function domdrapend(e) {
+            [].forEach.call(columns, function (column) {
+             column.classList.remove('over');
+             column.style.opacity = '1';
+             });
+         }
+</script>
+
+</html>
