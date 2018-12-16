@@ -1,0 +1,46 @@
+<table><tr>
+                    <td>%rax</td>
+                    <td><span id=RBX>-0x50</span></td>
+                </tr><tr>
+                    <td>%rcx</td>
+                    <td><span id=RBX>0x0</span></td>
+                </tr><tr>
+                    <td>%rdx</td>
+                    <td><span id=RBX>0x0</span></td>
+                </tr><tr>
+                    <td>%rbx</td>
+                    <td><span id=RBX>0x250</span></td>
+                </tr><tr>
+                    <td>%rsp</td>
+                    <td><span id=RBX>0x0</span></td>
+                </tr><tr>
+                    <td>%rbp</td>
+                    <td><span id=RBX>0x0</span></td>
+                </tr><tr>
+                    <td>%rsi</td>
+                    <td><span id=RBX>0x0</span></td>
+                </tr><tr>
+                    <td>%rdi</td>
+                    <td><span id=RBX>0x0</span></td>
+                </tr><tr>
+                    <td>%r8</td>
+                    <td><span id=RBX>0x0</span></td>
+                </tr><tr>
+                    <td>%r9</td>
+                    <td><span id=RBX>0x0</span></td>
+                </tr><tr>
+                    <td>%r10</td>
+                    <td><span id=RBX>0x0</span></td>
+                </tr><tr>
+                    <td>%r11</td>
+                    <td><span id=RBX>0x0</span></td>
+                </tr><tr>
+                    <td>%r12</td>
+                    <td><span id=RBX>0x0</span></td>
+                </tr><tr>
+                    <td>%r13</td>
+                    <td><span id=RBX>0x0</span></td>
+                </tr><tr>
+                    <td>%r14</td>
+                    <td><span id=RBX>0x0</span></td>
+                </tr></table>

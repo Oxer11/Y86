@@ -1,0 +1,7 @@
+<tr class="column" draggable="true">
+                <td>%rbx</td>
+                <td>0x250</td>
+            </tr><tr class="column" draggable="true">
+                <td>%rax</td>
+                <td>-0x50</td>
+            </tr>

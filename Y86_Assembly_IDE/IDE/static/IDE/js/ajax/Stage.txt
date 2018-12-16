@@ -1,0 +1,40 @@
+<tr>
+                <td style="font-family:myFont;color:rgb(147,112,219)">Fetch</td>
+                <td>predPC:0x16</span></td>
+            </tr><tr>
+                <td style="font-family:myFont;color:rgb(147,112,219)">Decode</td>
+                <td> icode:6</td>
+                <td> ifun:1</td>
+                <td> rA:%rbx</td>
+                <td>rB:%rax</td>
+                <td>valC:0x0</td>
+                <td>valP:0x16</td>
+            </tr><tr>
+                <td style="font-family:myFont;color:rgb(147,112,219)">Execute</td>
+                <td>icode:6</td>
+                <td>ifun:1</td>
+                <td>valC:0x0</td>
+                <td>valA:0x250</td>
+                <td>valB:0x200</td>
+                <td>dstE:%rax</td>
+            </tr><tr>
+                <td> </td>
+                <td>dstM:----</td>
+                <td>srcA:%rbx</td>
+                <td>srcB:%rax</td>
+            </tr><tr>
+                <td style="font-family:myFont;color:rgb(147,112,219)">Memory</td>
+                <td>icode:6</td>
+                <td>Cnd:0</td>
+                <td>valE:-0x50</td>
+                <td>valA:0x250</td>
+                <td>dstE:%rax</td>
+                <td>dstM:----</td>
+            </tr><tr>
+                <td style="font-family:myFont;color:rgb(147,112,219)">Write</td>
+                <td>icode:6</td>
+                <td>valE:-0x50</td>
+                <td>valM:0x0</td>
+                <td>dstE:%rax</td>
+                <td>dstM:----</td>
+            </tr>

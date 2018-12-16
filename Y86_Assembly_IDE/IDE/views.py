@@ -85,12 +85,15 @@ def Step(MAXSTEP=1, breakpoints=[], OP=0):
 	print 'CC.ZF=%d SF=%d OF=%d, Stat=%s'%(CC.ZF, CC.SF, CC.OF, Stat.stat)
 
 
-def OUTPUT():
+def OUTPUT(results):
+
 	ins_lst = pipereg.get_ins()
-	WriteStage(pipereg,ins_lst)
+	results.update({'pipereg':pipereg, 'ins':ins_lst})
+	
 	if NUM_INS !=0 : CPI = (NUM_INS+NUM_BUB+0.0)/NUM_INS
 	else: CPI = 0.00 
-	WriteStat(CLK, Stat.stat, CPI, CC.ZF, CC.SF, CC.OF)
+	results.update({'cycle':CLK, 'stat':Stat.stat, 'cpi':CPI, 'zf':CC.ZF, 'sf':CC.SF, 'of':CC.OF})
+
 	dis = []
 	for i in range(0, len(Display)):
 		sep = Display[i].find(' ')
@@ -102,18 +105,22 @@ def OUTPUT():
 			dis.append((arg2,hex(mem.read(int(arg2,16)))))
 		if arg1 == 'STACK':
 			dis.append((arg2,hex(mem.read(reg.reg[RRSP]-8*int(arg2,10)))))
-	WriteDisplay(dis)
-	WriteCode(Codes, PC)
+	results.update({'dis':dis})
+
+	results.update({'lines':Codes, 'PC':PC})
+	
 	rsp, rbp = reg.read(4, 5)
 	stack = {}
 	for i in range(rsp, rbp+1, 8):
 		stack.update({hex(i):hex(mem.read(i))})
-	WriteStack(stack, rsp, rbp)
+	results.update({'stack':stack, 'rsp':rsp, 'rbp':rbp})
+
 	REG = []
 	for i in range(0, 0xF):
 		val, V = reg.read(i, RNONE)
 		REG.append((reg.map[i],hex(val)))
-	WriteReg(REG)
+	results.update({'Reg':REG})
+
 
 mem = Memory()
 reg = Register()
@@ -299,4 +306,8 @@ def index(request):
 				fo.close()
 			
 			lst_cmd = cmd	
+			
+			results = {}
+			OUTPUT(results)
+			return JsonResponse(results)
    	return ""
