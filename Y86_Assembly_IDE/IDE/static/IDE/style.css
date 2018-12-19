@@ -1,79 +1,22 @@
 body {
             padding-bottom: 5px;
-            background: rgb(230,230,250) no-repeat fixed;
+            background-color: rgb(230,230,250);
             max-width: 1335px;
         }
 		
         * {
             list-style: none;
+        }		
+
+        font {
+            padding: 25px 50px;
         }
-		
-		#write{
-			display:none;
-		}
-		
-		#debug{
-			display:block;
-		}
-		
-		.switch_button{
-			display:block;
-			float:left;
-			position:absolute;
-			width:35px;
-			height:35px;
-            border: none;
-			margin:10px;
-			
-			opacity:0;
-			animation:show 0.5s;
-			-webkit-animation:show 1s;
-			animation-fill-mode:forwards;
-			animation-delay:2s;
-		}
-		
-		.input_ys{
-			position:relative;
-			display:inline-block;
-			float:right;
-			margin:15px;
-			top:20px;
-			margin-left:28px;
-			width:45%;
-			height:540px;
-			overflow:hidden;
-			box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-		}
-		
-		.input_yo{
-			position:relative;
-			display:inline-block;
-			float:right;
-			margin:15px;
-			top:20px;
-			padding:15px;
-			width:45%;
-			height:540px;
-			overflow:auto;
-			background-color: rgb(255,250,250);
-			border:none;
-			box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-		}
-		
-		.title{
-			animation: disapp 0.5s;
-			-webkit-animation:disapp 1s;
-			animation-fill-mode:forwards;
-			animation-delay:1.5s;
-		}
-		
-		.main_body{
-			opacity:0;
-			animation:show 0.5s;
-			-webkit-animation:show 1s;
-			animation-fill-mode:forwards;
-			animation-delay:2s;
-		}
+
+        @font-face {
+            font-family: myFont;
+            src: url(HappyKiller.ttf);
+            font-weight: bold;
+        }
 		
 		@keyframes disapp
 		{
@@ -98,6 +41,138 @@ body {
 			from {opacity:0;}
 			to {opacity:1;}
 		}
+		
+		@keyframes drop
+		{
+			from {top:-40px;}
+			to {top:0px;}
+		}
+		
+		@-webkit-keyframes drop
+		{
+			from {top:-40px;}
+			to {top:0px;}
+		}
+		
+		@keyframes slide{
+			from:{left:-80px;}
+			to{left:0px;}
+		}
+		
+		@-webkit-keyframes slide{
+			from:{left:-80px;}
+			to{left:0px;}
+		}
+		
+		#write{
+			display:none;
+		}
+		
+		#debug{
+			display:block;
+		}
+		
+		.switch_button{
+			display:block;
+			position:absolute;
+			left:-3px;
+			top:-3px;
+			width:35px;
+			height:35px;
+            border: none;
+			margin:10px;
+		}
+		
+		.swborder{
+			position:relative;
+			width:50px;
+			height:50px;
+			background:rgb(255,250,250);
+			border:none;
+			border-radius:50%;
+			box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),0 6px 20px 0 rgba(0, 0, 0, 0.19);
+			transition: all 0.2s ease-in-out;
+		}
+			.swborder:hover{
+				box-shadow: 0 4px 15px 0 rgba(0, 0, 0, 0.35),0 6px 24px 0 rgba(0, 0, 0, 0.19);
+			}
+			
+			#sb_w{
+				left:-80px;
+				animation:slide 0.4s;
+				-webkit-animation:slide 0.3s;
+				animation-fill-mode:forwards;
+				animation-delay:2s;
+			}
+			
+			#sb_d{
+				left:-80px;
+				animation:slide 0.4s;
+				-webkit-animation:slide 0.3s;
+				animation-fill-mode:forwards;
+				animation-delay:2.1s;
+			}
+		
+		.input_ys{
+			position:relative;
+			display:inline-block;
+			float:left;
+			margin:15px;
+			top:20px;
+			left:40px;
+			margin-left:28px;
+			width:40%;
+			height:580px;
+			overflow:hidden;
+		}
+		
+		.input_yo{
+			position:relative;
+			display:inline-block;
+			float:left;
+			margin:15px;
+			margin-left:30px;
+			top:20px;
+			left:40px;
+			padding:15px;
+			width:50%;
+			height:580px;
+			overflow:auto;
+			background-color: #FFFFFF;
+			border:none;
+		}
+		
+		#btn_input{
+			display:inline-block;
+			position:absolute;
+			width:35px;
+			height:35px;
+			top:300px;
+			left:610px;
+			transition: all 0.2s ease-in-out;
+		}
+		
+			#btn_input:hover{
+				top:298.5px;
+				left:608.5px;
+				width:38px;
+				height:38px;
+			}
+			
+		.title{
+			animation: disapp 0.5s;
+			-webkit-animation:disapp 0.5s;
+			animation-fill-mode:forwards;
+			animation-delay:1.5s;
+		}
+		
+		.main_body{
+			opacity:0;
+			animation:show 0.3s;
+			-webkit-animation:show 0.3s;
+			animation-fill-mode:forwards;
+			animation-delay:2s;
+		}
 
         .column {
             cursor: move;
@@ -110,16 +185,24 @@ body {
         td:hover {
             background-color: rgba(147,112,219,0.4);
         }
-
-        font {
-            padding: 25px 50px;
-        }
-
-        @font-face {
-            font-family: myFont;
-            src: url(HappyKiller.ttf);
-            font-weight: bold;
-        }
+		
+		.cmd_input{
+			position:fixed;
+			left:520px;
+			width:300px;
+			height:30px;
+			border:none;
+			background:#FFFFFF;
+			border-radius:0px 0px 10px 10px;
+			overflow:hidden;
+			box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+			
+			top:-40px;
+			animation:drop 0.3s;
+			-webkit-animation:drop 0.3s;
+			animation-fill-mode:forwards;
+			animation-delay:2s;
+		}
 
         .button {
             display: inline-block;
@@ -145,43 +228,44 @@ body {
         .code {
             display: inline-block;
             position: relative;
-            top: 15px;
-            background-color: rgb(255,250,250);
+            top: 20px;
+            background-color:#FFFFFF;
             float: left;
             height: 330px;
-            width: 54%;
+            width: 53%;
             border: none;
             padding: 0px;
             margin: 0px;
             overflow-x: hidden;
             overflow-y: auto;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         }
 
         .stages {
             display: inline-block;
-            background-color: rgb(255,250,250);
+            background-color:#FFFFFF;
             float: left;
-            width: 54%;
+            width: 53%;
             height: 240px;
             border: none;
             padding: 10px;
-	        padding-top:7px;
-	        padding-bottom:13px;
+			padding-top:7px;
+			padding-bottom:13px;
             margin: 0px;
             margin-top: 3px;
             overflow-y:auto;
 			overflow-x:hidden;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         }
 
             .stages td {
                 border: none;
-                height: 30px;
+                height: 35px;
             }
+			.stages td:hover{
+				background-color:rgba(255, 255, 255,0);
+			}
         table {
             width: 100%;
-            background-color: rgb(255,250,250);
+            background-color:#FFFFFF;
             border: none;
             margin: 0px;
         }
@@ -193,7 +277,7 @@ body {
         }
 
         .code td:hover {
-            background-color: rgb(255,250,250);
+            background-color:#FFFFFF;
         }
 
         .stack {
@@ -215,14 +299,14 @@ body {
         .tabs {
             position: relative;
             float: left;
-            background-color: rgb(255,250,250);
+            background-color:#FFFFFF;
             width: 18.5%;
             height: 330px;
             margin: 15px;
+			margin-top:20px;
             padding: 0px;
             overflow-x: hidden;
             overflow-y: auto;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         }
 
             .tabs li {
@@ -240,7 +324,7 @@ body {
                 border: none;
                 padding: 10px;
                 text-align: center;
-                background: rgb(255,250,250);
+                background:#FFFFFF;
                 position: relative;
                 top: 0px;
                 z-index: 3;
@@ -255,7 +339,7 @@ body {
 
             .tabs .tab_content {
                 width: 100%;
-                background-color: rgb(255,250,250);
+                background-color:#FFFFFF;
                 height: 305px;
                 position: absolute;
                 top: 43px;
@@ -281,14 +365,14 @@ body {
             position: relative;
 			border:none;
             float: left;
-            background-color: rgb(255,250,250);
+            background-color:#FFFFFF;
             width: 18.5%;
             height: 240px;
             margin: 15px;
 			margin-top:3px;
-			padding:0px;
-            overflow: hidden;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+			padding:10px;
+			overflow-x:hidden;
+            overflow-y:auto;
         }
 			
         mark {
@@ -296,23 +380,25 @@ body {
             font-weight: bold;
         }
 		
-		.tooltip {
+		.mytooltip {
 			position: relative;
 			display: inline-block;
 		}
 
-		.tooltip .tooltiptext {
+		.mytooltip .mytooltip_text {
 			visibility: hidden;
-			width: 100px;
-			background-color: rgba(147,112,219);
-			color: black;
+			width: 60px;
+			background-color: rgb(147,112,219);
+			color: white;
 			text-align: center;
 			border-radius: 6px;
-			padding: 3px 0;
+			padding: 1px 0px 2px 0px;
 			position: absolute;
+			left:-10px;
+			top:25px;
 			z-index: 1;
 		}
 
-		.tooltip:hover .tooltiptext {
+		.mytooltip:hover .mytooltip_text {
 			visibility: visible;
 		}
