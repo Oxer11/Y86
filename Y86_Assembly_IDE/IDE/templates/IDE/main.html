@@ -26,10 +26,14 @@
 	</script>
 </head>
 <body>
-	<div style="display:inline-block;position:fixed;top:15px;left:10px;">
-	<image src="{% static 'IDE/write_hover.png' %}" id="sb_w" class="switch_button" onclick="write_()">
-	<br><br>
-	<image src="{% static 'IDE/debug_chosen.png' %}" id="sb_d" class="switch_button"  onclick="debug()">
+	<div style="display:inline-block;position:fixed;top:30px;left:12px;">
+	<div id="sb_w"  class="swborder">
+	<image src="{% static 'IDE/write_hover.png' %}" class="switch_button" onclick="write_()">
+	</div>
+	<br>
+	<div id="sb_d"  class="swborder">
+	<image src="{% static 'IDE/debug_chosen.png' %}" class="switch_button"  onclick="debug()">
+	</div>
 	</div>
 	
 	<div class="title" style="max-width:1335px;z-index:-1;position:absolute;left:350px;top:250px;">
@@ -37,31 +41,86 @@
                 <font style="font-family:myFont;font-size:40pt;"><span style="color:rgb(147,112,219);">Y86</span> Simulator</font>
             </div>
     </div>
-	<div class="container-fluid" style="margin:15px;float:top;" id="write">
+	
+	<div class="container-fluid" style="margin:15px;float:top;position:relative;" id="write">
 		<div class="input_ys">
 		<form role="form" style="display:inline-block;width:100%;height:100%;margin:0px;position:relative;top:-2px;">
-			<textarea class="form-control" style="border:none;height:100%;"></textarea>
+			<textarea class="form-control" style="border:none;height:101%;"></textarea>
 		</form>
 		</div>
+		<image src="{% static 'IDE/trans.png' %}" id="btn_input">
 		<div class="input_yo">
 			<p>yo_code</p>
 		</div>
-		<br>
-		<button type="button" class="btn btn-success" style="display:inline-block;position:relative;padding-top:3px;top:25px;right:12px;text-weight:bold;float:right;mergin-top:10px;" id="btn_input">submit</button>
 	</div>
 	
 	<div id="debug">
-    <div class="container-fluid" style="margin:20px;">
+    <div class="container-fluid" style="margin:20px;">	
 	<div class="main_body" id="main_body" style="float:top;">
-        <div class="container" style="float:left;width:21%;height:330px;margin:15px;margin-left:28px;padding:0px;overflow-x:hidden;overflow-y:auto;background-color:rgb(255,250,250);box-shadow:0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+		
+		<div id="cmd_input" class="cmd_input">
+			<form role="form" style="display:inline-block;width:100%;height:100%;margin:0px;position:relative;top:-2px;">
+				<textarea class="form-control" rows="1" style="border:none;height:120%;width:110%;"></textarea>
+			</form>
+		</div>
+		
+        <div class="container" style="float:left;width:21%;height:330px;margin:15px;margin-left:48px;margin-top:20px;padding:0px;overflow-x:hidden;overflow-y:auto;background-color:#FFFFFF;">
             <p style="color:rgb(147,112,219);font-size:20px;font-family:myFont;font-weight:bold;margin:10px;">Stack</p>
-            <table class="stack" id="Stack"></table>
+            <table class="stack" id="Stack">
+				<tr>
+					<td>0x200L</td>
+					<td>0x0L</td>
+					<td class="pointer">%rsp</td>
+				</tr>
+				<tr>
+					<td>0x1F8L</td>
+					<td>0x0L</td>
+					<td class="pointer">%rbp</td>
+				</tr>
+			</table>
         </div>
 
         <div class="code" style="display:block;">
             <table>
                 <tr>
-                    <td id="Codes" style="border:none;"></td>
+                    <td id="Codes" style="border:none;">
+						<pre>                            | # Execution begins at address 0
+0x0:                        | 	.pos 0
+0x0: 30f40002000000000000   | 	irmovq stack, %rsp  	# Set up stack pointer
+<mark>0xa: 803800000000000000     | 	call main		# Execute main program</mark>
+0x13: 00                    | 	halt			# Terminate program
+                            | 
+                            | # Array of 4 elements
+0x18:                       | 	.align 8
+0x18: 0d000d000d000000      | array:	.quad 0x000d000d000d
+0x20: c000c000c0000000      | 	.quad 0x00c000c000c0
+0x28: 000b000b000b0000      | 	.quad 0x0b000b000b00
+0x30: 00a000a000a00000      | 	.quad 0xa000a000a000
+                            | 
+0x38: 30f71800000000000000  | main:	irmovq array,%rdi
+0x42: 30f60400000000000000  | 	irmovq $4,%rsi
+0x4c: 805600000000000000    | 	call sum		# sum(array, 4)
+0x55: 90                    | 	ret
+                            | 
+                            | # long sum(long *start, long count)
+                            | # start in %rdi, count in %rsi
+0x56: 30f80800000000000000  | sum:	irmovq $8,%r8        # Constant 8
+0x60: 30f90100000000000000  | 	irmovq $1,%r9	     # Constant 1
+0x6a: 6300                  | 	xorq %rax,%rax	     # sum = 0
+0x6c: 6266                  | 	andq %rsi,%rsi	     # Set CC
+0x6e: 708700000000000000    | 	jmp     test         # Goto test
+0x77: 50a70000000000000000  | loop:	mrmovq (%rdi),%r10   # Get *start
+0x81: 60a0                  | 	addq %r10,%rax       # Add to sum
+0x83: 6087                  | 	addq %r8,%rdi        # start++
+0x85: 6196                  | 	subq %r9,%rsi        # count--.  Set CC
+0x87: 747700000000000000    | test:	jne    loop          # Stop when 0
+0x90: 90                    | 	ret                  # Return
+                            | 
+                            | # Stack starts here and grows to lower addresses
+0x200:                      | 	.pos 0x200
+0x200:                      | stack:
+</pre>
+					</td>
                 </tr>
             </table>
         </div>
@@ -71,33 +130,264 @@
                 <input type="radio" name="tabs" id="tab1" checked />
                 <label for="tab1">Stat</label>
                 <div class="tab_content" id="tab_content1">
+					<div><p id="cycle" style="font-size:80px;font-weight:700;text-align:center;color:white;background-color:rgb(147,112,219);padding-top:10px;padding-bottom:10px;">1</p></div>
+                    <div style="text-align:center;margin-top:0px;margin-bottom:0px;">
+                        <button class="button">
+                            <span style="font-size:15px;">State</span><br />
+                            <span style="font-weight:bold;"><span id="Stat">AOK</span></span>
+                        </button>
+                        <button class="button">
+                            <span style="font-size:15px;">CPI</span><br />
+                            <span style="font-weight:bold;"><span id="CPI">1.0</span></span>
+                        </button>
+                    </div>
+                    <div style="text-align:center;margin-left:10px;margin-top:0px;">
+                        <button class="button">
+                            <span style="font-size:15px;">ZF</span><br />
+                            <span style="font-weight:bold;"><span id="ZF">0</span></span>
+                        </button>
+                        <button class="button">
+                            <span style="font-size:15px;">SF</span><br />
+                            <span style="font-weight:bold;"><span id="SF">0</span></span>
+                        </button>
+                        <button class="button">
+                            <span style="font-size:15px;">OF</span><br />
+                            <span style="font-weight:bold;"><span id="OF">0</span></span>
+                        </button>
+                    </div>
                 </div>
             </li>
             <li>
                 <input type="radio" name="tabs" id="tab3" />
                 <label for="tab3" id="last">Register</label>
                 <div class="tab_content" id="tab_content3">
+					<table>
+					<tr>
+						<td>%rax</td>
+						<td><span id=RBX>0x0</span></td>
+					</tr>
+					<tr>
+						<td>%rcx</td>
+						<td><span id=RBX>0x0</span></td>
+					</tr>
+					<tr>
+						<td>%rdx</td>
+						<td><span id=RBX>0x0</span></td>
+					</tr>
+					<tr>
+						<td>%rbx</td>
+						<td><span id=RBX>0x0</span></td>
+					</tr>
+					<tr>
+						<td>%rsp</td>
+						<td><span id=RBX>0x0</span></td>
+					</tr>
+					<tr>
+						<td>%rbp</td>
+						<td><span id=RBX>0x0</span></td>
+					</tr>
+					<tr>
+						<td>%rsi</td>
+						<td><span id=RBX>0x0</span></td>
+					</tr>
+					<tr>
+						<td>%rdi</td>
+						<td><span id=RBX>0x0</span></td>
+					</tr>
+					<tr>
+						<td>%r8</td>
+						<td><span id=RBX>0x0</span></td>
+					</tr>
+					<tr>
+						<td>%r9</td>
+						<td><span id=RBX>0x0</span></td>
+					</tr>
+					<tr>
+						<td>%r10</td>
+						<td><span id=RBX>0x0</span></td>
+					</tr>
+					<tr>
+						<td>%r11</td>
+						<td><span id=RBX>0x0</span></td>
+					</tr>
+					<tr>
+						<td>%r12</td>
+						<td><span id=RBX>0x0</span></td>
+					</tr>
+					<tr>
+						<td>%r13</td>
+						<td><span id=RBX>0x0</span></td>
+					</tr>
+					<tr>
+						<td>%r14</td>
+						<td><span id=RBX>0x0</span></td>
+					</tr>
+					</table>
                 </div>
             </li>
         </ul>
 		
-		<div class="container" style="border: none;float:left;width:21%;height:240px;margin:15px;margin-left:28px;margin-top:3px;padding:0px;overflow-x:hidden;overflow-y:auto;background-color: rgb(255,250,250);box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+		<div class="container" style="border: none;float:left;width:21%;height:240px;margin:15px;margin-left:48px;margin-top:3px;padding:0px;overflow-x:hidden;overflow-y:auto;background-color:#FFFFFF;">
             <p style="color:rgb(147,112,219);font-size:20px;font-family:myFont;font-weight:bold;margin:10px;">Display</p>
-            <table id="columns"></table>
+            <table id="columns">
+			<tr class="column" draggable="true">
+                <td>%rax</td>
+                <td>0x0L</td>
+            </tr>
+			<tr class="column" draggable="true">
+                <td>0x200</td>
+                <td>0x0L</td>
+            </tr>
+			</table>
         </div>
 
         <div class="stages">
-			<table id="Stage" style="border:none;"></table>
+			<table id="Stage" style="border:none;">
+				<tr>
+				<td style="font-family:myFont;color:rgb(147,112,219);">Write</td>
+				<td>
+					<span class="mytooltip">nop
+					<span class="mytooltip_text">ins</span></span>
+				</td>
+				<td>
+					<span class="mytooltip">AOK
+					<span class="mytooltip_text">stat</span></span>
+				</td>
+				<td>
+					<span class="mytooltip">----
+					<span class="mytooltip_text">dstE</span></span>
+				</td>
+				<td>
+					<span class="mytooltip">----
+					<span class="mytooltip_text">dstM</span></span>
+				</td>
+				<td>
+					<span class="mytooltip">0x0
+					<span class="mytooltip_text">valE</span></span>
+				</td>
+				<td>
+					<span class="mytooltip">0x0
+					<span class="mytooltip_text">valM</span></span>
+				</td>
+				</tr>
+				<tr>
+				<td style="font-family:myFont;color:rgb(147,112,219);">Memory</td>
+				<td>
+					<span class="mytooltip">nop
+					<span class="mytooltip_text">ins</span></span>
+				</td>
+				<td>
+					<span class="mytooltip">AOK
+					<span class="mytooltip_text">stat</span></span>
+				</td>
+				<td>
+					<span class="mytooltip">0
+					<span class="mytooltip_text">Cnd</span></span>
+				</td>
+				<td>
+					<span class="mytooltip">0x0
+					<span class="mytooltip_text">valE</span></span>
+				</td>
+				<td>
+					<span class="mytooltip">0x0
+					<span class="mytooltip_text">valA</span></span>
+				</td>
+				<td>
+					<span class="mytooltip">----
+					<span class="mytooltip_text">dstE</span></span>
+				</td>
+				<td>
+					<span class="mytooltip">----
+					<span class="mytooltip_text">dstM</span></span>
+				</td>
+				</tr>
+				<tr>
+				<td style="font-family:myFont;color:rgb(147,112,219);">Execute</td>
+				<td>
+					<span class="mytooltip">nop
+					<span class="mytooltip_text">ins</span></span>
+				</td>
+				<td>
+					<span class="mytooltip">AOK
+					<span class="mytooltip_text">stat</span></span>
+				</td>
+				<td>
+					<span class="mytooltip">----
+					<span class="mytooltip_text">dstE</span></span>
+				</td>
+				<td>
+					<span class="mytooltip">----
+					<span class="mytooltip_text">dstM</span></span>
+				</td>
+				<td>
+					<span class="mytooltip">0x0
+					<span class="mytooltip_text">valA</span></span>
+				</td>
+				<td>
+					<span class="mytooltip">0x0
+					<span class="mytooltip_text">valB</span></span>
+				</td>
+				<td>
+					<span class="mytooltip">0x0
+					<span class="mytooltip_text">valC</span></span>
+				</td>
+				</tr>
+				<tr><td> </td>
+				<td>
+					<span class="mytooltip">----
+					<span class="mytooltip_text">srcA</span></span>
+				</td>
+				<td>
+					<span class="mytooltip">----
+					<span class="mytooltip_text">srcB</span></span>
+				</td>
+				</tr>
+				<tr>
+				<td style="font-family:myFont;color:rgb(147,112,219);">Decode</td>
+				<td>
+					<span class="mytooltip">irmovq
+					<span class="mytooltip_text">ins</span></span>
+				</td>
+				<td>
+					<span class="mytooltip">AOK
+					<span class="mytooltip_text">stat</span></span>
+				</td>
+				<td>
+					<span class="mytooltip">----
+					<span class="mytooltip_text">rA</span></span>
+				</td>
+				<td>
+					<span class="mytooltip">%rsp
+					<span class="mytooltip_text">rB</span></span>
+				</td>
+				<td>
+					<span class="mytooltip">0x200
+					<span class="mytooltip_text">valC</span></span>
+				</td>
+				<td>
+					<span class="mytooltip">0xa
+					<span class="mytooltip_text">valP</span></span>
+				</td>
+				</tr>
+				<tr>
+				<td style="font-family:myFont;color:rgb(147,112,219);">Fetch</td>
+				<td>
+                    <span class="mytooltip">0xa
+                    <span class="mytooltip_text">predPC</span></span>
+                </td>
+				</tr>
+			</table>
         </div>
 		
 		<div class="cmd" id="cmd">
-			<form role="form" class="input_ys" style="display:inline-block;width:100%;height:100%;margin:0px;position:relative;top:-2px;">
-			<textarea class="form-control" style="border:none;height:100%;"></textarea>
-			</form>
+		<pre>
+load ./test/asum.yo
+step
+step
+		 </pre>
 		</div>
 		
 		</div>
-
     </div>
 	</div>
 </body>
@@ -113,6 +403,7 @@
 			document.getElementById("write").style="display:none";
 			document.getElementById("debug").style="display:block";
 			document.getElementById("main_body").style="opacity:1;animation:none;";
+			document.getElementById("cmd_input").style="top:0px;animation:none;";
 			document.getElementById("sb_w").src="{% static 'IDE/write_hover.png' %}";
 			document.getElementById("sb_d").src="{% static 'IDE/debug_chosen.png' %}";
 		}
