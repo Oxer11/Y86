@@ -16,11 +16,33 @@
     <script type="text/javascript">
 	$(document).ready(function(){
  		$("#btn_input").click(function(){
-  			var content=$(".form-control").val();                
+			$("#number_div").css("border-right-color","green");
+  			var content=$("#input_code").val();                
   		$.post("/IDE/",{'type':'code', 'content':content},     
     		function(data,status){              
          	$(".input_yo").html(data);      
   			});
+		});
+	});
+	$(document).ready(function(){
+	$("#input_code").focus(function(){
+	  $("#input_code").keyup(function(){
+		  $("#number_div").css("border-right-color","yellow");
+		  var lines=$("#input_code").val();
+		  var array=lines.split("\n");
+		  var s="";
+		  for(var i=1;i!=array.length+1;i++){
+			s=s+i.toString()+"<br>";
+		  }
+		  document.getElementById("number").innerHTML=s;
+			});
+		});
+	});
+	$(document).ready(function(){
+		$("#input_code").scroll(function(){
+			var h=$("#input_code").scrollTop();
+			$("#number_div").css("top","-"+h.toString()+"px");
+			//alert($("#number_div").css("bottom").toString());
 		});
 	});
 	</script>
@@ -43,10 +65,16 @@
     </div>
 	
 	<div class="container-fluid" style="margin:15px;float:top;position:relative;" id="write">
-		<div class="input_ys">
-		<form role="form" style="display:inline-block;width:100%;height:100%;margin:0px;position:relative;top:-2px;">
-			<textarea class="form-control" style="border:none;height:101%;"></textarea>
-		</form>
+		<div class="input_ys_contain">
+			<div id="number_div" style="display:inline-block;position:relative;float:left;top:4px;width:26px;boder:none;border-right:solid 2px yellow;padding-right:2px;padding-bottom:0px;">
+				<p id="number" style="text-align:right;">
+				</p>
+			</div>
+			<div class="input_ys">
+			<form style="display:inline-block;width:100%;height:100%;margin:0px;position:relative;top:-2px;">
+				<textarea id="input_code" class="form-control" style="border:none;height:101%;"></textarea>
+			</form>
+			</div>
 		</div>
 		<image src="{% static 'IDE/trans.png' %}" id="btn_input">
 		<div class="input_yo">
