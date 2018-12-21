@@ -112,16 +112,26 @@ body {
 				animation-fill-mode:forwards;
 				animation-delay:2.1s;
 			}
-		
-		.input_ys{
+			
+		.input_ys_contain{
 			position:relative;
-			display:inline-block;
+			display:inline-block;			
+			background-color: #FFFFFF;
 			float:left;
 			margin:15px;
 			top:20px;
 			left:40px;
 			margin-left:28px;
-			width:40%;
+			width:42%;
+			height:580px;
+			overflow:hidden;
+		}
+		
+		.input_ys{
+			position:relative;
+			display:inline-block;
+			float:left;
+			width:90%;
 			height:580px;
 			overflow:hidden;
 		}
@@ -148,13 +158,13 @@ body {
 			width:35px;
 			height:35px;
 			top:300px;
-			left:610px;
+			left:636px;
 			transition: all 0.2s ease-in-out;
 		}
 		
 			#btn_input:hover{
 				top:298.5px;
-				left:608.5px;
+				left:634.5px;
 				width:38px;
 				height:38px;
 			}
