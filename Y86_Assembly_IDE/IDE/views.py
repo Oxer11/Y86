@@ -2,6 +2,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
 
 import sys
 sys.path.append("./IDE/backend")
@@ -18,7 +19,12 @@ from stages.Decode import Decode
 from stages.Execute import Execute
 from stages.Memory import Memory_
 from stages.WriteBack import WriteBack
-
+from js.WriteCode import WriteCode
+from js.WriteStat import WriteStat
+from js.WriteStage import WriteStage
+from js.WriteDisplay import WriteDisplay
+from js.WriteStack import WriteStack
+from js.WriteReg import WriteReg
 
 def Update(cur, lst):
 	#P1代表处理ret，P2代表加载/使用冒险，P3代表预测错误的分支
@@ -87,13 +93,15 @@ def Step(MAXSTEP=1, breakpoints=[], OP=0):
 
 def OUTPUT(results):
 
+	results.update({"Codes":WriteCode(Codes, PC)})
+	
 	ins_lst = pipereg.get_ins()
-	results.update({'pipereg':pipereg, 'ins':ins_lst})
+	results.update({"Stage":WriteStage(pipereg, ins_lst)})
 	
 	if NUM_INS !=0 : CPI = (NUM_INS+NUM_BUB+0.0)/NUM_INS
 	else: CPI = 0.00 
-	results.update({'cycle':CLK, 'stat':Stat.stat, 'cpi':CPI, 'zf':CC.ZF, 'sf':CC.SF, 'of':CC.OF})
-
+	results.update({"Stat":WriteStat(CLK, Stat.stat, CPI, CC.ZF, CC.SF, CC.OF)})
+	
 	dis = []
 	for i in range(0, len(Display)):
 		sep = Display[i].find(' ')
@@ -105,21 +113,20 @@ def OUTPUT(results):
 			dis.append((arg2,hex(mem.read(int(arg2,16)))))
 		if arg1 == 'STACK':
 			dis.append((arg2,hex(mem.read(reg.reg[RRSP]-8*int(arg2,10)))))
-	results.update({'dis':dis})
-
-	results.update({'lines':Codes, 'PC':PC})
+	results.update({"Display":WriteDisplay(dis)})
 	
 	rsp, rbp = reg.read(4, 5)
 	stack = {}
 	for i in range(rsp, rbp+1, 8):
 		stack.update({hex(i):hex(mem.read(i))})
-	results.update({'stack':stack, 'rsp':rsp, 'rbp':rbp})
-
+	results.update({"Stack":WriteStack(stack, rsp, rbp)})
+	
 	REG = []
 	for i in range(0, 0xF):
 		val, V = reg.read(i, RNONE)
 		REG.append((reg.map[i],hex(val)))
-	results.update({'Reg':REG})
+	results.update({'Register':WriteReg(REG)})
+	
 
 
 mem = Memory()
@@ -134,6 +141,7 @@ InsCode = {}
 breakpoints = []
 Display = []
 CLK = 0
+CMD_RESULTS = ""
 NUM_INS, NUM_BUB = 0, 0
 PC, f_pc, maxPC = 0, 0, 0
 	
@@ -145,6 +153,8 @@ def index(request):
 	if request.method == 'GET':
 		return render(request, 'IDE/main.html', {})
 	elif request.method == 'POST':
+		results = {}
+		CMD_RESULTS = ""
 		if request.POST.get("type") == 'code':
 			mem = Memory()
 			reg = Register()
@@ -178,16 +188,18 @@ def index(request):
 			Code = ""
 			for line in Codes:
 				Code = Code + line.rstrip() + "\n"
-			return render(request, 'IDE/code.html', {"Code":Code})
+			results.update({'Code':Code})
 		
 		elif request.POST.get("type") == 'command':
 			cmd = request.POST.get("content").encode('ascii')
+			cmd = cmd.strip()
+			CMD_RESULTS = "<div>" + cmd 
 			if len(cmd)==0 : cmd = lst_cmd
 			sep = cmd.find(' ')
 			if sep == -1: sep = len(cmd)
 			CMD = cmd[0:sep]
 			arg = cmd[sep:len(cmd)].strip()
-	
+			
 			#Others
 			if (CMD == 'clear'): 
 				mem = Memory()
@@ -273,13 +285,13 @@ def index(request):
 			if (CMD == 'b') or (CMD == 'break'):
 				if labels.has_key(arg): breakpoints.append([int(labels[arg],16),'y',1])
 				else: breakpoints.append([int(arg,16),'y',1])
-				print 'Breakpoint %d at '%(len(breakpoints)) + arg
+				CMD_RESULTS = CMD_RESULTS + "<div>" + 'Breakpoint %d at '%(len(breakpoints)) + arg + "</div>"
 	
 			if (CMD == 'info') and (arg == 'breakpoints'):
-				print 'Num'.ljust(8)+'Type'.ljust(15)+'Enb'.ljust(4)+'Address'
+				CMD_RESULTS = CMD_RESULTS + "<div>" + 'Num'.ljust(8)+'Type'.ljust(15)+'Enb'.ljust(4)+'Address' + "</div>"
 				for i in range(0,len(breakpoints)):
 					if breakpoints[i][2]!=0:
-						print str(i+1).ljust(8)+'breakpoint'.ljust(15)+breakpoints[i][1].ljust(4)+hex(breakpoints[i][0])
+						CMD_RESULTS = CMD_RESULTS + "<div>" + str(i+1).ljust(8)+'breakpoint'.ljust(15)+breakpoints[i][1].ljust(4)+hex(breakpoints[i][0]) + "</div>"
 				
 			if (CMD == 'enable'): 
 				if len(arg) == 0:
@@ -296,18 +308,12 @@ def index(request):
 					for i in range(0,len(breakpoints)):
 						breakpoints[i][2] = 0
 				else: breakpoints[int(arg,10)-1][2] = 0
-
-			#I/O
-			if (CMD == 'w') or (CMD == 'write'):
-				fout = arg
-				fo = open(fout, "w")
-				for line in Codes:
-					fo.write(line.rstrip()+"\n")
-				fo.close()
 			
 			lst_cmd = cmd	
 			
-			results = {}
-			OUTPUT(results)
-			return JsonResponse(results)
+			
+		OUTPUT(results)
+		CMD_RESULTS = CMD_RESULTS + "</div>"
+		results.update({"CMD":CMD_RESULTS})
+		return JsonResponse(results)
    	return ""
