@@ -4,7 +4,6 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 
-import threading
 import sys
 sys.path.append("./IDE/backend")
 
@@ -15,12 +14,11 @@ from memory_sys.piperegister import *
 from others.cc_stat import *
 from others.Init import *
 from others.Help import *
-from others.thread import *
-from parallel_stages.Fetch import Fetch
-from parallel_stages.Decode import Decode
-from parallel_stages.Execute import Execute
-from parallel_stages.Memory import Memory_
-from parallel_stages.WriteBack import WriteBack
+from stages.Fetch import Fetch
+from stages.Decode import Decode
+from stages.Execute import Execute
+from stages.Memory import Memory_
+from stages.WriteBack import WriteBack
 from js.WriteCode import WriteCode
 from js.WriteStat import WriteStat
 from js.WriteStage import WriteStage
@@ -78,29 +76,12 @@ def Step(MAXSTEP=1, breakpoints=[], OP=0):
 			break
 		if pipereg.regW['icode'] == 8: dep += 1
 		if pipereg.regW['icode'] == 9: dep -= 1
-		
-		M_over = threading.Event()
-		E_over = threading.Event()
-		
-		W = MyThread(WriteBack, args = (pipereg, Stat, reg))
-		M = MyThread(Memory_, args = (pipereg, tmp_pipereg, mem, M_over))
-		E = MyThread(Execute, args = (pipereg, tmp_pipereg, CC, NUM_INS, NUM_BUB, E_over, M_over))
-		D = MyThread(Decode, args = (pipereg, tmp_pipereg, reg, E_over))
-		F = MyThread(Fetch, args = (pipereg, tmp_pipereg, InsCode, PC))
-		
-		F.start()
-		D.start()
-		E.start()
-		M.start()
-		W.start()
-		
-		W.join()
-		M.join()
-		E.join()
-		D.join()
-		F.join()
-		CC, NUM_INS, NUM_BUB = E.get_result()
-		
+		WriteBack(pipereg, Stat, reg)
+		Memory_(pipereg, tmp_pipereg, mem)
+		CC, NUM_INS, NUM_BUB = Execute(pipereg, tmp_pipereg, CC, NUM_INS, NUM_BUB)
+		#转发过程需要用到e_valE和m_valM，所以先执行Execute和Memory，实际电路中是同时执行的
+		Decode(pipereg, tmp_pipereg, reg)
+		Fetch(pipereg, tmp_pipereg, InsCode, PC)
 		Update(cur=tmp_pipereg, lst=pipereg)
 		PC = UpdatePC(pipereg)
 		CLK += 1
