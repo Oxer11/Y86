@@ -1,7 +1,0 @@
-# Test forward process
-irmovq $0x123, %rax
-irmovq $0x321, %rdx
-xorq %rcx, %rcx		# CC = 100
-cmovne %rax, %rdx	# Not transferred
-addq %rdx, %rdx		# Should be 0x642
-halt

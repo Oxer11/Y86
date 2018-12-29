@@ -1,5 +1,0 @@
-<pre>                            | #Hello, world!
-0x0: 30f35002000000000000   | 	irmovq $0x250, %rbx
-0xa: 30f00002000000000000   | 	irmovq $0x200, %rax
-0x14: 6130                  | 	subq %rbx, %rax
-</pre>

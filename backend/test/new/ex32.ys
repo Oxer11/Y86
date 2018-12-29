@@ -1,6 +1,0 @@
-# Test forward process
-irmovq $5, %rdx
-irmovq $0x100, %rsp
-rmmovq %rdx, 0(%rsp) # Change the value on the top of stack 
-popq %rsp   # %rsp should be $5 
-rrmovq %rsp, %rax 

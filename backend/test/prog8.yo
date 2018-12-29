@@ -1,5 +1,0 @@
-                            | # prog8: Forwarding Priority
-0x0: 30f20a00000000000000   |   irmovq $10,%rdx
-0xa: 30f20300000000000000   |   irmovq  $3,%rdx
-0x14: 2020                  |   rrmovq %rdx,%rax
-0x16: 00                    |   halt
