@@ -19,24 +19,83 @@ write(addr, datain)
 '''
 
 from others.constant import *
+from others.Global import*
 
+miss, hit = 0, 0
+s=2
+b=6
+t=4
+S=4
+B=64
+E=4
 class Memory:
 	'系统内存'
 	
 	def __init__(self):
-		self.mem = ['00']*MEMORYSIZE
+		global miss,hit,S,B,E,s,b,t
+		
+		miss, hit = 0, 0
+		self.main_m = ['00']*MEMORYSIZE
+		self.cache_m=[[{'lst':0,'write':0,'valid':0,'tag':0,'block':['00']*B} for i in range(0,E)] for j in range(0,S)]
 		#self.insbeg = -1
 		#self.insend = -1
 		
 	def	read(self, addr):
+		global miss,hit,S,B,E,s,b,t
 		dataout = ''
 		
 		if (addr not in range(0,MEMORYSIZE)) or (addr+7 not in range(0,MEMORYSIZE)):
 			raise Exception("Invalid addr: [%d, %d)"%(addr, addr+8))
-			
 		else:
-			for i in range(0,8):
-				dataout = self.mem[addr+i]+dataout
+			si=(addr>>b)%(1<<s)
+			bo=addr%(1<<b)
+			t=addr>>(s+b)
+			
+			i=0
+			while i<E:
+				if self.cache_m[si][i]['tag']==t and self.cache_m[si][i]['valid']==1:
+					break
+				i+=1
+			#hit	
+			if i<E:
+				add_CLK(VISIT_C)
+				hit += 1
+				self.cache_m[si][i]['lst']=get_CLK()
+				for j in range(0,8):
+					dataout = self.cache_m[si][i]['block'][bo+j]+dataout
+			#miss
+			else:
+				add_CLK(VISIT_M)
+				miss += 1
+				min_id=0
+				min=MAXCLOCK
+				i=0
+				while i<E:
+					if self.cache_m[si][i]['valid']==0:
+						break
+					else:
+						if self.cache_m[si][i]['lst']<min:
+							min_id=i
+							min=self.cache_m[si][i]['lst']
+					i+=1
+				
+				if i==E:
+					i=min_id
+					
+				if self.cache_m[si][i]['write'] == 1 and self.cache_m[si][i]['valid'] == 1:
+					w_addr = (self.cache_m[si][i]['tag']<<s+si)<<b
+					for j in range(0,B):
+						self.main_m[w_addr+j] = self.cache_m[si][i]['block'][j]
+				
+				for j in range(0,B):
+					self.cache_m[si][i]['block'][j] = self.main_m[addr-bo+j]
+				self.cache_m[si][i]['write'] = 0
+				self.cache_m[si][i]['tag'] = t
+				self.cache_m[si][i]['valid'] = 1
+				self.cache_m[si][i]['lst']=get_CLK()
+				
+				for j in range(0,8):
+					dataout = self.cache_m[si][i]['block'][bo+j]+dataout
 		
 		if dataout[0] in ['8','9','a','b','c','d','e','f']:
 			ret = -1 * ((0xffffffffffffffff ^ long(dataout, 16)) + 1)
@@ -45,31 +104,138 @@ class Memory:
 		
 		return ret
 		
-	def write(self, addr, datain, length = 8):
-		
+	def write(self, addr, datain, length = 8):	
+		global miss,hit,S,B,E,s,b,t
 		if (addr not in range(0,MEMORYSIZE)) or (addr+length-1 not in range(0,MEMORYSIZE)):
 			raise Exception("Invalid addr: [%d, %d)"%(addr, addr+8))
 		
 		else:
-			for i in range(0,length):
-				self.mem[addr+i] = hex(datain%256/16)[2]+hex(datain%16)[2]
-				datain /= 256
+			si=(addr>>b)%(1<<s)
+			bo=addr%(1<<b)
+			t=addr>>(s+b)
+			
+			i=0
+			while i<E:
+				if self.cache_m[si][i]['tag']==t and self.cache_m[si][i]['valid']==1:
+					break
+				i+=1
+			#hit
+			if i<E:
+				add_CLK(VISIT_C)
+				hit += 1
+				for j in range(0,length):
+					self.cache_m[si][i]['block'][bo+j] = hex(datain%256/16)[2]+hex(datain%16)[2]
+					datain /= 256
+				self.cache_m[si][i]['write'] = 1
+				self.cache_m[si][i]['lst']=get_CLK()
+			#miss
+			else:
+				add_CLK(VISIT_M)
+				miss += 1
+				min_id=0
+				min=MAXCLOCK
+				i=0
+				while i<E:
+					if self.cache_m[si][i]['valid']==0:
+						break
+					else:
+						if self.cache_m[si][i]['lst']<min:
+							min_id=i
+							min=self.cache_m[si][i]['lst']
+					i+=1
+				
+				if i==E:
+					i=min_id
+					
+				if self.cache_m[si][i]['write'] == 1 and self.cache_m[si][i]['valid'] == 1:
+					w_addr = (self.cache_m[si][i]['tag']<<s+si)<<b
+					for j in range(0,B):
+						self.main_m[w_addr+j] = self.cache_m[si][i]['block'][j]
+						
+				for j in range(0,B):
+					self.cache_m[si][i]['block'][j] = self.main_m[addr-bo+j]
+				self.cache_m[si][i]['write'] = 1
+				self.cache_m[si][i]['tag'] = t
+				self.cache_m[si][i]['valid'] = 1
+				self.cache_m[si][i]['lst']=get_CLK()
+				for j in range(0,length):
+					self.cache_m[si][i]['block'][bo+j] = hex(datain%256/16)[2]+hex(datain%16)[2]
+					datain /= 256
 	
 	def load(self, addr, datain, length = 8):
 		if (addr not in range(0,MEMORYSIZE)) or (addr+length-1 not in range(0,MEMORYSIZE)):
 			raise Exception("Invalid addr: [%d, %d)"%(addr, addr+8))
-		
 		else:
 			for i in range(0,length):
-				self.mem[addr+i] = datain[2*i]+datain[2*i+1]
+				self.main_m[addr+i] = datain[2*i]+datain[2*i+1]
+	
+	def display(self, addr):
+		global miss,hit,S,B,E,s,b,t
+		dataout = ''
+		
+		if (addr not in range(0,MEMORYSIZE)) or (addr+7 not in range(0,MEMORYSIZE)):
+			raise Exception("Invalid addr: [%d, %d)"%(addr, addr+8))
+		else:
+			si=(addr>>b)%(1<<s)
+			bo=addr%(1<<b)
+			t=addr>>(s+b)
+			
+			i=0
+			while i<E:
+				if self.cache_m[si][i]['tag']==t and self.cache_m[si][i]['valid']==1:
+					break
+				i+=1
+			#hit
+			if i<E:
+				for j in range(0,8):
+					dataout = self.cache_m[si][i]['block'][bo+j]+dataout
+			#miss
+			else:				
+				for j in range(0,8):
+					dataout = self.main_m[addr+j]+dataout
+		
+		if dataout[0] in ['8','9','a','b','c','d','e','f']:
+			ret = -1 * ((0xffffffffffffffff ^ long(dataout, 16)) + 1)
+		else:
+			ret = long(dataout, 16)
+		return ret
+	
+	def get_hm(self):
+		global hit
+		global miss
+		return hit,miss
+	
+	def set_cacfg(self,S_,B_,E_):
+		global S,B,E,s,b,t
+		if S_<=0 or B_<=0 or E_<=0:
+			return 1
+		temp_s=math.log(S_,2)
+		temp_b=math.log(B_,2)
+		if temp_s==int(temp_s) and temp_b==int(temp_b) and temp_b>2 and temp_s>0 and temp_s+temp_b<12:
+			s=int(temp_s)
+			b=int(temp_b)
+			t=12-s-b
+			S=S_
+			B=B_
+		else:
+			return 1
+	
+		if E_<=1<<t:
+			E=E_
+		else:
+			E=1<<t
+			
+		self.cache_m=[[{'lst':0,'write':0,'valid':0,'tag':0,'block':['00']*B} for i in range(0,E)] for j in range(0,S)]
+	
+		return 0
 	
 	def valid(self,addr):
 		return (addr in range(0,MEMORYSIZE)) and (addr+7 in range(0,MEMORYSIZE)) #and not (addr in range(self.insbeg, self.insend)) and not (addr+7 in range(self.insbeg, self.insend))
 			
 if __name__ == "__main__":
 	print '测试Memory类'
-	mem = Memory()
-	mem.write(0x0, 0x0123456789abcdef)
-	mem.write(0x8, 0x0123456789abcdef)
-	error, val = mem.read(0x4)
+	main_m = Memory()
+	main_m.write(0x0, 0x0123456789abcdef)
+	main_m.write(0x8, 0x0123456789abcdef)
+	error, val = main_m.read(0x4)
 	print error, hex(val)
