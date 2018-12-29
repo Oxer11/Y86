@@ -1,0 +1,7 @@
+                            | # Test of Push semantics for Y86-64
+0x0: 30f40001000000000000   | 	irmovq $0x100,%rsp  # Initialize stack pointer
+0xa: 2040                   | 	rrmovq %rsp,%rax    # Save stack pointer
+0xc: a04f                   | 	pushq %rsp          # Push the stack pointer (old or new?)
+0xe: b02f                   | 	popq  %rdx          # Get it back
+0x10: 6120                  | 	subq  %rdx,%rax     # Compute difference.  Either 0 (old) or 4 (new).
+0x12: 00                    | 	halt

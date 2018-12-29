@@ -1,0 +1,7 @@
+#Memory Modification Test
+irmovq $1, %rsi
+irmovq $0, %rdi
+rmmovq %rsi, (%rdi) #Trying to modify instruction code
+nop	#Should return with status ADR
+nop
+nop
