@@ -4,7 +4,6 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 
-import threading
 import sys
 sys.path.append("./IDE/backend")
 
@@ -15,12 +14,12 @@ from memory_sys.piperegister import *
 from others.cc_stat import *
 from others.Init import *
 from others.Help import *
-from others.thread import *
-from parallel_stages.Fetch import Fetch
-from parallel_stages.Decode import Decode
-from parallel_stages.Execute import Execute
-from parallel_stages.Memory import Memory_
-from parallel_stages.WriteBack import WriteBack
+from stages.Fetch import Fetch
+from stages.Decode import Decode
+from stages.Execute import Execute
+from stages.Memory import Memory_
+from stages.WriteBack import WriteBack
+from others.Global import *
 from js.WriteCode import WriteCode
 from js.WriteStat import WriteStat
 from js.WriteStage import WriteStage
@@ -62,7 +61,7 @@ def UpdatePC(reg):
 	return f_pc
 
 def Step(MAXSTEP=1, breakpoints=[], OP=0):
-	global PC, CC, Stat, CLK, NUM_INS, NUM_BUB
+	global PC, CC, Stat, NUM_INS, NUM_BUB
 	dep, STEP = 0, 0
 	while Stat.stat=='AOK' and STEP<MAXSTEP:
 		if [PC,'y',1] in breakpoints:
@@ -70,7 +69,7 @@ def Step(MAXSTEP=1, breakpoints=[], OP=0):
 			break
 		if (OP == 2) and (dep == -1): break
 		print ''
-		print 'Cycle %d. CC=Z=%d S=%d O=%d, Stat=%s'%(CLK, CC.ZF, CC.SF, CC.OF, Stat.stat)
+		print 'Cycle %d. CC=Z=%d S=%d O=%d, Stat=%s'%(get_CLK(), CC.ZF, CC.SF, CC.OF, Stat.stat)
 		pipereg.print_()
 		print ''
 		if pipereg.regW['stat'] in ['HLT', 'INS', 'ADR']:
@@ -78,32 +77,15 @@ def Step(MAXSTEP=1, breakpoints=[], OP=0):
 			break
 		if pipereg.regW['icode'] == 8: dep += 1
 		if pipereg.regW['icode'] == 9: dep -= 1
-		
-		M_over = threading.Event()
-		E_over = threading.Event()
-		
-		W = MyThread(WriteBack, args = (pipereg, Stat, reg))
-		M = MyThread(Memory_, args = (pipereg, tmp_pipereg, mem, M_over))
-		E = MyThread(Execute, args = (pipereg, tmp_pipereg, CC, NUM_INS, NUM_BUB, E_over, M_over))
-		D = MyThread(Decode, args = (pipereg, tmp_pipereg, reg, E_over))
-		F = MyThread(Fetch, args = (pipereg, tmp_pipereg, InsCode, PC))
-		
-		F.start()
-		D.start()
-		E.start()
-		M.start()
-		W.start()
-		
-		W.join()
-		M.join()
-		E.join()
-		D.join()
-		F.join()
-		CC, NUM_INS, NUM_BUB = E.get_result()
-		
+		WriteBack(pipereg, Stat, reg)
+		Memory_(pipereg, tmp_pipereg, mem)
+		CC, NUM_INS, NUM_BUB = Execute(pipereg, tmp_pipereg, CC, NUM_INS, NUM_BUB)
+		#转发过程需要用到e_valE和m_valM，所以先执行Execute和Memory，实际电路中是同时执行的
+		Decode(pipereg, tmp_pipereg, reg)
+		Fetch(pipereg, tmp_pipereg, InsCode, PC)
 		Update(cur=tmp_pipereg, lst=pipereg)
 		PC = UpdatePC(pipereg)
-		CLK += 1
+		add_CLK(1)
 		if (OP != 1) or (dep == 0): STEP += 1
 		
 	print reg.reg
@@ -119,7 +101,7 @@ def OUTPUT(results):
 	
 	if NUM_INS !=0 : CPI = (NUM_INS+NUM_BUB+0.0)/NUM_INS
 	else: CPI = 0.00 
-	results.update({"Stat":WriteStat(CLK, Stat.stat, CPI, CC.ZF, CC.SF, CC.OF)})
+	results.update({"Stat":WriteStat(get_CLK(), Stat.stat, CPI, CC.ZF, CC.SF, CC.OF)})
 	
 	dis = []
 	for i in range(0, len(Display)):
@@ -129,15 +111,15 @@ def OUTPUT(results):
 		if arg1 == 'REG': 
 			dis.append((arg2,hex(reg.reg[reg.map[arg2]])))
 		if arg1 == 'MEM': 
-			dis.append((arg2,hex(mem.read(int(arg2,16)))))
+			dis.append((arg2,hex(mem.display(int(arg2,16)))))
 		if arg1 == 'STACK':
-			dis.append((arg2,hex(mem.read(reg.reg[RRSP]-8*int(arg2,10)))))
+			dis.append((arg2,hex(mem.display(reg.reg[RRSP]-8*int(arg2,10)))))
 	results.update({"Display":WriteDisplay(dis)})
 	
 	rsp, rbp = reg.read(4, 5)
 	stack = {}
 	for i in range(rsp, rbp+1, 8):
-		stack.update({hex(i):hex(mem.read(i))})
+		stack.update({hex(i):hex(mem.display(i))})
 	results.update({"Stack":WriteStack(stack, rsp, rbp)})
 	
 	REG = []
@@ -159,7 +141,6 @@ Codes = []
 InsCode = {}
 breakpoints = []
 Display = []
-CLK = 0
 CMD_RESULTS = ""
 NUM_INS, NUM_BUB = 0, 0
 PC, f_pc, maxPC = 0, 0, 0
@@ -168,7 +149,7 @@ PC, f_pc, maxPC = 0, 0, 0
 def index(request):
 #print request.method
 #	print request.POST
-	global mem, reg, pipereg, CC, Stat, tmp_pipereg, labels, Codes, InsCode, breakpoints, CLK, NUM_INS, NUM_BUB, PC, f_pc, maxPC
+	global mem, reg, pipereg, CC, Stat, tmp_pipereg, labels, Codes, InsCode, breakpoints, NUM_INS, NUM_BUB, PC, f_pc, maxPC
 	if request.method == 'GET':
 		return render(request, 'IDE/main.html', {})
 	elif request.method == 'POST':
@@ -185,7 +166,7 @@ def index(request):
 			Codes = []
 			InsCode = {}
 			breakpoints = []
-			CLK = 0
+			set_CLK(0)
 			NUM_INS, NUM_BUB = 0, 0
 			PC, f_pc, maxPC= 0, 0, 0
 			AssemblyCode = request.POST.get("content").encode('ascii')
@@ -231,7 +212,7 @@ def index(request):
 				Codes = []
 				InsCode = {}
 				breakpoints = []
-				CLK = 0
+				set_CLK(0)
 				NUM_INS, NUM_BUB = 0, 0
 				PC, f_pc, maxPC= 0, 0, 0
 	
@@ -251,6 +232,12 @@ def index(request):
 					mem.write(int(arg2,16),int(arg3))
 				if arg1 == 'STACK':
 					mem.write(reg.reg[RRSP]-8*int(arg2,10),int(arg3))
+				if arg1 == 'CACHE':
+					sep=arg3.find(' ')
+					arg4=arg3[sep+1:].strip()
+					arg3=arg3[0:sep].strip()
+					if mem.set_cacfg(int(arg2),int(arg3),int(arg4))==1:
+						CMD_RESULTS = CMD_RESULTS + "<div>Invalid S,B or E</div>"
 	
 			#Display
 			if (CMD == 'display'): Display.append(arg)
@@ -285,7 +272,7 @@ def index(request):
 			if (CMD == 'return'):
 				pipereg = PipeRegister()
 				rsp, rnone = reg.read(RRSP, RNONE)
-				addr = mem.read(rsp)
+				addr = mem.display(rsp)
 				reg.write(RRSP, rsp+8)
 				PC = addr
 	
@@ -329,8 +316,8 @@ def index(request):
 				else: breakpoints[int(arg,10)-1][2] = 0
 			
 			lst_cmd = cmd	
-			
-			
+		
+		print 'miss,hit:',mem.get_hm()
 		OUTPUT(results)
 		CMD_RESULTS = CMD_RESULTS + "</div>"
 		results.update({"CMD":CMD_RESULTS})
