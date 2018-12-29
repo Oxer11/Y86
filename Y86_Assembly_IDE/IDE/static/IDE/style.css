@@ -147,10 +147,50 @@
 			padding:15px;
 			width:50%;
 			height:580px;
-			overflow:auto;
+			overflow:hidden;
 			background-color: #FFFFFF;
 			border:none;
 		}
+		
+		.error_info{
+			position:absolute;
+			border:3px solid rgb(147,112,219);
+			background-color:white;
+			padding:0px;
+			z-index:1;
+			width:96%;
+			height:300px;
+			bottom:-260px;
+			box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2),0 6px 20px 0 rgba(0, 0, 0, 0.19);
+			transition:all 0.5s ease-in-out;
+		}
+			.error_info th{
+				padding:5px;
+				font-size:20px;
+			}
+			
+			.error_line:hover{
+				cursor:pointer;
+			}
+			
+			#error_state{
+				position:relative;
+			}
+			#error_state:hover{
+				cursor:pointer;
+			}
+			
+			#error_arrow{
+				display:inline-block;
+				z-index:2;
+				position:absolute;
+				top:12px;
+				left:90px;
+				margin-left:10px;
+				width: 15px;
+				height: 15px;
+				transition:all 0.2s ease-in-out;
+			}
 		
 		#btn_input{
 			display:inline-block;
@@ -246,6 +286,7 @@
             border: none;
             padding: 0px;
             margin: 0px;
+			margin-left:48px;
             overflow-x: hidden;
             overflow-y: auto;
         }
@@ -262,6 +303,7 @@
 			padding-bottom:13px;
             margin: 0px;
             margin-top: 3px;
+			margin-left:48px;
             overflow-y:auto;
 			overflow-x:hidden;
         }
@@ -310,7 +352,7 @@
             position: relative;
             float: left;
             background-color:#FFFFFF;
-            width: 18.5%;
+            width: 20%;
             height: 330px;
             margin: 15px;
 			margin-top:20px;
@@ -376,7 +418,7 @@
 			border:none;
             float: left;
             background-color:white;
-            width: 18.5%;
+            width: 41%;
             height: 240px;
             margin: 15px;
 			margin-top:3px;

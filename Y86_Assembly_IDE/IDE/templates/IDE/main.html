@@ -14,6 +14,7 @@
  <!--   <script src="{% static 'IDE/js/Load.js' %}"></script> -->
     <link rel="stylesheet" href="{% static 'IDE/style.css' %}">
     <script type="text/javascript">
+	var yo;
 	$(document).ready(function(){
  		$("#btn_input").click(function(){
 			$("#number_div").css("border-right-color","green");
@@ -21,6 +22,8 @@
   			$.post("/IDE/",{'type':'code', 'content':content},     
     			function(data,status){              
          			$("#yo_Code").html(data.Code);
+					yo=$("#yo_Code").html();
+					$("#error").html(data.error);
          			$("#Codes").html(data.Codes);
          			$("#tab_content1").html(data.Stat);
          			$("#Stage").html(data.Stage);
@@ -28,9 +31,16 @@
          			$("#Stack").html(data.Stack);
          			$("#tab_content3").html(data.Register);
          			$("#cmd_output").html("");
+					
+					if(data.error.match("Fail")=="Fail"){
+						$(".error_info").css("bottom","0px");
+						$("#error_arrow").css("transform","rotate(180deg)");
+					}
+					else{
+						$(".error_info").css("bottom","-260px");
+						$("#error_arrow").css("transform","rotate(0deg)");
+					}
   				});
-			
-			$(".code").scrollTop(0);
 		});
 	});
 	$(document).ready(function(){
@@ -64,6 +74,20 @@
   			}
 		});
 	});
+	
+	$(document).on("dblclick", ".error_line",function(){
+			var line=this.innerHTML;
+			var id1=line.indexOf("line");
+			var id2=line.indexOf("</td>");
+			var i=parseInt(line.substring(id1+5,id2));
+			var s=yo.split('\n');
+			s[i-1]="<mark>"+s[i-1]+"</mark>";
+			$("#yo_Code").html(s.join('\n'));
+			if(i>8&&i<s.length)
+				$("#yo").scrollTop((i-8)*20);
+			else
+				$("#yo").scrollTop(0);
+	});
 	$(document).ready(function(){
 	$("#input_code").focus(function(){
 	  $("#input_code").keyup(function(){
@@ -90,11 +114,11 @@
 <body>
 	<div style="display:inline-block;position:fixed;top:30px;left:12px;">
 	<div id="sb_w"  class="swborder">
-	<image src="{% static 'IDE/write_hover.png' %}" class="switch_button" onclick="write_()">
+	<img src="{% static 'IDE/write_hover.png' %}" class="switch_button" onclick="write_()">
 	</div>
 	<br>
 	<div id="sb_d"  class="swborder">
-	<image src="{% static 'IDE/debug_chosen.png' %}" class="switch_button"  onclick="debug()">
+	<img src="{% static 'IDE/debug_chosen.png' %}" class="switch_button"  onclick="debug()">
 	</div>
 	</div>
 	<div id="cmd_input" class="cmd_input">
@@ -121,21 +145,26 @@
 			</form>
 			</div>
 		</div>
-		<image src="{% static 'IDE/trans.png' %}" id="btn_input">
+		<img src="{% static 'IDE/trans.png' %}" id="btn_input">
 		<div class="input_yo">
+		<div style="width:100%;height:100%;overflow:auto;" id="yo">
 			<pre id="yo_Code">yo_code</pre>
+		</div>
+		<div class="error_info">
+				<table>
+					<tbody id="error">
+						<tr><th style="color:blue;"><div id="error_state" onclick="fold()">Error Info</div></th>
+							<img src="{% static 'IDE/arrowup.png' %}" id="error_arrow">
+						</tr>
+					</tbody>
+				</table>
+		</div>
 		</div>
 	</div>
 	
 	<div id="debug">
     <div class="container-fluid" style="margin:20px;">	
 	<div class="main_body" id="main_body" style="float:top;">		
-        <div class="container" style="float:left;width:21%;height:330px;margin:15px;margin-left:48px;margin-top:20px;padding:0px;overflow-x:hidden;overflow-y:auto;background-color:#FFFFFF;">
-            <p style="color:rgb(147,112,219);font-size:20px;font-family:myFont;font-weight:bold;margin:10px;">Stack</p>
-            <table class="stack" id="Stack">
-			</table>
-        </div>
-
         <div class="code" style="display:block;">
             <table>
                 <tr>
@@ -152,15 +181,26 @@
                 <div class="tab_content" id="tab_content1">
                 </div>
             </li>
+			<li>
+                <input type="radio" name="tabs" id="tab2" />
+                <label for="tab2">Stack</label>
+                <div class="tab_content" id="tab_content2">
+					<table class="stack">
+					<tbody id="Stack">
+					</tbody>
+					</table>
+                </div>
+            </li>
             <li>
                 <input type="radio" name="tabs" id="tab3" />
-                <label for="tab3" id="last">Register</label>
+                <label for="tab3">Register</label>
                 <div class="tab_content" id="tab_content3">
                 </div>
             </li>
+			
         </ul>
 		
-		<div class="container" style="border: none;float:left;width:21%;height:240px;margin:15px;margin-left:48px;margin-top:3px;padding:0px;overflow-x:hidden;overflow-y:auto;background-color:#FFFFFF;">
+		<div class="container" style="border: none;float:left;width:20%;height:330px;margin:0px;margin-top:20px;padding:0px;overflow-x:hidden;overflow-y:auto;background-color:#FFFFFF;">
             <p style="color:rgb(147,112,219);font-size:20px;font-family:myFont;font-weight:bold;margin:10px;">Display</p>
             <table id="columns">
 			</table>
@@ -180,6 +220,17 @@
 </body>
 
 <script>
+		function fold(){
+			var b=$(".error_info").css("bottom");
+			if(b=="0px"){
+				$(".error_info").css("bottom","-260px");
+				$("#error_arrow").css("transform","rotate(0deg)");
+			}
+			else if(b=="-260px"){
+				$(".error_info").css("bottom","0px");
+				$("#error_arrow").css("transform","rotate(180deg)");
+			}			
+		}
 		function write_(){
 			document.getElementById("write").style="display:block;opacity:1;animation:none;margin:15px;float:top;position:relative;";
 			document.getElementById("debug").style="display:none";
