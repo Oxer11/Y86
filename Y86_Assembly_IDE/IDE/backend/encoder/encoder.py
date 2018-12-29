@@ -3,8 +3,11 @@
 import re
 
 INS = 0
+error={}
+count=1
 
 def register(REG):
+	global error,count
 	if REG == '%rax':
 		return '0'
 	elif REG == '%rcx':
@@ -36,7 +39,7 @@ def register(REG):
 	elif REG == '%r14':
 		return 'e'
 	else:
-		print 'Error: Invalid Register!'
+		error[count]='Error: Invalid Register '+REG+'!'
 		global INS
 		INS = 1
 		return ''
@@ -44,17 +47,18 @@ def register(REG):
 
 def little_endian(v, length=0x8):
 	global INS
+	global error,count
 	if len(v) == 0: v = '0'
 	if v[0:2] == '0x':
 		if not re.match(r'^0x[0-9a-fA-F]+$', v):
 			INS = 1
-			print v[2:len(v)]
+			error[count]='Error: Invalid Number '+v+'!'
 			return ''
 		x = long(v, 16)
 	else:
 		if not v.isdigit() and not (v[0] == '-' and v[1:len(v)].isdigit()):
 			INS = 1
-			print 'Error: Invalid Number!'
+			error[count]='Error: Invalid Number '+v+'!'
 			return ''
 		x = long(v, 10)
 	ans = ''
@@ -64,20 +68,25 @@ def little_endian(v, length=0x8):
 	return ans
 
 def Label(labels, str):
+	global error,count
 	if not labels.has_key(str):
-		print 'Error: Invalid Label!'
+		error[count]='Error: Invalid Label '+str+'!'
 		global INS
 		INS = 1
 		return '0'
 	else: return labels[str]
 
 def encoder(AssemblyCode, labels, nowPC):
+	global error,count
 	codes = []
 	now = nowPC
 	lst_labels = labels
 	global INS
 	INS = 0
+	count=0
+	error={}
 	for line in AssemblyCode:
+		count += 1
 		cmd = re.sub(r'(#.*$)|(/\*(.|\n)*\*/)', "", line)
 		cmd = cmd.strip()
 		end = cmd.find(':')
@@ -112,13 +121,13 @@ def encoder(AssemblyCode, labels, nowPC):
 			if now % x != 0:
 				now += x - now % x
 		else:
-			print 'Error: Invalid Instruction!'
-			print 'Syntax Error:\n' + line
+			error[count]='Error: Invalid Instruction '+line+'!'
 			labels = lst_labels
-			return [], nowPC
 
 	now = nowPC
-	for line in AssemblyCode:
+	count=0
+	for line in AssemblyCode:		
+		count += 1
 		cmd = re.sub(r'(#.*$)|(/\*(.|\n)*\*/)', "", line)
 		ans = ''
 		cmd = cmd.strip()
@@ -259,11 +268,8 @@ def encoder(AssemblyCode, labels, nowPC):
 			ans = hex(now) + ': '
 		codes.append(ans.ljust(28) + '| ' + line)
 		if INS:
-			print 'Syntax Error:\n' + line
 			labels = lst_labels
-			return [], nowPC
-
-	return codes, now
+	return codes, now, error
 
 
 if __name__ == '__main__':
