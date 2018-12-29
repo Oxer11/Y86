@@ -1,4 +1,4 @@
-body {
+		body {
             padding-bottom: 5px;
             background-color: rgb(230,230,250);
             max-width: 1335px;
@@ -65,11 +65,11 @@ body {
 		}
 		
 		#write{
-			display:none;
+			display:block;
 		}
 		
 		#debug{
-			display:block;
+			display:none;
 		}
 		
 		.switch_button{
@@ -176,7 +176,7 @@ body {
 			animation-delay:1.5s;
 		}
 		
-		.main_body{
+		#write{
 			opacity:0;
 			animation:show 0.3s;
 			-webkit-animation:show 0.3s;
@@ -375,7 +375,7 @@ body {
             position: relative;
 			border:none;
             float: left;
-            background-color:#FFFFFF;
+            background-color:white;
             width: 18.5%;
             height: 240px;
             margin: 15px;

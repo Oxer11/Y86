@@ -160,7 +160,6 @@ Codes = []
 InsCode = {}
 breakpoints = []
 Display = []
-CMD_RESULTS = ""
 NUM_INS, NUM_BUB = 0, 0
 PC, f_pc, maxPC = 0, 0, 0
 	
@@ -173,7 +172,7 @@ def index(request):
 		return render(request, 'IDE/main.html', {})
 	elif request.method == 'POST':
 		results = {}
-		CMD_RESULTS = ""
+		set_CR('')
 		if request.POST.get("type") == 'code':
 			mem = Memory()
 			reg = Register()
@@ -212,7 +211,7 @@ def index(request):
 		elif request.POST.get("type") == 'command':
 			cmd = request.POST.get("content").encode('ascii')
 			cmd = cmd.strip()
-			CMD_RESULTS = "<div>" + cmd 
+			set_CR("<div>" + cmd)
 			if len(cmd)==0 : cmd = lst_cmd
 			sep = cmd.find(' ')
 			if sep == -1: sep = len(cmd)
@@ -236,7 +235,9 @@ def index(request):
 				PC, f_pc, maxPC= 0, 0, 0
 	
 	
-			if (CMD == 'h') or (CMD == 'help'): Help(arg)
+			if (CMD == 'h') or (CMD == 'help'): 
+				s=Help(arg)
+				add_CR(s)
 	
 			if (CMD == 'set'):
 				sep = arg.find(' ')
@@ -256,7 +257,7 @@ def index(request):
 					arg4=arg3[sep+1:].strip()
 					arg3=arg3[0:sep].strip()
 					if mem.set_cacfg(int(arg2),int(arg3),int(arg4))==1:
-						CMD_RESULTS = CMD_RESULTS + "<div>Invalid S,B or E</div>"
+						add_CR("<div>Invalid S,B or E</div>")
 	
 			#Display
 			if (CMD == 'display'): Display.append(arg)
@@ -310,13 +311,13 @@ def index(request):
 			if (CMD == 'b') or (CMD == 'break'):
 				if labels.has_key(arg): breakpoints.append([int(labels[arg],16),'y',1])
 				else: breakpoints.append([int(arg,16),'y',1])
-				CMD_RESULTS = CMD_RESULTS + "<div>" + 'Breakpoint %d at '%(len(breakpoints)) + arg + "</div>"
+				add_CR("<div>" + 'Breakpoint %d at '%(len(breakpoints)) + arg + "</div>")
 	
 			if (CMD == 'info') and (arg == 'breakpoints'):
-				CMD_RESULTS = CMD_RESULTS + "<div>" + 'Num'.ljust(8)+'Type'.ljust(15)+'Enb'.ljust(4)+'Address' + "</div>"
+				add_CR("<div>" + 'Num'.ljust(8)+'Type'.ljust(15)+'Enb'.ljust(4)+'Address' + "</div>")
 				for i in range(0,len(breakpoints)):
 					if breakpoints[i][2]!=0:
-						CMD_RESULTS = CMD_RESULTS + "<div>" + str(i+1).ljust(8)+'breakpoint'.ljust(15)+breakpoints[i][1].ljust(4)+hex(breakpoints[i][0]) + "</div>"
+						add_CR("<div>" + str(i+1).ljust(8)+'breakpoint'.ljust(15)+breakpoints[i][1].ljust(4)+hex(breakpoints[i][0]) + "</div>")
 				
 			if (CMD == 'enable'): 
 				if len(arg) == 0:
@@ -336,9 +337,8 @@ def index(request):
 			
 			lst_cmd = cmd	
 		
-		print 'miss,hit:',mem.get_hm()
 		OUTPUT(results)
-		CMD_RESULTS = CMD_RESULTS + "</div>"
-		results.update({"CMD":CMD_RESULTS})
+		add_CR("</div>")
+		results.update({"CMD":get_CR()})
 		return JsonResponse(results)
    	return ""

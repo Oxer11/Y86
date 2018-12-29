@@ -60,6 +60,7 @@ class Memory:
 			if i<E:
 				add_CLK(VISIT_C)
 				hit += 1
+				add_CR("<div>Hit when read "+hex(addr)+"</div>")
 				self.cache_m[si][i]['lst']=get_CLK()
 				for j in range(0,8):
 					dataout = self.cache_m[si][i]['block'][bo+j]+dataout
@@ -67,6 +68,7 @@ class Memory:
 			else:
 				add_CLK(VISIT_M)
 				miss += 1
+				add_CR("<div>Miss when read "+hex(addr)+"</div>")
 				min_id=0
 				min=MAXCLOCK
 				i=0
@@ -123,6 +125,7 @@ class Memory:
 			if i<E:
 				add_CLK(VISIT_C)
 				hit += 1
+				add_CR("<div>Hit when write to "+hex(addr)+"</div>")
 				for j in range(0,length):
 					self.cache_m[si][i]['block'][bo+j] = hex(datain%256/16)[2]+hex(datain%16)[2]
 					datain /= 256
@@ -132,6 +135,7 @@ class Memory:
 			else:
 				add_CLK(VISIT_M)
 				miss += 1
+				add_CR("<div>Miss when write to "+hex(addr)+"</div>")
 				min_id=0
 				min=MAXCLOCK
 				i=0

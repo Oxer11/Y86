@@ -7,15 +7,16 @@ sys.path.append(o_path)
 
 from memory_sys.piperegister import *
 from memory_sys.register import *
+from others.Global import *
 
 def Decode(lst, cur, reg, E_over):
-	print 'D starts'
+	add_CR('<div>D starts</div>')
 	cur.regE['stat'] = lst.regD['stat']	
 	icode = lst.regD['icode']	
 	cur.regE['icode'] = lst.regD['icode']
 	cur.regE['ifun'] = lst.regD['ifun']
 	if lst.regD['stat'] not in ['AOK','BUB']:
-		print 'D is over'
+		add_CR('<div>D is over</div>')
 		return
 
 	cur.regE['valC'] = lst.regD['valC']
@@ -80,6 +81,6 @@ def Decode(lst, cur, reg, E_over):
 	elif cur.regE['srcB'] == lst.regW['dstE']:
 		cur.regE['valB'] = lst.regW['valE']
 	
-	print 'D is over'
+	add_CR('<div>D is over</div>')
 		
 	

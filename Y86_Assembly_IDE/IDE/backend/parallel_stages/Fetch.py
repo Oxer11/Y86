@@ -8,6 +8,7 @@ sys.path.append(o_path)
 from others.little_endian import *
 from memory_sys.piperegister import *
 from others.constant import *
+from others.Global import*
 
 def valid(InsCode):
 	icode = int(InsCode[0], 16)
@@ -48,17 +49,17 @@ def valid(InsCode):
 	return 1
 
 def Fetch(lst, cur, InsCode_dic, PC):
-	print 'F starts'
+	add_CR('<div>F starts</div>')
 	if not InsCode_dic.has_key(PC):
 		cur.regD['stat'] = 'NON'
-		print 'F is over'
+		add_CR( '<div>F is over</div>')
 		return
 	InsCode = InsCode_dic[PC]
 	icode = int(InsCode[0], 16)
 	
 	if not valid(InsCode):
 		cur.regD['stat'] = 'INS'
-		print 'F is over'
+		add_CR( '<div>F is over</div>')
 		return
 	elif icode == IHALT or lst.regD['stat'] == 'HLT':
 		cur.regD['stat'] = 'HLT'
@@ -104,51 +105,4 @@ def Fetch(lst, cur, InsCode_dic, PC):
 	else:
 		cur.regF['predPC'] = cur.regD['valP']
 		
-	print 'F is over'
-		
-if __name__ == "__main__":
-	print "测试Fetch过程"
-	reg = PipeRegister()
-	Fetch(reg, '00', 0)
-	print '00'
-	print reg.regD
-	Fetch(reg, '10', 0)
-	print '10'
-	print reg.regD
-	Fetch(reg, '2012', 0)
-	print '2012'
-	print reg.regD
-	Fetch(reg, '30f60400000000000000', 0)
-	print '30f60400000000000000'
-	print reg.regD
-	Fetch(reg, '40ac0400000000000000', 0)
-	print '40ac0400000000000000'
-	print reg.regD
-	Fetch(reg, '50bd0410000000000000', 0)
-	print '50bd0410000000000000'
-	print reg.regD
-	Fetch(reg, '60b6', 0)
-	print '60b6'
-	print reg.regD
-	Fetch(reg, '70f604000000000000', 0)
-	print '70f604000000000000'
-	print reg.regD
-	Fetch(reg, '805600000000000000', 0)
-	print '805600000000000000'
-	print reg.regD
-	Fetch(reg, '90', 0)
-	print '90'
-	print reg.regD
-	Fetch(reg, 'a05f', 0)
-	print 'a05f'
-	print reg.regD
-	Fetch(reg, 'b06f', 0)
-	print 'b06f'
-	print reg.regD
-	Fetch(reg, 'ff', 0)
-	print 'ff'
-	print reg.regD
-	
-	
-	
-	
+	add_CR( '<div>F is over</div>')

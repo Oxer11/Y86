@@ -6,14 +6,15 @@ o_path = os.getcwd()
 sys.path.append(o_path)
 
 from memory_sys.memory import *
+from others.Global import *
 
 def Memory_(lst, cur, mem, M_over):
-	print 'M starts'
+	add_CR('<div>M starts</div>')
 	cur.regW['stat'] = lst.regM['stat']
 	cur.regW['icode'] = lst.regM['icode']
 	cur.regW['ifun'] = lst.regM['ifun']
 	if lst.regM['stat'] not in ['AOK','BUB'] or lst.regW['stat'] not in ['AOK','BUB']:
-		print 'M is over'
+		add_CR('<div>M is over</div>')
 		M_over.set()
 		return
 
@@ -42,5 +43,5 @@ def Memory_(lst, cur, mem, M_over):
 		else:
 			cur.regW['stat'] = 'ADR'
 	
-	print 'M is over'
+	add_CR('<div>M is over</div>')
 	M_over.set()

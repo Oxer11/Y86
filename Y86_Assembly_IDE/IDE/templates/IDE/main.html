@@ -29,6 +29,8 @@
          			$("#tab_content3").html(data.Register);
          			$("#cmd_output").html("");
   				});
+			
+			$(".code").scrollTop(0);
 		});
 	});
 	$(document).ready(function(){
@@ -46,6 +48,17 @@
          			$("#Stack").html(data.Stack);
          			$("#tab_content3").html(data.Register);
          			$("#cmd_output").append(data.CMD);
+					
+					$("#cmd_output").scrollTop(9999);
+					var ls=data.Codes.split('\n');
+					var i=0;
+					for(i=0;i!=ls.length;i++)
+						if(ls[i][1]=='m')
+							break;
+					if(i>8&&i<ls.length)
+						$(".code").scrollTop((i-8)*20);
+					else
+						$(".code").scrollTop(0);
   				});
   			$("#cmd").val("");
   			}
@@ -69,7 +82,7 @@
 		$("#input_code").scroll(function(){
 			var h=$("#input_code").scrollTop();
 			$("#number_div").css("top","-"+h.toString()+"px");
-			//alert($("#number_div").css("bottom").toString());
+			//alert(h.toString()+' '+hei.toString());
 		});
 	});
 	</script>
@@ -83,6 +96,11 @@
 	<div id="sb_d"  class="swborder">
 	<image src="{% static 'IDE/debug_chosen.png' %}" class="switch_button"  onclick="debug()">
 	</div>
+	</div>
+	<div id="cmd_input" class="cmd_input">
+			<form role="form" style="display:inline-block;width:100%;height:100%;margin:0px;position:relative;top:-2px;">
+				<textarea class="form-control" rows="1" style="border:none;height:120%;width:110%;" id="cmd"></textarea>
+			</form>
 	</div>
 	
 	<div class="title" style="max-width:1335px;z-index:-1;position:absolute;left:350px;top:250px;">
@@ -111,13 +129,7 @@
 	
 	<div id="debug">
     <div class="container-fluid" style="margin:20px;">	
-	<div class="main_body" id="main_body" style="float:top;">
-		<div id="cmd_input" class="cmd_input">
-			<form role="form" style="display:inline-block;width:100%;height:100%;margin:0px;position:relative;top:-2px;">
-				<textarea class="form-control" rows="1" style="border:none;height:120%;width:110%;" id="cmd"></textarea>
-			</form>
-		</div>
-		
+	<div class="main_body" id="main_body" style="float:top;">		
         <div class="container" style="float:left;width:21%;height:330px;margin:15px;margin-left:48px;margin-top:20px;padding:0px;overflow-x:hidden;overflow-y:auto;background-color:#FFFFFF;">
             <p style="color:rgb(147,112,219);font-size:20px;font-family:myFont;font-weight:bold;margin:10px;">Stack</p>
             <table class="stack" id="Stack">
@@ -160,11 +172,6 @@
         </div>
 		
 		<div class="cmd" id="cmd_output">
-		<pre>
-load ./test/asum.yo
-step
-step
-		 </pre>
 		</div>
 		
 		</div>
@@ -174,7 +181,7 @@ step
 
 <script>
 		function write_(){
-			document.getElementById("write").style="display:block";
+			document.getElementById("write").style="display:block;opacity:1;animation:none;margin:15px;float:top;position:relative;";
 			document.getElementById("debug").style="display:none";
 			document.getElementById("sb_w").src="{% static 'IDE/write_chosen.png' %}";
 			document.getElementById("sb_d").src="{% static 'IDE/debug_hover.png' %}";
@@ -182,14 +189,11 @@ step
 		function debug(){
 			document.getElementById("write").style="display:none";
 			document.getElementById("debug").style="display:block";
-			document.getElementById("main_body").style="opacity:1;animation:none;";
-			document.getElementById("cmd_input").style="top:0px;animation:none;";
 			document.getElementById("sb_w").src="{% static 'IDE/write_hover.png' %}";
 			document.getElementById("sb_d").src="{% static 'IDE/debug_chosen.png' %}";
 		}
         var columns = document.querySelectorAll('#columns .column');
         var dragEl = null;
-
         [].forEach.call(columns,function(column){
              column.addEventListener("dragstart",domdrugstart,false);
              column.addEventListener('dragenter', domdrugenter, false);
@@ -198,45 +202,35 @@ step
             column.addEventListener('drop', domdrop, false);
             column.addEventListener('dragend', domdrapend, false);
         });
-
         function domdrugstart(e) {
             e.target.style.opacity = '0.5';
             dragEl = this;
             e.dataTransfer.effectAllowed = "move";
             e.dataTransfer.setData("text/html", this.innerHTML);
         }
-
         function domdrugenter(e) {
             e.target.classList.add('over');
         }
-
         function domdrugover(e) {
             if (e.preventDefault) {
                 e.preventDefault();
             }
-
             e.dataTransfer.dropEffect = 'move';
-
             return false;
          }
-
        function domdrugleave(e) {
             e.target.classList.remove('over');
          }
-
         function domdrop(e) {
             if (e.stopPropagation) {
                 e.stopPropagation();
              }
-
             if (dragEl != this) {
                 dragEl.innerHTML = this.innerHTML;
                 this.innerHTML = e.dataTransfer.getData('text/html');
              }
-
             return false;
          }
-
         function domdrapend(e) {
             [].forEach.call(columns, function (column) {
              column.classList.remove('over');

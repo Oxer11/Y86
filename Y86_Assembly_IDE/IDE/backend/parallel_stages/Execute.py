@@ -7,6 +7,7 @@ sys.path.append(o_path)
 
 from others.cc_stat import *
 from others.constant import *
+from others.Global import *
 
 def ALU(ALUA, ALUB, ALUfun):
 	if ALUfun == 0:
@@ -27,7 +28,7 @@ def ALU(ALUA, ALUB, ALUfun):
 		
 
 def Execute(lst, cur, CC, NUM_INS, NUM_BUB, E_over, M_over):
-	print 'E starts'
+	add_CR('<div>E starts</div>')
 	
 	cur.regM['stat'] = lst.regE['stat']
 	cur.regM['icode'] = lst.regE['icode']
@@ -36,7 +37,7 @@ def Execute(lst, cur, CC, NUM_INS, NUM_BUB, E_over, M_over):
 	if lst.regE['stat'] in ['BUB']: NUM_BUB += 1
 	M_over.wait()
 	if lst.regE['stat'] not in ['AOK','BUB'] or lst.regM['stat'] not in ['AOK','BUB'] or lst.regW['stat'] not in ['AOK','BUB'] or cur.regW['stat'] not in ['AOK','BUB']:
-		print 'E is over'
+		add_CR('<div>E is over</div>')
 		E_over.set()
 		return CC, NUM_INS, NUM_BUB
 
@@ -100,7 +101,7 @@ def Execute(lst, cur, CC, NUM_INS, NUM_BUB, E_over, M_over):
 	if icode == 2 and lst.regE['ifun'] != 0 and not cur.regM['Cnd']:
 		cur.regM['dstE'] = RNONE
 	
-	print 'E is over'
+	add_CR('<div>E is over</div>')
 	E_over.set()
 	
 	return CC, NUM_INS, NUM_BUB

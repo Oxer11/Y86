@@ -8,10 +8,10 @@ sys.path.append(o_path)
 from others.cc_stat import *
 from memory_sys.register import *
 from memory_sys.piperegister import *
-
+from others.Global import *
 
 def WriteBack(lst, Stat, reg):
-	print 'W starts'
+	add_CR('<div>W starts</div>')
 	
 	if lst.regW['stat'] == 'BUB':
 		Stat.stat = 'AOK'
@@ -19,13 +19,13 @@ def WriteBack(lst, Stat, reg):
 		Stat.stat = lst.regW['stat']
 
 	if Stat.stat != 'AOK':
-		print 'W is over'
+		add_CR('<div>W is over</div>')
 		return
     
 	reg.write(lst.regW['dstE'], lst.regW['valE'])
 	reg.write(lst.regW['dstM'], lst.regW['valM'])
 	
-	print 'W is over'
+	add_CR('<div>W is over</div>')
 
 
 if __name__ == "__main__":
