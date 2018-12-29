@@ -28,6 +28,7 @@ from js.WriteStage import WriteStage
 from js.WriteDisplay import WriteDisplay
 from js.WriteStack import WriteStack
 from js.WriteReg import WriteReg
+from js.WriteError import WriteError
 
 def Update(cur, lst):
 	#P1代表处理ret，P2代表加载/使用冒险，P3代表预测错误的分支
@@ -114,7 +115,7 @@ def Step(MAXSTEP=1, breakpoints=[], OP=0):
 def OUTPUT(results):
 
 	results.update({"Codes":WriteCode(Codes, PC)})
-	
+	results.update({'error':WriteError(error)})
 	ins_lst = pipereg.get_ins()
 	results.update({"Stage":WriteStage(pipereg, ins_lst)})
 	
@@ -157,6 +158,7 @@ Stat = Status()
 tmp_pipereg = PipeRegister()
 labels = {}
 Codes = []
+error={}
 InsCode = {}
 breakpoints = []
 Display = []
@@ -167,7 +169,7 @@ PC, f_pc, maxPC = 0, 0, 0
 def index(request):
 #print request.method
 #	print request.POST
-	global mem, reg, pipereg, CC, Stat, tmp_pipereg, labels, Codes, InsCode, breakpoints, NUM_INS, NUM_BUB, PC, f_pc, maxPC
+	global mem, reg, pipereg, CC, Stat, tmp_pipereg, labels, Codes, error, InsCode, breakpoints, NUM_INS, NUM_BUB, PC, f_pc, maxPC
 	if request.method == 'GET':
 		return render(request, 'IDE/main.html', {})
 	elif request.method == 'POST':
@@ -189,7 +191,7 @@ def index(request):
 			PC, f_pc, maxPC= 0, 0, 0
 			AssemblyCode = request.POST.get("content").encode('ascii')
 			AssemblyCode = AssemblyCode.split('\n')
-			new_Codes, maxPC = encoder(AssemblyCode, labels, maxPC)
+			new_Codes, maxPC, error = encoder(AssemblyCode, labels, maxPC)
 			Codes.extend(new_Codes)
 			for line in new_Codes:
 				beg = line.find(":")
@@ -206,6 +208,7 @@ def index(request):
 			Code = ""
 			for line in Codes:
 				Code = Code + line.rstrip() + "\n"
+			results.update({'error':error})
 			results.update({'Code':Code})
 		
 		elif request.POST.get("type") == 'command':
@@ -233,7 +236,6 @@ def index(request):
 				set_CLK(0)
 				NUM_INS, NUM_BUB = 0, 0
 				PC, f_pc, maxPC= 0, 0, 0
-	
 	
 			if (CMD == 'h') or (CMD == 'help'): 
 				s=Help(arg)
@@ -338,7 +340,6 @@ def index(request):
 			lst_cmd = cmd	
 		
 		OUTPUT(results)
-		add_CR("</div>")
 		results.update({"CMD":get_CR()})
 		return JsonResponse(results)
    	return ""
