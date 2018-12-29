@@ -92,42 +92,44 @@
 \end{tabular}
 \end{table}
 
-\subsection{文件构成}
+\subsection{文件结构（新）}
+
+所有核心代码均收录在/Y86\_Assembly\_IDE/IDE文件夹下。
 
 \noindent
 本次Project的后端代码均在{\bf backend}目录下，说明如下：
-
 
 \begin{table}[h]
 \resizebox{\textwidth}{27mm}{
 \begin{tabular}{llll}
 {\bf kernel.py}          & 流水线控制逻辑  
 &{\bf others/cc\underline{\hspace{0.5em}}stat.py}       & 状态码与条件码类 \\
-{\bf stages/Fetch.py}    & 流水线取指阶段  
+{\bf parallel\_stages/Fetch.py}    & 流水线取指阶段  
 &{\bf others/constant.py}& 常量的定义 \\
-{\bf stages/Decode.py}   & 流水线译码阶段  
+{\bf parallel\_stages/Decode.py}   & 流水线译码阶段  
 &{\bf others/decoder.py} & 预处理.yo文件 \\
-{\bf stages/Execute.py}  & 流水线执行阶段  
+{\bf parallel\_stages/Execute.py}  & 流水线执行阶段  
 &{\bf others/Init.py}    & 处理.yo文件 \\
-{\bf stages/Memory.py}   & 流水线访存阶段  
+{\bf parallel\_stages/Memory.py}   & 流水线访存阶段  
 &{\bf others/little\underline{\hspace{0.5em}}endian.py} & 处理小端法 \\
-{\bf stages/WriteBack.py}& 流水线写回阶段  
+{\bf parallel\_stages/WriteBack.py}& 流水线写回阶段  
 &{\bf others/Help.py}      & Debug帮助文件 \\
 {\bf memory\underline{\hspace{0.5em}}sys/memory.py} & 内存的实现  
 &{\bf memory\underline{\hspace{0.5em}}sys/register.py} & 系统寄存器的实现 \\
 {\bf memory\underline{\hspace{0.5em}}sys/piperegister.py} & 流水线寄存器的实现  
-&{\bf encoder/encoder.py} & 汇编器 
+&{\bf encoder/encoder.py} & 汇编器 \\
+{\bf others/thread.py} & 自定义线程  
+&{\bf others/Global.py} & 封装Clock Cycle 
 \end{tabular}}
 \end{table}
 
 \noindent
-本次Project的前段代码均在{\bf frontend}目录下，说明如下：
+本次Project的前端代码收录在{\bf backend/js}目录下，前端素材收录在{\bf static/IDE}目录下，渲染模板收录在{\bf templates/IDE}目录下说明如下：
 
 \begin{table}[h]
 \begin{tabular}{ll}
-{\bf main.html}          & 前端界面  \\
-{\bf arrow.png}          & 前端素材  \\
-{\bf HappyKiller.ttf}    & 前端字体 \\
+{\bf templates/IDE/main.html}          & 前端界面  \\
+{\bf static/IDE}    & 前端素材 \\
 {\bf js/WriteCode.py}    & 前后端交互代码部分 \\  
 {\bf js/WriteDisplay.py}    & 前后端交互显示框部分 \\  
 {\bf js/WriteReg.py}    & 前后端交互寄存器部分 \\  
@@ -248,13 +250,38 @@
 
 同时用CSS设置style，把每一个显示区设置为卡片风格，并进行页面的总体布局和美化。
 
-\subsection{前后端交互}
+\subsection{前后端交互（新）}
 
-前后端交互主要利用了JavaScript。具体的实现是后端通过调用相应的WriteXXX函数把前端需要的数据整理成HTML格式，输入到.txt文件中。然后通过Load.js，每隔100ms把.txt文件中的内容加载到main.html文件对应的位置。这样就实现了前端的不断更新。
+（原）
 
-\subsection{存储器结构}
+前后端交互主要利用了JavaScript。具体的实现是后端通过调用相应的WriteXXX函数把前端需要的数据整理成HTML格式，输入到.txt文件中。然后通过Load.js，每隔100ms把.txt文件中的内容加载到main.html文件对应的位置。这样就实现了前端的不断更新。\\
+
+（新）
+
+为了减少前后端交互过程中的文件传输，我们在第三阶段中放弃了用文件读写的方式交互，改用{\bf Django}框架。{\bf Django}是用{\bf Python}语言编写的{\bf Web}应用框架，因为我们使用的语言是{\bf Python 2.7}，所以不能支持{\bf Django}的最新版本，而使用的是{\bf Django 1.10}版本。
+
+前后端交互是通过{\bf Request}和{\bf Response}实现的。当前端页面收到一个访问请求或者功能请求时，前端会向后端发送相应的{\bf Request}，后端在接收到{\bf Request}后，根据请求的内容进行相应的处理，并将处理的结果通过{\bf Response}发送给前端，前端进行相应的显示。
+
+当收到一个访问请求时，前端会发送一个{\bf GET}请求给后端，后端收到请求后，渲染初始模板后，将相应的页面传输给前端显示。当收到一个功能请求时，例如编译、调试命令，前端会发送一个{\bf POST}请求给后端，这里使用POST请求是因为可以更方便的传递较大的参数（代码、调试命令）；后端接受{\bf POST}请求后，会调用CPU进行处理。
+
+因为我们不希望在每次命令后都要刷新来显示，所以我们在前端中使用了{\bf Ajax}来进行异步的局部刷新。但是这就需要同时返回几个{\bf HTML}版面，在后端中直接使用模板渲染只能返回一个{\bf HTML}版面，所以最后不得已我们还是选择了写{\bf Python}代码去得到{\bf HTML}代码，而非采用模板渲染。通过{\bf Python}代码得到几个部分的{\bf HTML}代码后，通过{\bf JSON}传输格式发送到前端，前端解析后再分别加载到页面的每个部分。
+
+\subsection{存储器结构（新）}
 
 暂未完成。
+
+\subsection{多线程Y86-64模拟器（新）}
+
+在最初的Y86实现版本中，虽然我们的五个阶段是在同一个Cycle中完成的，但是我们并没有实现五个阶段的同时执行。阶段三的任务之一就是通过各种语言自带的多线程函数，实现五个阶段的并行。
+
+Python中提供了threading库来实现多线程，在每个Cycle开始时，为五个阶段分别创建线程并执行，在Cycle结束时，要通过join方法等待五个阶段执行结束。
+
+这个阶段中遇到的几个问题：
+
+\begin{itemize}
+\item {\bf 阶段依赖：}目前流水线的设计有一点小问题，在转发阶段和执行阶段中判断CC是否修改需要后执行阶段和访存阶段的计算结果，所以必须等到相应阶段结束后再开始。这个问题的解决方法是，设置两个threading.Event表示执行阶段和访存阶段是否结束，当这两个阶段结束时，通过set方法设置结束信号。当需要当前某一阶段的值时，通过wait方法等待那一阶段的结束信号。
+\item {\bf 函数返回值：}直接使用Python的threading函数是不能得到执行函数的返回值的，而我们的代码中Execute阶段的返回值是必要的。查阅资料后，我们使用了重新实现的MyThread类，以得到函数的返回值。
+\end{itemize}
 
 \clearpage
 \section{测试}
