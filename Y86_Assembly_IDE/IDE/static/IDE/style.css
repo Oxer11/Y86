@@ -307,7 +307,23 @@
             overflow-y:auto;
 			overflow-x:hidden;
         }
-
+		
+		#Fetch{			
+			transition:all 0.2s ease-in-out;
+		}
+		#Decode{
+			transition:all 0.2s ease-in-out;
+		}
+		#Execute{
+			transition:all 0.2s ease-in-out;
+		}
+		#Memory{
+			transition:all 0.2s ease-in-out;
+		}
+		#Write{
+			transition:all 0.2s ease-in-out;
+		}
+		
             .stages td {
                 border: none;
                 height: 35px;
@@ -412,6 +428,39 @@
             .tabs input[type=radio]:checked ~ div[id^=tab_content] {
                 display: block;
             }
+			
+			.valid{
+			color:black;
+		}
+		
+		.invalid{
+			color:gray;
+		}
+			.invalid td:hover{
+				background-color:white;
+			}
+		
+		#Cache th{
+			color:rgb(221,160,221);
+			padding:5px;
+		}
+		
+		#Cache .button{
+			color:white;
+			font-size:18px;
+			background-color:rgb(221,160,221);
+			margin:5px;
+			border-radius:3px;
+			text-align:center;
+		}
+		
+		.hm{
+			color:black;
+			font-size:20px;
+			font-weight:bold;
+			display:inline;
+		}
+
 		
 		.cmd{
             position: relative;

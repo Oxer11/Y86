@@ -29,6 +29,7 @@ from js.WriteDisplay import WriteDisplay
 from js.WriteStack import WriteStack
 from js.WriteReg import WriteReg
 from js.WriteError import WriteError
+from js.WriteCache import WriteCache
 
 def Update(cur, lst):
 	#P1代表处理ret，P2代表加载/使用冒险，P3代表预测错误的分支
@@ -147,6 +148,9 @@ def OUTPUT(results):
 	for i in range(rsp, rbp+1, 8):
 		stack.update({hex(i):hex(mem.display(i))})
 	results.update({"Stack":WriteStack(stack, rsp, rbp)})
+	
+	Cache=(mem.cache_m,mem.get_hm(),mem.get_cacfg())
+	results.update({'Cache':WriteCache(Cache)})
 	
 	REG = []
 	for i in range(0, 0xF):

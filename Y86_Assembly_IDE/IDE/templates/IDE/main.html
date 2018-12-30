@@ -13,7 +13,9 @@
     {% load static %}
  <!--   <script src="{% static 'IDE/js/Load.js' %}"></script> -->
     <link rel="stylesheet" href="{% static 'IDE/style.css' %}">
-    <script src="{% static 'IDE/js/Load.js' %}"></script>
+        <script src="{% static 'IDE/js/Load.js' %}"></script>
+    <script type="text/javascript">
+    </script>
 </head>
 <body>
 	<div style="display:inline-block;position:fixed;top:30px;left:12px;">
@@ -103,12 +105,24 @@
             </li>
 			
         </ul>
-		
-		<div class="container" style="border: none;float:left;width:20%;height:330px;margin:0px;margin-top:20px;padding:0px;overflow-x:hidden;overflow-y:auto;background-color:#FFFFFF;">
-            <p style="color:rgb(147,112,219);font-size:20px;font-family:myFont;font-weight:bold;margin:10px;">Display</p>
-            <table id="columns">
-			</table>
-        </div>
+		<ul class="tabs" style="width:20%;height:330px;margin:0px;margin-top:20px;">
+            <li>
+                <input type="radio" name="tabs_" id="tab4" checked />
+                <label for="tab4">Display</label>
+                <div class="tab_content" id="tab_content4">
+					<table id="columns">
+					</table>
+                </div>
+            </li>
+			<li>
+                <input type="radio" name="tabs_" id="tab5" />
+                <label for="tab5">Cache</label>
+                <div class="tab_content" id="tab_content5">
+					<div id="Cache">
+					</div>
+                </div>
+            </li>			
+        </ul>
 
         <div class="stages">
 			<table id="Stage" style="border:none;">

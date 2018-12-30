@@ -23,6 +23,7 @@ $(document).ready(function(){
          			$("#Stack").html(data.Stack);
          			$("#tab_content3").html(data.Register);
          			$("#cmd_output").html("");
+					$("#Cache").html(data.Cache);
 					
 					if(data.error.match("Fail")=="Fail"){
 						$(".error_info").css("bottom","0px");
@@ -74,8 +75,9 @@ $(document).ready(function(){
     		     			$("#Stack").html(data.Stack);
     		     			$("#tab_content3").html(data.Register);
     		     			$("#cmd_output").append(data.CMD);
+							$("#Cache").html(data.Cache);
 		
-							$("#cmd_output").scrollTop(9999);
+							$("#cmd_output").scrollTop(99999);
 							var ls=data.Codes.split('\n');
 							var i=0;
 							for(i=0;i!=ls.length;i++)
@@ -95,31 +97,31 @@ $(document).ready(function(){
   					{
   						if (THREAD[i] == 'F')
 						{
-							if (FF%2 == 0) $("#Fetch").css("background-color","yellow");
+							if (FF%2 == 0) $("#Fetch").css("background-color","rgb(216,191,216)");
 							else $("#Fetch").css("background-color","white");
 							FF++;
 						}
 						if (THREAD[i] == 'D')
 						{
-							if (DD%2 == 0) $("#Decode").css("background-color","yellow");
+							if (DD%2 == 0) $("#Decode").css("background-color","rgb(216,191,216)");
 							else $("#Decode").css("background-color","white");
 							DD++;
 						}
 						if (THREAD[i] == 'E')
 						{
-							if (EE%2 == 0) $("#Execute").css("background-color","yellow");
+							if (EE%2 == 0) $("#Execute").css("background-color","rgb(216,191,216)");
 							else $("#Execute").css("background-color","white");
 							EE++;
 						}
 						if (THREAD[i] == 'M')
 						{
-							if (MM%2 == 0) $("#Memory").css("background-color","yellow");
+							if (MM%2 == 0) $("#Memory").css("background-color","rgb(216,191,216)");
 							else $("#Memory").css("background-color","white");
 							MM++;
 						}
 						if (THREAD[i] == 'W')
 						{
-							if (WW%2 == 0) $("#Write").css("background-color","yellow");
+							if (WW%2 == 0) $("#Write").css("background-color","rgb(216,191,216)");
 							else $("#Write").css("background-color","white");
 							WW++;
 						}
