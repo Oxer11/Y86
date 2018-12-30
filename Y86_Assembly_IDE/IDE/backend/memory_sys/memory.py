@@ -49,11 +49,11 @@ class Memory:
 		else:
 			si=(addr>>b)%(1<<s)
 			bo=addr%(1<<b)
-			t=addr>>(s+b)
+			t_=addr>>(s+b)
 			
 			i=0
 			while i<E:
-				if self.cache_m[si][i]['tag']==t and self.cache_m[si][i]['valid']==1:
+				if self.cache_m[si][i]['tag']==t_ and self.cache_m[si][i]['valid']==1:
 					break
 				i+=1
 			#hit	
@@ -85,14 +85,14 @@ class Memory:
 					i=min_id
 					
 				if self.cache_m[si][i]['write'] == 1 and self.cache_m[si][i]['valid'] == 1:
-					w_addr = (self.cache_m[si][i]['tag']<<s+si)<<b
+					w_addr = ((self.cache_m[si][i]['tag']<<s)+si)<<b
 					for j in range(0,B):
 						self.main_m[w_addr+j] = self.cache_m[si][i]['block'][j]
 				
 				for j in range(0,B):
 					self.cache_m[si][i]['block'][j] = self.main_m[addr-bo+j]
 				self.cache_m[si][i]['write'] = 0
-				self.cache_m[si][i]['tag'] = t
+				self.cache_m[si][i]['tag'] = t_
 				self.cache_m[si][i]['valid'] = 1
 				self.cache_m[si][i]['lst']=get_CLK()
 				
@@ -114,11 +114,11 @@ class Memory:
 		else:
 			si=(addr>>b)%(1<<s)
 			bo=addr%(1<<b)
-			t=addr>>(s+b)
+			t_=addr>>(s+b)
 			
 			i=0
 			while i<E:
-				if self.cache_m[si][i]['tag']==t and self.cache_m[si][i]['valid']==1:
+				if self.cache_m[si][i]['tag']==t_ and self.cache_m[si][i]['valid']==1:
 					break
 				i+=1
 			#hit
@@ -152,14 +152,14 @@ class Memory:
 					i=min_id
 					
 				if self.cache_m[si][i]['write'] == 1 and self.cache_m[si][i]['valid'] == 1:
-					w_addr = (self.cache_m[si][i]['tag']<<s+si)<<b
+					w_addr = ((self.cache_m[si][i]['tag']<<s)+si)<<b
 					for j in range(0,B):
 						self.main_m[w_addr+j] = self.cache_m[si][i]['block'][j]
 						
 				for j in range(0,B):
 					self.cache_m[si][i]['block'][j] = self.main_m[addr-bo+j]
 				self.cache_m[si][i]['write'] = 1
-				self.cache_m[si][i]['tag'] = t
+				self.cache_m[si][i]['tag'] = t_
 				self.cache_m[si][i]['valid'] = 1
 				self.cache_m[si][i]['lst']=get_CLK()
 				for j in range(0,length):
@@ -182,11 +182,11 @@ class Memory:
 		else:
 			si=(addr>>b)%(1<<s)
 			bo=addr%(1<<b)
-			t=addr>>(s+b)
+			t_=addr>>(s+b)
 			
 			i=0
 			while i<E:
-				if self.cache_m[si][i]['tag']==t and self.cache_m[si][i]['valid']==1:
+				if self.cache_m[si][i]['tag']==t_ and self.cache_m[si][i]['valid']==1:
 					break
 				i+=1
 			#hit
@@ -232,6 +232,10 @@ class Memory:
 		self.cache_m=[[{'lst':0,'write':0,'valid':0,'tag':0,'block':['00']*B} for i in range(0,E)] for j in range(0,S)]
 	
 		return 0
+		
+	def get_cacfg(self):
+		global s,t,b
+		return s,t,b
 	
 	def valid(self,addr):
 		return (addr in range(0,MEMORYSIZE)) and (addr+7 in range(0,MEMORYSIZE)) #and not (addr in range(self.insbeg, self.insend)) and not (addr+7 in range(self.insbeg, self.insend))
