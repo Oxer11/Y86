@@ -6,7 +6,7 @@ function sleep (time) {
 $.ajaxSetup({ 
     async : false 
 });    
-
+var cmd_id=0;
 $(document).ready(function(){
  		$("#btn_input").click(function(){
 			$("#number_div").css("border-right-color","green");
@@ -34,7 +34,7 @@ $(document).ready(function(){
 					}
   				});
 			
-			//$(".code").scrollTop(0);
+			$(".code").scrollTop(0);
 		});
 	});
 	$(document).on("dblclick", ".error_line",function(){
@@ -57,74 +57,79 @@ $(document).ready(function(){
  			var eCode = e.keyCode ? e.keyCode : e.which ? e.which : e.charCode;
  			if (eCode==13)
  			{
-  			var content=$("#cmd").val(); 
-  			var cmd=content.split(" ");
-  			//function B()
-  			{  
-  				var end=1, THREAD='';
-  				$.post("/IDE/",{'type':'command', 'content':content},     
-    				function(data,status)
-    				{              
-         				$("#yo_Code").html(data.Code);
-         				$("#Codes").html(data.Codes);
-         				$("#tab_content1").html(data.Stat);
- 	        			$("#Stage").html(data.Stage);
-    	     			$("#columns").html(data.Display);
-    	     			$("#Stack").html(data.Stack);
-    	     			$("#tab_content3").html(data.Register);
-    	     			$("#cmd_output").append(data.CMD);
-	
-						$("#cmd_output").scrollTop(9999);
-						var ls=data.Codes.split('\n');
-						var i=0;
-						for(i=0;i!=ls.length;i++)
-							if(ls[i][1]=='m')
-								break;
-						if(i>8&&i<ls.length)
-							$(".code").scrollTop((i-8)*20);
-						else
-							$(".code").scrollTop(0);
-							
-						THREAD = data.THREAD;
-						//end = data.end;
-  					});
-  				$("#cmd").val("");  
-  				var FF=0,DD=0,EE=0,MM=0,WW=0;
-  				function A(i)
-  				{
-  					if (THREAD[i] == 'F')
-					{
-						if (FF == 0) {FF = 1; $("#Fetch").css("background-color","yellow");}
-						else {FF = 0; $("#Fetch").css("background-color","white");}
+  				var content=$("#cmd").val(); 
+	  			var cmd=content.split(" ");
+	  			cmd_id++;
+  				function B()
+  				{  
+  					var end=1, THREAD='';
+  					$.post("/IDE/",{'type':'command', 'content':content, 'cmdid':cmd_id},     
+    					function(data,status)
+    					{              
+    	     				$("#yo_Code").html(data.Code);
+    	     				$("#Codes").html(data.Codes);
+    	     				$("#tab_content1").html(data.Stat);
+ 		        			$("#Stage").html(data.Stage);
+    		     			$("#columns").html(data.Display);
+    		     			$("#Stack").html(data.Stack);
+    		     			$("#tab_content3").html(data.Register);
+    		     			$("#cmd_output").append(data.CMD);
+		
+							$("#cmd_output").scrollTop(9999);
+							var ls=data.Codes.split('\n');
+							var i=0;
+							for(i=0;i!=ls.length;i++)
+								if(ls[i][1]=='m')
+									break;
+							if(i>8&&i<ls.length)
+								$(".code").scrollTop((i-8)*20);
+							else
+								$(".code").scrollTop(0);
+								
+							THREAD = data.THREAD;
+							end = data.end;
+  						});
+  					$("#cmd").val("");  
+  					var FF=0,DD=0,EE=0,MM=0,WW=0;
+  					function A(i)
+  					{
+  						if (THREAD[i] == 'F')
+						{
+							if (FF%2 == 0) $("#Fetch").css("background-color","yellow");
+							else $("#Fetch").css("background-color","white");
+							FF++;
+						}
+						if (THREAD[i] == 'D')
+						{
+							if (DD%2 == 0) $("#Decode").css("background-color","yellow");
+							else $("#Decode").css("background-color","white");
+							DD++;
+						}
+						if (THREAD[i] == 'E')
+						{
+							if (EE%2 == 0) $("#Execute").css("background-color","yellow");
+							else $("#Execute").css("background-color","white");
+							EE++;
+						}
+						if (THREAD[i] == 'M')
+						{
+							if (MM%2 == 0) $("#Memory").css("background-color","yellow");
+							else $("#Memory").css("background-color","white");
+							MM++;
+						}
+						if (THREAD[i] == 'W')
+						{
+							if (WW%2 == 0) $("#Write").css("background-color","yellow");
+							else $("#Write").css("background-color","white");
+							WW++;
+						}
+						if (i<THREAD.length-1) sleep(200).then(() => { A(i+1); })
 					}
-					if (THREAD[i] == 'D')
-					{
-						if (DD == 0) {DD = 1; $("#Decode").css("background-color","yellow");}
-						else {DD = 0; $("#Decode").css("background-color","white");}
-					}
-					if (THREAD[i] == 'E')
-					{
-						if (EE == 0) {EE = 1; $("#Execute").css("background-color","yellow");}
-						else {EE = 0; $("#Execute").css("background-color","white");}
-					}
-					if (THREAD[i] == 'M')
-					{
-						if (MM == 0) {MM = 1; $("#Memory").css("background-color","yellow");}
-						else {MM = 0; $("#Memory").css("background-color","white");}
-					}
-					if (THREAD[i] == 'W')
-					{
-						if (WW == 0) {WW = 1; $("#Write").css("background-color","yellow");}
-						else {WW = 0; $("#Write").css("background-color","white");}
-					}
-					if (i<THREAD.length-1)
-						sleep(200).then(() => { A(i+1); })
-				}
-				A(0);
-  				//if (end == 0)
-  				//	sleep(200).then(() => { B(); })
-  			}
-  			//B();
+					A(0);
+  					if (end == 0)
+  						sleep(2100).then(() => { B(); })
+  				}
+  				B();
   			}
 		});
 	});

@@ -64,13 +64,16 @@ def UpdatePC(reg):
 	return f_pc
 
 def Step(MAXSTEP=1, breakpoints=[], OP=0):
-	global PC, CC, Stat, NUM_INS, NUM_BUB
-	dep, STEP = 0, 0
+	global PC, CC, Stat, NUM_INS, NUM_BUB, next_cnt, end, dep
+	STEP = 0
 	while Stat.stat=='AOK' and STEP<MAXSTEP:
 		if [PC,'y',1] in breakpoints:
-			print 'Breakpoint %d, '%(breakpoints.index([PC,'y',1])+1)+hex(PC)
+			add_CR('<div>Breakpoint %d, '%(breakpoints.index([PC,'y',1])+1)+hex(PC)+'</div>')
+			end = 1
 			break
-		if (OP == 2) and (dep == -1): break
+		if (OP == 2) and (dep == -1): 
+			end = 1
+			break
 		print ''
 		print 'Cycle %d. CC=Z=%d S=%d O=%d, Stat=%s'%(get_CLK(), CC.ZF, CC.SF, CC.OF, Stat.stat)
 		pipereg.print_()
@@ -106,7 +109,10 @@ def Step(MAXSTEP=1, breakpoints=[], OP=0):
 		Update(cur=tmp_pipereg, lst=pipereg)
 		PC = UpdatePC(pipereg)
 		add_CLK(1)
-		if (OP != 1) or (dep == 0): STEP += 1
+		if (OP != 1) or (dep == 0): 
+			STEP += 1
+			next_cnt += 1
+		break
 		
 	print reg.reg
 	print 'CC.ZF=%d SF=%d OF=%d, Stat=%s'%(CC.ZF, CC.SF, CC.OF, Stat.stat)
@@ -162,6 +168,7 @@ error={}
 InsCode = {}
 breakpoints = []
 Display = []
+lst_cmdid, step_cnt, next_cnt, end, dep = 0, 0, 0, 0, 0
 NUM_INS, NUM_BUB = 0, 0
 PC, f_pc, maxPC = 0, 0, 0
 	
@@ -169,7 +176,7 @@ PC, f_pc, maxPC = 0, 0, 0
 def index(request):
 #print request.method
 #	print request.POST
-	global mem, reg, pipereg, CC, Stat, tmp_pipereg, labels, Codes, error, InsCode, breakpoints, NUM_INS, NUM_BUB, PC, f_pc, maxPC
+	global mem, reg, pipereg, CC, Stat, tmp_pipereg, labels, Codes, error, InsCode, breakpoints, NUM_INS, NUM_BUB, PC, f_pc, maxPC, lst_cmdid, step_cnt, next_cnt, end, dep
 	if request.method == 'GET':
 		return render(request, 'IDE/main.html', {})
 	elif request.method == 'POST':
@@ -215,6 +222,12 @@ def index(request):
 		elif request.POST.get("type") == 'command':
 			cmd = request.POST.get("content").encode('ascii')
 			cmd = cmd.strip()
+			cmdid = request.POST.get("cmdid").encode('ascii')
+			if (cmdid != lst_cmdid): 
+				lst_cmdid = cmdid
+				step_cnt, next_cnt, dep = 0, 0, 0
+			end = 1
+				
 			set_CR("<div>" + cmd)
 			if len(cmd)==0 : cmd = lst_cmd
 			sep = cmd.find(' ')
@@ -270,20 +283,23 @@ def index(request):
 			#Step
 			if (CMD == 's') or (CMD == 'step'): 
 				if Stat.stat == 'NON': Stat.stat = 'AOK'
-				if len(arg) == 0: Step()
-				else: Step(int(arg,10))
+				Step()
+				step_cnt += 1
+				if (len(arg) > 0 and step_cnt < int(arg,10) and Stat.stat == 'AOK'): end = 0
 		
 			if (CMD == 'n') or (CMD == 'next'): 
 				if Stat.stat == 'NON': Stat.stat = 'AOK'
-				if len(arg) == 0: Step(OP = 1)
-				else: Step(int(arg,10), OP = 1)	
+				Step(OP = 1)	
+				if (len(arg) > 0 and next_cnt < int(arg,10) and Stat.stat == 'AOK'): end = 0
 		
 			if (CMD == 'c') or (CMD == 'continue'): 
 				if Stat.stat == 'NON': Stat.stat = 'AOK'
+				end = 0
 				Step(MAXCLOCK, breakpoints)
 	
 			if (CMD == 'finish'):
 				if Stat.stat == 'NON': Stat.stat = 'AOK'
+				end = 0
 				Step(MAXCLOCK, OP = 2)
 		
 			#Jump
@@ -339,6 +355,7 @@ def index(request):
 				else: breakpoints[int(arg,10)-1][2] = 0
 			
 			lst_cmd = cmd	
+			results.update({"end":end})
 		
 		OUTPUT(results)
 		results.update({"CMD":get_CR()})
