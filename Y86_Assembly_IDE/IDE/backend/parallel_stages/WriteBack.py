@@ -11,7 +11,7 @@ from memory_sys.piperegister import *
 from others.Global import *
 
 def WriteBack(lst, Stat, reg):
-	add_CR('<div>W starts</div>')
+	#add_CR('<div>W starts</div>')
 	add_THREAD('W')
 	
 	if lst.regW['stat'] == 'BUB':
@@ -20,14 +20,14 @@ def WriteBack(lst, Stat, reg):
 		Stat.stat = lst.regW['stat']
 
 	if Stat.stat != 'AOK':
-		add_CR('<div>W is over</div>')
+		#add_CR('<div>W is over</div>')
 		add_THREAD('W')
 		return
     
 	reg.write(lst.regW['dstE'], lst.regW['valE'])
 	reg.write(lst.regW['dstM'], lst.regW['valM'])
 	
-	add_CR('<div>W is over</div>')
+	#add_CR('<div>W is over</div>')
 	add_THREAD('W')
 
 if __name__ == "__main__":

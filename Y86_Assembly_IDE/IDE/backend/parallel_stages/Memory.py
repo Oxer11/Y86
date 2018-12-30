@@ -9,13 +9,13 @@ from memory_sys.memory import *
 from others.Global import *
 
 def Memory_(lst, cur, mem, M_over):
-	add_CR('<div>M starts</div>')
+	#add_CR('<div>M starts</div>')
 	add_THREAD('M')
 	cur.regW['stat'] = lst.regM['stat']
 	cur.regW['icode'] = lst.regM['icode']
 	cur.regW['ifun'] = lst.regM['ifun']
 	if lst.regM['stat'] not in ['AOK','BUB'] or lst.regW['stat'] not in ['AOK','BUB']:
-		add_CR('<div>M is over</div>')
+		#add_CR('<div>M is over</div>')
 		add_THREAD('M')
 		M_over.set()
 		return
@@ -45,6 +45,6 @@ def Memory_(lst, cur, mem, M_over):
 		else:
 			cur.regW['stat'] = 'ADR'
 	
-	add_CR('<div>M is over</div>')
+	#add_CR('<div>M is over</div>')
 	add_THREAD('M')
 	M_over.set()

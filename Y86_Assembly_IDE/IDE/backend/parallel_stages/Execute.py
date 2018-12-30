@@ -28,7 +28,7 @@ def ALU(ALUA, ALUB, ALUfun):
 		
 
 def Execute(lst, cur, CC, NUM_INS, NUM_BUB, E_over, M_over):
-	add_CR('<div>E starts</div>')
+	#add_CR('<div>E starts</div>')
 	add_THREAD('E')
 	
 	cur.regM['stat'] = lst.regE['stat']
@@ -38,7 +38,7 @@ def Execute(lst, cur, CC, NUM_INS, NUM_BUB, E_over, M_over):
 	if lst.regE['stat'] in ['BUB']: NUM_BUB += 1
 	M_over.wait()
 	if lst.regE['stat'] not in ['AOK','BUB'] or lst.regM['stat'] not in ['AOK','BUB'] or lst.regW['stat'] not in ['AOK','BUB'] or cur.regW['stat'] not in ['AOK','BUB']:
-		add_CR('<div>E is over</div>')
+		#add_CR('<div>E is over</div>')
 		add_THREAD('E')
 		E_over.set()
 		return CC, NUM_INS, NUM_BUB
@@ -103,7 +103,7 @@ def Execute(lst, cur, CC, NUM_INS, NUM_BUB, E_over, M_over):
 	if icode == 2 and lst.regE['ifun'] != 0 and not cur.regM['Cnd']:
 		cur.regM['dstE'] = RNONE
 	
-	add_CR('<div>E is over</div>')
+	#add_CR('<div>E is over</div>')
 	add_THREAD('E')
 	E_over.set()
 	
