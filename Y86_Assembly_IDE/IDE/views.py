@@ -175,6 +175,7 @@ def index(request):
 	elif request.method == 'POST':
 		results = {}
 		set_CR('')
+		init_THREAD()
 		if request.POST.get("type") == 'code':
 			mem = Memory()
 			reg = Register()
@@ -341,5 +342,6 @@ def index(request):
 		
 		OUTPUT(results)
 		results.update({"CMD":get_CR()})
+		results.update({"THREAD":get_THREAD()})
 		return JsonResponse(results)
    	return ""
