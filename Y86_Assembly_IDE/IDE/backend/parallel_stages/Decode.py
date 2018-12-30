@@ -11,12 +11,14 @@ from others.Global import *
 
 def Decode(lst, cur, reg, E_over):
 	add_CR('<div>D starts</div>')
+	add_THREAD('D')
 	cur.regE['stat'] = lst.regD['stat']	
 	icode = lst.regD['icode']	
 	cur.regE['icode'] = lst.regD['icode']
 	cur.regE['ifun'] = lst.regD['ifun']
 	if lst.regD['stat'] not in ['AOK','BUB']:
 		add_CR('<div>D is over</div>')
+		add_THREAD('D')
 		return
 
 	cur.regE['valC'] = lst.regD['valC']
@@ -82,5 +84,5 @@ def Decode(lst, cur, reg, E_over):
 		cur.regE['valB'] = lst.regW['valE']
 	
 	add_CR('<div>D is over</div>')
-		
+	add_THREAD('D')
 	

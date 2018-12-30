@@ -9,7 +9,7 @@ def WriteStage(pipereg,ins):
     
     fr = ''
     s = '''<tr>
-				<td style="font-family:myFont;color:rgb(147,112,219);">Write</td>
+				<td style="font-family:myFont;color:rgb(147,112,219);" id="Write">Write</td>
 				<td>
 					<span class="mytooltip">'''+ins[3]+'''
 					<span class="mytooltip_text">ins</span></span>
@@ -39,7 +39,7 @@ def WriteStage(pipereg,ins):
     fr = fr + s
 
     s = '''<tr>
-				<td style="font-family:myFont;color:rgb(147,112,219);">Memory</td>
+				<td style="font-family:myFont;color:rgb(147,112,219);" id="Memory">Memory</td>
 				<td>
 					<span class="mytooltip">'''+ins[2]+'''
 					<span class="mytooltip_text">ins</span></span>
@@ -72,7 +72,7 @@ def WriteStage(pipereg,ins):
     fr = fr + s
 
     s = '''<tr>
-				<td style="font-family:myFont;color:rgb(147,112,219);">Execute</td>
+				<td style="font-family:myFont;color:rgb(147,112,219);" id="Execute">Execute</td>
 				<td>
 					<span class="mytooltip">'''+ins[1]+'''
 					<span class="mytooltip_text">ins</span></span>
@@ -117,7 +117,7 @@ def WriteStage(pipereg,ins):
     fr = fr + s
 
     s = '''<tr>
-				<td style="font-family:myFont;color:rgb(147,112,219);">Decode</td>
+				<td style="font-family:myFont;color:rgb(147,112,219);" id="Decode">Decode</td>
 				<td>
 					<span class="mytooltip">'''+ins[0]+'''
 					<span class="mytooltip_text">ins</span></span>
@@ -146,7 +146,7 @@ def WriteStage(pipereg,ins):
     fr = fr + s
 
     s = '''<tr>
-				<td style="font-family:myFont;color:rgb(147,112,219);">Fetch</td>
+				<td style="font-family:myFont;color:rgb(147,112,219);" id="Fetch">Fetch</td>
 				<td>
                     <span class="mytooltip">'''+hex(pipereg.regF['predPC'])+'''
                     <span class="mytooltip_text">predPC</span></span>

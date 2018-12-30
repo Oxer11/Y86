@@ -9,6 +9,7 @@ sys.path.append(o_path)
 '''
 定义CLK,提供修改和读取的接口
 定义CMD_RESULTS,提供修改和读取的接口
+定义THREAD_LIST,提供修改和读取的接口
 '''
 
 CLK=0
@@ -36,3 +37,16 @@ def set_CR(s):
 def get_CR():
 	global CMD_RESULTS
 	return CMD_RESULTS
+	
+THREAD_LIST=''
+def add_THREAD(s):
+	global THREAD_LIST
+	THREAD_LIST+=s
+
+def init_THREAD():
+	global THREAD_LIST
+	THREAD_LIST=''
+
+def get_THREAD():
+	global THREAD_LIST
+	return THREAD_LIST

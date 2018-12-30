@@ -50,9 +50,11 @@ def valid(InsCode):
 
 def Fetch(lst, cur, InsCode_dic, PC):
 	add_CR('<div>F starts</div>')
+	add_THREAD('F')
 	if not InsCode_dic.has_key(PC):
 		cur.regD['stat'] = 'NON'
 		add_CR( '<div>F is over</div>')
+		add_THREAD('F')
 		return
 	InsCode = InsCode_dic[PC]
 	icode = int(InsCode[0], 16)
@@ -106,3 +108,4 @@ def Fetch(lst, cur, InsCode_dic, PC):
 		cur.regF['predPC'] = cur.regD['valP']
 		
 	add_CR( '<div>F is over</div>')
+	add_THREAD('F')
