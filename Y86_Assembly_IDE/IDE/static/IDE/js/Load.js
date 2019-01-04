@@ -74,10 +74,10 @@ $(document).ready(function(){
     		     			$("#columns").html(data.Display);
     		     			$("#Stack").html(data.Stack);
     		     			$("#tab_content3").html(data.Register);
-    		     			$("#cmd_output").append(data.CMD);
+    		     			$("#cmd_output").html(data.CMD);
 							$("#Cache").html(data.Cache);
 		
-							$("#cmd_output").scrollTop(99999);
+							$(".cmd").scrollTop(99999);
 							var ls=data.Codes.split('\n');
 							var i=0;
 							for(i=0;i!=ls.length;i++)

@@ -69,7 +69,7 @@ def Step(MAXSTEP=1, breakpoints=[], OP=0):
 	STEP = 0
 	while Stat.stat=='AOK' and STEP<MAXSTEP:
 		if [PC,'y',1] in breakpoints:
-			add_CR('<div>Breakpoint %d, '%(breakpoints.index([PC,'y',1])+1)+hex(PC)+'</div>')
+			add_CR('<tr><td  class="info">Breakpoint %d, '%(breakpoints.index([PC,'y',1])+1)+hex(PC)+'</td></tr>')
 			end = 1
 			break
 		if (OP == 2) and (dep == -1): 
@@ -175,17 +175,17 @@ Display = []
 lst_cmdid, step_cnt, next_cnt, end, dep = 0, 0, 0, 0, 0
 NUM_INS, NUM_BUB = 0, 0
 PC, f_pc, maxPC = 0, 0, 0
+lst_cmd=''
 	
 @csrf_exempt
 def index(request):
 #print request.method
 #	print request.POST
-	global mem, reg, pipereg, CC, Stat, tmp_pipereg, labels, Codes, error, InsCode, breakpoints, NUM_INS, NUM_BUB, PC, f_pc, maxPC, lst_cmdid, step_cnt, next_cnt, end, dep
+	global lst_cmd,mem, reg, pipereg, CC, Stat, tmp_pipereg, labels, Codes, error, InsCode, breakpoints, NUM_INS, NUM_BUB, PC, f_pc, maxPC, lst_cmdid, step_cnt, next_cnt, end, dep
 	if request.method == 'GET':
 		return render(request, 'IDE/main.html', {})
 	elif request.method == 'POST':
 		results = {}
-		set_CR('')
 		init_THREAD()
 		if request.POST.get("type") == 'code':
 			mem = Memory()
@@ -232,8 +232,8 @@ def index(request):
 				step_cnt, next_cnt, dep = 0, 0, 0
 			end = 1
 				
-			set_CR("<div>" + cmd)
-			if len(cmd)==0 : cmd = lst_cmd
+			if len(cmd)==0 : cmd = lst_cmd	
+			add_CR('<tr><td  class="ins">'+cmd+'</td></tr>')
 			sep = cmd.find(' ')
 			if sep == -1: sep = len(cmd)
 			CMD = cmd[0:sep]
@@ -252,14 +252,15 @@ def index(request):
 				InsCode = {}
 				breakpoints = []
 				set_CLK(0)
+				set_CR('')
 				NUM_INS, NUM_BUB = 0, 0
 				PC, f_pc, maxPC= 0, 0, 0
 	
-			if (CMD == 'h') or (CMD == 'help'): 
+			elif (CMD == 'h') or (CMD == 'help'): 
 				s=Help(arg)
 				add_CR(s)
 	
-			if (CMD == 'set'):
+			elif (CMD == 'set'):
 				sep = arg.find(' ')
 				arg1 = arg[0:sep].strip()
 				arg2 = arg[sep+1:len(arg)].strip()
@@ -268,58 +269,60 @@ def index(request):
 				arg2 = arg2[0:sep].strip()
 				if arg1 == 'REG': 
 					reg.write(reg.map[arg2],int(arg3))
-				if arg1 == 'MEM': 
+				elif arg1 == 'MEM': 
 					mem.write(int(arg2,16),int(arg3))
-				if arg1 == 'STACK':
+				elif arg1 == 'STACK':
 					mem.write(reg.reg[RRSP]-8*int(arg2,10),int(arg3))
-				if arg1 == 'CACHE':
+				elif arg1 == 'CACHE':
 					sep=arg3.find(' ')
 					arg4=arg3[sep+1:].strip()
 					arg3=arg3[0:sep].strip()
 					if mem.set_cacfg(int(arg2),int(arg3),int(arg4))==1:
-						add_CR("<div>Invalid S,B or E</div>")
+						add_CR('<tr><td  class="error">Invalid S,B or E</td></tr>')
+				else:
+					add_CR('<tr><td  class="error">Invalid Instruction</td></tr>')
 	
 			#Display
-			if (CMD == 'display'): Display.append(arg)
+			elif (CMD == 'display'): Display.append(arg)
 	
-			if (CMD == 'undisplay'): Display.remove(arg)
+			elif (CMD == 'undisplay'): Display.remove(arg)
 	
 			#Step
-			if (CMD == 's') or (CMD == 'step'): 
+			elif (CMD == 's') or (CMD == 'step'): 
 				if Stat.stat == 'NON': Stat.stat = 'AOK'
 				Step()
 				step_cnt += 1
 				if (len(arg) > 0 and step_cnt < int(arg,10) and Stat.stat == 'AOK'): end = 0
 		
-			if (CMD == 'n') or (CMD == 'next'): 
+			elif (CMD == 'n') or (CMD == 'next'): 
 				if Stat.stat == 'NON': Stat.stat = 'AOK'
 				Step(OP = 1)	
 				if (len(arg) > 0 and next_cnt < int(arg,10) and Stat.stat == 'AOK'): end = 0
 		
-			if (CMD == 'c') or (CMD == 'continue'): 
+			elif (CMD == 'c') or (CMD == 'continue'): 
 				if Stat.stat == 'NON': Stat.stat = 'AOK'
 				end = 0
 				Step(MAXCLOCK, breakpoints)
 	
-			if (CMD == 'finish'):
+			elif (CMD == 'finish'):
 				if Stat.stat == 'NON': Stat.stat = 'AOK'
 				end = 0
 				Step(MAXCLOCK, OP = 2)
 		
 			#Jump
-			if (CMD == 'j') or (CMD == 'jump'):
+			elif (CMD == 'j') or (CMD == 'jump'):
 				pipereg = PipeRegister()
 				if labels.has_key(arg): PC = int(labels[arg],16)
 				else: PC = int(arg,16)
 		
-			if (CMD == 'return'):
+			elif (CMD == 'return'):
 				pipereg = PipeRegister()
 				rsp, rnone = reg.read(RRSP, RNONE)
 				addr = mem.display(rsp)
 				reg.write(RRSP, rsp+8)
 				PC = addr
 	
-			if (CMD == 'call'):
+			elif (CMD == 'call'):
 				if labels.has_key(arg): addr = int(labels[arg],16)
 				else: addr = int(arg,16)
 				pipereg = PipeRegister()
@@ -331,32 +334,35 @@ def index(request):
 	
 			#Breakpoints
 	
-			if (CMD == 'b') or (CMD == 'break'):
+			elif (CMD == 'b') or (CMD == 'break'):
 				if labels.has_key(arg): breakpoints.append([int(labels[arg],16),'y',1])
 				else: breakpoints.append([int(arg,16),'y',1])
-				add_CR("<div>" + 'Breakpoint %d at '%(len(breakpoints)) + arg + "</div>")
+				add_CR('<tr><td  class="info">' + 'Breakpoint %d at '%(len(breakpoints)) + arg + "</td></tr>")
 	
-			if (CMD == 'info') and (arg == 'breakpoints'):
-				add_CR("<div>" + 'Num'.ljust(8)+'Type'.ljust(15)+'Enb'.ljust(4)+'Address' + "</div>")
+			elif (CMD == 'info') and (arg == 'breakpoints'):
+				add_CR('<tr><td  class="info"><div>' + 'Num'.ljust(8)+'Type'.ljust(15)+'Enb'.ljust(4)+'Address' + "</div>")
 				for i in range(0,len(breakpoints)):
 					if breakpoints[i][2]!=0:
 						add_CR("<div>" + str(i+1).ljust(8)+'breakpoint'.ljust(15)+breakpoints[i][1].ljust(4)+hex(breakpoints[i][0]) + "</div>")
+				add_CR('</td></tr>')
 				
-			if (CMD == 'enable'): 
+			elif (CMD == 'enable'): 
 				if len(arg) == 0:
 					for i in range(0,len(breakpoints)):
 						breakpoints[i][1] = 'y'
 				else: breakpoints[int(arg,10)-1][1] = 'y'
-			if (CMD == 'disable'): 
+			elif (CMD == 'disable'): 
 				if len(arg) == 0:
 					for i in range(0,len(breakpoints)):
 						breakpoints[i][1] = 'n'
 				else: breakpoints[int(arg,10)-1][1] = 'n'
-			if (CMD == 'delete'): 
+			elif (CMD == 'delete'): 
 				if len(arg) == 0:
 					for i in range(0,len(breakpoints)):
 						breakpoints[i][2] = 0
 				else: breakpoints[int(arg,10)-1][2] = 0
+			else:
+				add_CR('<tr><td  class="error">Invalid Instruction</td></tr>')
 			
 			lst_cmd = cmd	
 			results.update({"end":end})

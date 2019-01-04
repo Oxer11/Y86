@@ -360,8 +360,6 @@
 
         .pointer:before {
             content: url(arrow.png);
-            width: 10px;
-            height: 10px;
         }
 
         .tabs {
@@ -464,7 +462,7 @@
 		
 		.cmd{
             position: relative;
-			border:none;
+			border:3px solid rgb(147,112,219);
             float: left;
             background-color:white;
             width: 41%;
@@ -472,9 +470,53 @@
             margin: 15px;
 			margin-top:3px;
 			padding:10px;
-			overflow-x:hidden;
+			overflow-x:auto;
             overflow-y:auto;
         }
+			.cmd td{
+				border:1px solid rgb(211,211,211);
+				border-right:none;
+				border-left:none;
+				font-weight:bold;
+			}
+			.cmd .info{
+				background-color:rgb(224,255,255);
+			}
+			.cmd .info:hover{
+				background-color:rgb(224,255,255);
+			}
+			.cmd .info:before{
+				content: url(info.png);
+				position:relative;
+				left:-3px;
+				top:2px;
+			}
+			
+			.cmd .ins{
+				background-color:white;
+			}
+			.cmd .ins:hover{
+				background-color:white;
+			}
+			.cmd .ins:before{
+				content: url(ins.png);
+				position:relative;
+				left:-3px;
+				top:2px;
+			}
+			
+			.cmd .error{
+				background-color:rgb(255,228,225);
+			}
+			.cmd .error:hover{
+				background-color:rgb(255,228,225);
+			}
+			.cmd .error:before{
+				content: url(error.png);
+				position:relative;
+				left:-3px;
+				top:2px;
+			}
 			
         mark {
             background-color: rgba(147,112,219,0.3);
