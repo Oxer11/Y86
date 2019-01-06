@@ -199,6 +199,7 @@ def index(request):
 			InsCode = {}
 			breakpoints = []
 			set_CLK(0)
+			set_Hit_Type(-1)
 			NUM_INS, NUM_BUB = 0, 0
 			PC, f_pc, maxPC= 0, 0, 0
 			AssemblyCode = request.POST.get("content").encode('ascii')
@@ -230,14 +231,16 @@ def index(request):
 			if (cmdid != lst_cmdid): 
 				lst_cmdid = cmdid
 				step_cnt, next_cnt, dep = 0, 0, 0
+				add_CR('<tr><td  class="ins">'+cmd+'</td></tr>')
 			end = 1
 				
 			if len(cmd)==0 : cmd = lst_cmd	
-			add_CR('<tr><td  class="ins">'+cmd+'</td></tr>')
+			
 			sep = cmd.find(' ')
 			if sep == -1: sep = len(cmd)
 			CMD = cmd[0:sep]
 			arg = cmd[sep:len(cmd)].strip()
+			set_Hit_Type(-1)
 			
 			#Others
 			if (CMD == 'clear'): 

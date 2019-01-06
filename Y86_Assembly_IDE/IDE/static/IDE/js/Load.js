@@ -92,6 +92,10 @@ $(document).ready(function(){
 							end = data.end;
   						});
   					$("#cmd").val("");  
+  					$("#hit").css("background-color","rgb(216,191,216)");
+  					sleep(200).then(() => { $("#hit").css("background-color","rgb(216,191,216)"); })
+  					$("#miss").css("background-color","red");
+  					sleep(200).then(() => { $("#miss").css("background-color","white"); })
   					var FF=0,DD=0,EE=0,MM=0,WW=0;
   					function A(i)
   					{
