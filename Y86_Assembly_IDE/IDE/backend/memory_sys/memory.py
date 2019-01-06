@@ -53,36 +53,38 @@ class Memory:
 			
 			i=0
 			while i<E:
-				if self.cache_m[si][i]['tag']==t_ and self.cache_m[si][i]['valid']==1:
+				if self.cache_m[si][i]['tag'] == t_ and self.cache_m[si][i]['valid'] == 1:
 					break
-				i+=1
+				i += 1
 			#hit	
 			if i<E:
 				add_CLK(VISIT_C)
 				hit += 1
 				add_CR('<tr><td  class="ins">Hit when read '+hex(addr)+"</td></tr>")
-				self.cache_m[si][i]['lst']=get_CLK()
+				set_Hit_Type(1)
+				self.cache_m[si][i]['lst'] = get_CLK()
 				for j in range(0,8):
-					dataout = self.cache_m[si][i]['block'][bo+j]+dataout
+					dataout = self.cache_m[si][i]['block'][bo+j] + dataout
 			#miss
 			else:
 				add_CLK(VISIT_M)
 				miss += 1
 				add_CR('<tr><td  class="ins">Miss when read '+hex(addr)+"</td></tr>")
-				min_id=0
-				min=MAXCLOCK
+				set_Hit_Type(0)
+				min_id = 0
+				min = MAXCLOCK
 				i=0
 				while i<E:
-					if self.cache_m[si][i]['valid']==0:
+					if self.cache_m[si][i]['valid'] == 0:
 						break
 					else:
-						if self.cache_m[si][i]['lst']<min:
-							min_id=i
-							min=self.cache_m[si][i]['lst']
-					i+=1
+						if self.cache_m[si][i]['lst'] < min:
+							min_id = i
+							min = self.cache_m[si][i]['lst']
+					i += 1
 				
-				if i==E:
-					i=min_id
+				if i == E:
+					i = min_id
 					
 				if self.cache_m[si][i]['write'] == 1 and self.cache_m[si][i]['valid'] == 1:
 					w_addr = ((self.cache_m[si][i]['tag']<<s)+si)<<b
@@ -94,10 +96,10 @@ class Memory:
 				self.cache_m[si][i]['write'] = 0
 				self.cache_m[si][i]['tag'] = t_
 				self.cache_m[si][i]['valid'] = 1
-				self.cache_m[si][i]['lst']=get_CLK()
+				self.cache_m[si][i]['lst'] = get_CLK()
 				
 				for j in range(0,8):
-					dataout = self.cache_m[si][i]['block'][bo+j]+dataout
+					dataout = self.cache_m[si][i]['block'][bo+j] + dataout
 		
 		if dataout[0] in ['8','9','a','b','c','d','e','f']:
 			ret = -1 * ((0xffffffffffffffff ^ long(dataout, 16)) + 1)
@@ -126,6 +128,7 @@ class Memory:
 				add_CLK(VISIT_C)
 				hit += 1
 				add_CR('<tr><td  class="ins">Hit when write to '+hex(addr)+"</td></tr>")
+				set_Hit_Type(1)
 				for j in range(0,length):
 					self.cache_m[si][i]['block'][bo+j] = hex(datain%256/16)[2]+hex(datain%16)[2]
 					datain /= 256
@@ -136,6 +139,7 @@ class Memory:
 				add_CLK(VISIT_M)
 				miss += 1
 				add_CR('<tr><td  class="ins">Miss when write to '+hex(addr)+"</td></tr>")
+				set_Hit_Type(0)
 				min_id=0
 				min=MAXCLOCK
 				i=0
