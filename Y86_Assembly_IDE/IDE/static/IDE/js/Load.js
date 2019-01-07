@@ -91,11 +91,23 @@ $(document).ready(function(){
 							THREAD = data.THREAD;
 							end = data.end;
   						});
-  					$("#cmd").val("");  
-  					$("#hit").css("background-color","rgb(216,191,216)");
-  					sleep(200).then(() => { $("#hit").css("background-color","rgb(216,191,216)"); })
-  					$("#miss").css("background-color","red");
-  					sleep(200).then(() => { $("#miss").css("background-color","white"); })
+  					$("#cmd").val(""); 
+					
+					if ($('input:radio[name="tabs_"]:checked').val()=="cache"){						
+						if ( $("#miss").length > 0 ){
+							var mp=$("#miss").parent().position();
+							$("#cache_tab").scrollTop(mp.top);
+							$("#miss").css("background-color","rgb(250,128,114)");
+							sleep(200).then(() => { $("#miss").css("background-color","white"); })
+						}
+						if ( $("#hit").length > 0 ){
+							var hp=$("#hit").parent().position();
+							$("#cache_tab").scrollTop(hp.top);
+							$("#hit").css("background-color","rgb(144,238,144)");
+							sleep(200).then(() => { $("#hit").css("background-color","white"); })
+						}
+					}
+					
   					var FF=0,DD=0,EE=0,MM=0,WW=0;
   					function A(i)
   					{
