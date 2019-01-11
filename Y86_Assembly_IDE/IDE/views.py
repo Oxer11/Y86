@@ -228,13 +228,12 @@ def index(request):
 			cmd = request.POST.get("content").encode('ascii')
 			cmd = cmd.strip()
 			cmdid = request.POST.get("cmdid").encode('ascii')
+			if len(cmd)==0 : cmd = lst_cmd	
 			if (cmdid != lst_cmdid): 
 				lst_cmdid = cmdid
 				step_cnt, next_cnt, dep = 0, 0, 0
 				add_CR('<tr><td  class="ins">'+cmd+'</td></tr>')
 			end = 1
-				
-			if len(cmd)==0 : cmd = lst_cmd	
 			
 			sep = cmd.find(' ')
 			if sep == -1: sep = len(cmd)
@@ -343,10 +342,10 @@ def index(request):
 				add_CR('<tr><td  class="info">' + 'Breakpoint %d at '%(len(breakpoints)) + arg + "</td></tr>")
 	
 			elif (CMD == 'info') and (arg == 'breakpoints'):
-				add_CR('<tr><td  class="info"><div>' + 'Num'.ljust(8)+'Type'.ljust(15)+'Enb'.ljust(4)+'Address' + "</div>")
+				add_CR('<tr><td  class="info"><div><b><pre>' + 'Num'.ljust(8)+'Type'.ljust(15)+'Enb'.ljust(4)+'Address' + "</pre></b></div>")
 				for i in range(0,len(breakpoints)):
 					if breakpoints[i][2]!=0:
-						add_CR("<div>" + str(i+1).ljust(8)+'breakpoint'.ljust(15)+breakpoints[i][1].ljust(4)+hex(breakpoints[i][0]) + "</div>")
+						add_CR('<div><pre><b>' + str(i+1).ljust(8)+'breakpoint'.ljust(15)+breakpoints[i][1].ljust(4)+hex(breakpoints[i][0]) + "</b></pre></div>")
 				add_CR('</td></tr>')
 				
 			elif (CMD == 'enable'): 
