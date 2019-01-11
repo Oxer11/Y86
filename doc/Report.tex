@@ -4,58 +4,230 @@
 % This is a simple template for a LaTeX document using the "article" class.
 % See "book", "report", "letter" for other types of document.
 
-\documentclass[12pt]{article} % use larger type; default would be 10pt
+%\documentclass[12pt]{article} % use larger type; default would be 10pt
+%
+%\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
+%
+%%%% Examples of Article customizations
+%% These packages are optional, depending whether you want the features they provide.
+%% See the LaTeX Companion or other references for full information.
+%
+%%%% PAGE DIMENSIONS
+%\usepackage[top=1.05in, bottom=0.95in, left=0.75in, right=0.75in]{geometry}
+%%\usepackage{geometry} % to change the page dimensions
+%\geometry{a4paper} % or letterpaper (US) or a5paper or....
+%% \geometry{margin=2in} % for example, change the margins to 2 inches all round
+%% \geometry{landscape} % set up the page for landscape
+%%   read geometry.pdf for detailed page layout information
+%
+%\usepackage{graphicx} % support the \includegraphics command and options
+%
+%% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
+%
+%%%% PACKAGES
+%\usepackage{booktabs} % for much better looking tables
+%\usepackage{array} % for better arrays (eg matrices) in maths
+%\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
+%\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
+%\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+%% These packages are all incorporated in the memoir class to one degree or another...
+%
+%%%% HEADERS & FOOTERS
+%\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
+%\pagestyle{fancy} % options: empty , plain , fancy
+%%\renewcommand{\headrulewidth}{0pt} % customise the layout...
+%\lhead{}\chead{}\rhead{}
+%\lfoot{}\cfoot{\thepage}\rfoot{}
+%
+%%%% SECTION TITLE APPEARANCE
+%\usepackage{sectsty}
+%\allsectionsfont{\sffamily\mdseries\upshape} % (See the fntguide.pdf for font help)
+%% (This matches ConTeXt defaults)
+%
+%%%% ToC (table of contents) APPEARANCE
+%\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
+%\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
+%\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
+%\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
+%\usepackage[UTF8]{ctex}
+%\usepackage{fancyhdr}
+%\usepackage{enumerate}
+%\usepackage{indentfirst}
+%\usepackage{extramarks}
+%\usepackage{titling}
 
-\usepackage[utf8]{inputenc} % set input encoding (not needed with XeLaTeX)
 
-%%% Examples of Article customizations
-% These packages are optional, depending whether you want the features they provide.
-% See the LaTeX Companion or other references for full information.
+%!Mode:: "TeX:UTF-8"
+\documentclass[a4paper,11pt,UTF8]{ctexart}
 
-%%% PAGE DIMENSIONS
-\usepackage[top=1.05in, bottom=0.95in, left=0.75in, right=0.75in]{geometry}
-%\usepackage{geometry} % to change the page dimensions
-\geometry{a4paper} % or letterpaper (US) or a5paper or....
-% \geometry{margin=2in} % for example, change the margins to 2 inches all round
-% \geometry{landscape} % set up the page for landscape
-%   read geometry.pdf for detailed page layout information
-
-\usepackage{graphicx} % support the \includegraphics command and options
-
-% \usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
-
-%%% PACKAGES
-\usepackage{booktabs} % for much better looking tables
-\usepackage{array} % for better arrays (eg matrices) in maths
-\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
-\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
-\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
-% These packages are all incorporated in the memoir class to one degree or another...
-
-%%% HEADERS & FOOTERS
-\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
-\pagestyle{fancy} % options: empty , plain , fancy
-%\renewcommand{\headrulewidth}{0pt} % customise the layout...
-\lhead{}\chead{}\rhead{}
-\lfoot{}\cfoot{\thepage}\rfoot{}
-
-%%% SECTION TITLE APPEARANCE
-\usepackage{sectsty}
-\allsectionsfont{\sffamily\mdseries\upshape} % (See the fntguide.pdf for font help)
-% (This matches ConTeXt defaults)
-
-%%% ToC (table of contents) APPEARANCE
-\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
-\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
-\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
-\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
-\usepackage[UTF8]{ctex}
-\usepackage{fancyhdr}
-\usepackage{enumerate}
-\usepackage{indentfirst}
-\usepackage{extramarks}
+\usepackage{indentfirst} %缩进
+\usepackage{xeCJK}    %使用系统字体
+\usepackage{fancyhdr} %自定义页眉页脚
+\pagestyle{empty}                   %不设置页眉页脚
+\usepackage{amsmath, amsthm, amssymb, amsfonts} %数学公式
+\usepackage[a4paper,left=3cm,right=3cm,top=3cm,bottom=3cm]{geometry}
+%\usepackage[tmargin=1in,bmargin=1in,lmargin=1.25in,rmargin=1.25in]{geometry}.
+\usepackage{booktabs} %插入表格
+\usepackage[section]{placeins} %避免浮动
+\usepackage{listings} %插入代码
+\usepackage{ctex}     %中文宏包
+\usepackage[svgnames, table]{xcolor} %彩色表格
+\usepackage{algorithm}          %伪代码
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+\usepackage{algorithm,algpseudocode,float}
+\usepackage{lipsum}
+\usepackage{enumitem}           %调整列举环境
+\usepackage{url}
+\usepackage{fontspec,xunicode}
+\defaultfontfeatures{Mapping=tex-text} %如果没有它，会有一些 tex 特殊字符无法正常使用，比如连字符。
 \usepackage{titling}
+\usepackage{extramarks}
 
+\usepackage{graphicx}
+\graphicspath{{imgs/}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 缩进及行间距
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setlength{\parindent}{22pt} %重新定义缩进长度
+\setlength{\baselineskip}{20pt}  %定义行间距
+%\renewcommand{\baselinestretch}{1.1} %定义行间距
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 列表设置
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setenumerate{fullwidth,itemindent=\parindent,listparindent=\parindent,itemsep=0ex,partopsep=0pt,parsep=0ex}
+\setenumerate[2]{label=\alph*),leftmargin=1.5em}  %二级item设置
+\setitemize{itemindent=38pt,leftmargin=0pt,itemsep=-0.4ex,listparindent=26pt,partopsep=0pt,parsep=0.5ex,topsep=-0.25ex}
+\setdescription{itemindent=38pt,leftmargin=0pt,itemsep=-0.4ex,listparindent=26pt,partopsep=0pt,parsep=0.5ex,topsep=-0.25ex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 图的标题行间距设置
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\bottomcaption}{%
+\setlength{\abovecaptionskip}{6pt}%
+\setlength{\belowcaptionskip}{6pt}%
+\caption}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 字体定义
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\setmainfont{Times New Roman}  %默认英文字体.serif是有衬线字体sans serif无衬线字体
+\setmonofont{Consolas}
+\setCJKmainfont[ItalicFont={楷体}, BoldFont={黑体}]{宋体}%衬线字体 缺省中文字体为
+\setCJKsansfont{黑体}
+\punctstyle{hangmobanjiao}
+%-----------------------xeCJK下设置中文字体------------------------------%
+\setCJKfamilyfont{song}{SimSun}                             %宋体 song
+\newcommand{\song}{\CJKfamily{song}}
+\setCJKfamilyfont{fs}{FangSong}                      %仿宋  fs
+\newcommand{\fs}{\CJKfamily{fs}}
+\setCJKfamilyfont{ktgb}{KaiTi}                      %楷体2312 ktgb
+\newcommand{\ktgb}{\CJKfamily{ktgb}}
+\setCJKfamilyfont{yh}{Microsoft YaHei}                    %微软雅黑 yh
+\newcommand{\yh}{\CJKfamily{yh}}
+\setCJKfamilyfont{hei}{SimHei}                              %黑体  hei
+\newcommand{\hei}{\CJKfamily{hei}}
+\setCJKfamilyfont{hwxk}{STXingkai}                                %华文行楷  hwxk
+\newcommand{\hwxk}{\CJKfamily{hwxk}}
+%------------------------------设置字体大小------------------------%
+\newcommand{\shiyanbaogao}{\fontsize{36pt}{\baselineskip}\selectfont}
+\newcommand{\chuhao}{\fontsize{42pt}{\baselineskip}\selectfont}     %初号
+\newcommand{\xiaochuhao}{\fontsize{36pt}{\baselineskip}\selectfont} %小初号
+\newcommand{\yihao}{\fontsize{28pt}{\baselineskip}\selectfont}      %一号
+\newcommand{\erhao}{\fontsize{21pt}{\baselineskip}\selectfont}      %二号
+\newcommand{\xiaoerhao}{\fontsize{18pt}{\baselineskip}\selectfont}  %小二号
+\newcommand{\sanhao}{\fontsize{15.75pt}{\baselineskip}\selectfont}  %三号
+\newcommand{\sihao}{\fontsize{14pt}{\baselineskip}\selectfont}       %四号
+\newcommand{\xiaosihao}{\fontsize{12pt}{\baselineskip}\selectfont}  %小四号
+\newcommand{\wuhao}{\fontsize{10.5pt}{\baselineskip}\selectfont}    %五号
+\newcommand{\xiaowuhao}{\fontsize{9pt}{\baselineskip}\selectfont}   %小五号
+\newcommand{\liuhao}{\fontsize{7.875pt}{\baselineskip}\selectfont}  %六号
+\newcommand{\qihao}{\fontsize{5.25pt}{\baselineskip}\selectfont}    %七号
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 图题字体大小相同
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{caption}
+\captionsetup{font={footnotesize}}   % footnotesize = 9pt
+\captionsetup[lstlisting]{font={footnotesize}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 重定义枚举编号为 1),2)...
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\labelenumi}{\theenumi)}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 重定义section标题
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\CTEXsetup[format={\sihao\CJKfamily{zhhei}\zihao{3}},%number={\chinese{section}},name={,、~},aftername={},
+indent={0pt},beforeskip={6pt},afterskip={6pt},format+={\flushleft}]{section}
+\CTEXsetup[format={\Large\bfseries\CJKfamily{zhkai}\zihao{4}},
+%name={,.},number={\arabic{subsection}},aftername={},
+indent={0pt},beforeskip={8pt},afterskip={6pt}]{subsection}
+\CTEXsetup[format={\Large\bfseries\CJKfamily{zhkai}\zihao{4}},%name={(,)},number={\arabic{subsubsection}},aftername={},
+indent={0pt},beforeskip={8pt},afterskip={6pt}]{subsubsection}
+\CTEXsetup[number={\chinese{section}},name={附录, ~~ }]{appendix}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 标题名称中文化
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand\figurename{\hei 图}
+\renewcommand\tablename{\hei 表}
+\renewcommand\lstlistingname{\hei 代码}
+\renewcommand{\algorithmicrequire}{\textbf{输入:}}
+\renewcommand{\algorithmicensure}{\textbf{输出:}}
+\newtheorem{define}{定义}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 代码设置
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\lstset{
+ columns=fixed,
+ numbers=left,                                        % 在左侧显示行号
+ numberstyle=\tiny\color{gray},                       % 设定行号格式
+ frame=single,                                        % 单线背景边框
+ breaklines=true,                                     % 设定LaTeX对过长的代码行进行自动换行
+ keywordstyle=\color[RGB]{40,40,255},                 % 设定关键字颜色
+ numberstyle=\footnotesize\color{darkgray},
+ commentstyle=\it\color[RGB]{0,96,96},                % 设置代码注释的格式
+ stringstyle=\rmfamily\slshape\color[RGB]{128,0,0},   % 设置字符串格式
+ showstringspaces=false,                              % 不显示字符串中的空格
+ language=java,                                        % 设置语言
+ basicstyle=\linespread{1.0}\xiaowuhao\ttfamily,                      % 字体字号
+ %lineskip=10pt,
+ %baselinestretch=1,
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 伪代码分页
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\makeatletter
+\renewcommand{\ALG@name}{算法}
+\newenvironment{breakablealgorithm}
+  {% \begin{breakablealgorithm}
+   \begin{center}
+     \refstepcounter{algorithm}% New algorithm
+     \hrule height.8pt depth0pt \kern2pt% \@fs@pre for \@fs@ruled
+     \renewcommand{\caption}[2][\relax]{% Make a new \caption
+       {\raggedright\textbf{\ALG@name~\thealgorithm} ##2\par}%
+       \ifx\relax##1\relax % #1 is \relax
+         \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##2}%
+       \else % #1 is not \relax
+         \addcontentsline{loa}{algorithm}{\protect\numberline{\thealgorithm}##1}%
+       \fi
+       \kern2pt\hrule\kern2pt
+     }
+  }{% \end{breakablealgorithm}
+     \kern2pt\hrule\relax% \@fs@post for \@fs@ruled
+   \end{center}
+  }
+\makeatother
 
 %%% END Article customizations
 
@@ -82,7 +254,7 @@
 
 \section{概览}
 
-\subsection{开发环境}
+\subsection{{\bf 开发环境}}
 
 \begin{table}[h]
 \begin{tabular}{ll}
@@ -92,7 +264,7 @@
 \end{tabular}
 \end{table}
 
-\subsection{文件结构（新）}
+\subsection{{\bf 文件结构（新）}}
 
 所有核心代码均收录在/Y86\_Assembly\_IDE/IDE文件夹下。
 
@@ -145,29 +317,27 @@
 \clearpage
 \section{设计}
 
-本节将叙述对本次Project的需求分析和开发选择，并列出最终实现的所有功能。
-
-\subsection{动机}
+\subsection{{\bf 动机}}
 
 本次Project的基本要求是实现一个Y86流水线模拟器，这涉及到大量的逻辑和封装，以及对图形界面的需求。图形界面的几个选择有各种语言自带的图形库、Web、Unity、uwp等等。最后我们选择了Python+Web的组合，主要原因如下：
 
 \begin{enumerate}
 \item 我们能够熟练运用的语言只有C++，略知一二的有Python。Python{\bf 易上手}，且未来的{\bf 使用需求较高}，所以这里我们选择了Python作为我们的后端语言。
 
-\item 相比其他语言，Python有着{\bf 强大的库函数}，使用更便利，可以大大减少代码量。在不考虑效率的情况下，Python比C++更加友好，这尤其体现在后期代码量巨大的IDE设计上。
+\item 相比其他语言，Python有着强大的库函数，使用便捷，大大减少了代码量。在不考虑效率的情况下，Python比C++更加友好，这尤其体现在后期代码量巨大的IDE设计上。
 
-\item 由于C++和Python自带的图形界面并不算出彩，所以我们选择了{\bf 显示更美观}、{\bf 交互性更好}的Web作为前端。同时，Python支持的框架有很多，所以Python搭配Web是很好的选择。
+\item 由于C++和Python自带的图形界面并不出彩，所以我们选择了{\bf 显示更美观}、{\bf 交互性更好}的Web作前端。并且Python支持的框架较多，所以Python搭配Web是很好的选择。
 
 \item Web是前端开发的基础，而Python更是当代程序员的必备技能。这两种工具的{\bf 学习资料较多}，且{\bf 未来用处更大}，不妨借此机会尝试一下。
 \end{enumerate}
 
-在github上参考了许多学长学姐的project之后，我们开始思考如何才能做出自己的特点。一些使用Unity作为前端的学长的作品，有非常抓人眼球的{\bf 3D显示效果}，这是Web所做不到的。但与此同时，换来的也是使用上的不便捷。同时也有许多用Web作为前端的学长，他们的project往往风格十分朴素，前端{\bf 设计精简}，提供一些{\bf 基本的交互功能}，但仅此是不能做出我们自己的特色的。
+在github上参考了许多学长学姐的project之后，我们开始思考如何才能做出自己的特点。一些使用Unity作为前端的学长的作品，有非常抓人眼球的{\bf 3D显示效果}，这是Web所做不到的。但与此同时，换来的也是使用上的不便捷。同时也有许多用Web作为前端的学长，他们的Project往往风格十分朴素，前端{\bf 设计精简}，提供一些{\bf 基本的交互功能}，但仅此是不能做出我们自己的特色的。
 
 再三考虑之后，我们打算做一个IDE。Web显示风格十分简洁，且不失美观，恰好符合作为调试工具的基本要求。而通过后端输入指令，更是符合程序员写代码的习惯。于是，我们打算开发一个简单的{\bf 书写Y86汇编代码的IDE}。
 
 基于以上考虑，我们采用前端Web的形式，后端用Python实现所有的逻辑。
 
-\subsection{特点}
+\subsection{{\bf 特点（新）}}
 
 最终的版本实现了所有的基本功能：
 \begin{itemize}
@@ -178,12 +348,13 @@
 
 在此基础上，我们还添加了许多新功能：
 \begin{itemize}
-\item 加入了{\bf iaddq}操作。
-\item 加入了{\bf 加载转发}优化(见课本练习4.57)。
+\item 加入了{\bf iaddq}操作和{\bf 加载转发}优化(见课本练习4.57)。
 \item 前端实时监视指定的栈、内存、寄存器中的值。
 \item 实现了{\bf Y86汇编器}，从而能够接受.ys文件作为输入，也能保存汇编的结果。
-\item 支持动态输入汇编代码，实时执行的功能，{\bf 写代码}，{\bf 调试代码}二合一，实现简易的{\bf IDE}。
-\item 模仿gdb，实现了步进、断点等{\bf 22条动态调试指令}，调试功能强大。
+\item 编译汇编代码，并显示返回{\bf 编译错误}。
+\item 模仿GDB，实现了步进、断点等{\bf 22条动态调试指令}，调试功能强大。
+\item 增加了Cache的模拟和显示
+\item 可视化并行过程
 \end{itemize}
 
 \clearpage
@@ -191,7 +362,7 @@
 
 本节将对IDE的各个部件的具体实现细节进行详述，对于没有提及的细节请查看代码中的注释。
 
-\subsection{流水线}
+\subsection{{\bf 流水线}}
 
 在{\bf backend/memory\underline{\hspace{0.5em}}sys}中，我们将内存、寄存器、系统寄存器封装成类，以便之后使用。封装和注释使合作完成代码的过程更加顺利，同时也使思路更清晰。
 
@@ -209,46 +380,46 @@
 \item 加入了{\bf 加载转发}优化，通过增加在$Execute$阶段的特判，减少$bubble$的产生，详见课本练习4.57。
 \end{itemize}
 
-\subsection{汇编器}
+\subsection{{\bf 汇编器}}
 
 作为一个IDE的基本需求，自然要实现一个Y86汇编器以实现编译汇编代码的需求。在实现YAS之后，可以通过书写.ys文件来造样例，这是非常方便的。
 
 比较严谨的实现可能要参考{\bf 编译原理}这门课中的做法，但是时间有限，Y86的汇编代码比较简单，所以凭自己的想象写了一个汇编器，大致步骤如下：
 
-\begin{enumerate}
+\begin{itemize}
 \item 格式化输入文件，用{\bf 正则表达式}去除备注和多余空格。由于我在读指令的时候是一行一行读的，所以暂时没办法处理跨行的注释。
 \item 扫描并记录所有的{\bf label}，同时记录相应的指令地址。处理{\bf directives}，包括.pos、.align、.quad和.byte，其中对于.pos和.align要重新计算指令偏移量。
 \item 再次扫描输入，对于每一条汇编指令，根据相应的语法格式{\bf 提取参数}并编码。这一步中要进行大量的特判，以保证能够检验出所有的非法指令，通过及时报错，来避免程序中断的问题。
 \item 拼接结果，或是处理检验到的异常。
-\end{enumerate}
+\end{itemize}
 
 整个YAS实现的细节都在{\bf encoder/encoder.py}文件中，这是本PJ中代码量较大的一部分。
 
-\subsection{Debug功能}
+\subsection{{\bf Debug功能}}
 
 为了完善IDE，改善用户体验，我们加入了相当数量的调试指令。其中大部分功能均是参考gdb中支持的指令及其语法格式。
 
-大部分指令的实现细节都在{\bf manual.pdf}中提到，此处只大致概述。
-\begin{enumerate}
+大部分指令的实现细节都在{\bf Manual.pdf}中提到，此处只大致概述。
+\begin{itemize}
 \item {\bf $\#Step$指令集} \quad 运行程序。把原来执行指令的循环改成每次只执行一步，通过设置步长和断点，把控结束的时间。其中比较难实现的是$next$和$finish$两个指令，因为要牵扯到判断在哪一个函数中。我们可以通过$call$和$ret$的数量，来判断当前的递归深度。需要注意的是，{\bf 不能}统计在取指阶段取出的$call$和$ret$的数量，因为流水线的控制逻辑可能会导致误取指令。而为了体现步进的特点，$step$和$continue$指令均是查看{\bf 取指阶段}中取出的指令，所以这里在使用的时候会有一些偏差。
 \item {\bf $\#Jump$指令集} \quad 跳转。最开始想通过向流水线中加入一条不存在的虚拟指令，以实现跳转操作。可是万恶的流水线控制逻辑有可能会将新加入的指令当做误取指令来处理！无奈，只好规定在跳的时候清空流水线寄存器中的信息，并{\bf 手动}执行$call$和$ret$的操作。
 \item {\bf $\#Breakpoints$指令集} \quad 设置断点。实现相对简单，只需要用一个$list$来记录断点，并在执行的时候判断是否抵达断点即可。因为要维护断点的多条信息，所以这里如果把断点封装成类可能会更好些。
 \item {\bf $\#Display$指令集} \quad 设置需要监视的值。和$\#Breakpoints$的实现类似，用一个$list$记录$Display$的表达式，前后端交互时读取相应的值并发送给前端。实现最简单的一个指令集。
 \item {\bf $\#I\backslash O$指令集} \quad 输入/输出代码。在实现了YAS之后，我们可以很容易地支持加载并输出.yo和.ys操作。除此之外，我们还实现了{\bf 动态输入}代码的功能，当输入一段指令时，使用YAS进行译码，并将新得到的指令码加入当前指令集中。
 \item {\bf $\#Others$指令集} \quad 其他功能。这里的几项功能逻辑都比较简单，不会遇到很大的问题。最麻烦的$help$指令，在参考了gdb的$help$文档后，改造完成，提升使用的{\bf 便捷性}。
-\end{enumerate}
+\end{itemize}
 
-\subsection{Web界面（新）}
+\subsection{{\bf Web界面（新）}}
 
 （原）
 
 我们采用了HTML、CSS作为前端开发语言，同时借助了第三方库Bootstrap。利用这些强大的工具，我们得以比较轻松的实现较为美观的前端界面。具体的实现细节如下：
 
-\begin{enumerate}
+\begin{itemize}
 \item Stack显示区和Code显示区：利用Bootstrap提供的表格功能实现
 \item 状态和寄存器显示区：原本想用Bootstrap提供的选项卡功能实现，但是因为没能搞懂链接操作失败了。最后利用radio表单，让被选中的单选框对应的内容展示，实现了不同选项卡的切换。但缺点是每一次换选项卡时页面都会重新刷新
 \item 流水线寄存器和Display展示区：同样利用表格排版
-\end{enumerate}
+\end{itemize}
 
 同时用CSS设置style，把每一个显示区设置为卡片风格，并进行页面的总体布局和美化。\\
 
@@ -262,15 +433,15 @@
 \paragraph{调试界面}
 
 调试界面在前两个阶段的基础上修改而成，在外观上大致相同，为了适应新加入的板块做了布局上的调整，也进行了一些美化。除此之外，还添加了以下功能：
-\begin{enumerate}
-\item {\bf 指令输入：}为了操作的方便性，我们将之前在后端的指令输入输出都移到了前端，从此就不用再打开两个窗口使用IDE了。为此我们在界面顶部设置了指令输入框，加入了一个新的板块CMD来显示相关的输出，并且能让不同类型的输出（如报错或提示）使用不同样式显示。
+\begin{itemize}
+\item {\bf 指令输入：}为了操作的方便性，我们将之前在后端的指令输入输出都移到了前端，从此就不用再打开两个窗口使用IDE了。为此我们在界面顶部设置了指令输入框，加入了一个新的板块{\bf CMD}来显示相关的输出，并且能让不同类型的输出（如报错或提示）使用不同样式显示。
 \item {\bf 流水线状态：}为了能更直观地体现多线程的实现效果，我们对流水线寄存器状态部分做了改进，让正在执行的阶段名称闪烁。当然，因为真正执行的速度非常快，这只是一个模拟效果，体现各个阶段开始的相对顺序。
-\item {\bf 展示Cache：}我们增加了展示Cache的部分，可以显示miss和hit的数量、每一个set每一行的tag、起始地址和结束地址，并采用不同的样式来区分valid line和invalid line。同时，在发生miss和hit时对应的line能分别闪烁红色和绿色并定位。
+\item {\bf 展示Cache：}我们增加了展示{\bf Cache}的部分，可以显示miss和hit的数量、每一个set每一行的tag、起始地址和结束地址，并采用不同的样式来区分valid line和invalid line。同时，在发生miss和hit时对应的line能分别闪烁红色和绿色并定位。
 \item {\bf 代码显示定位：}代码显示自动跳转到当前执行的行。
-\end{enumerate}
+\end{itemize}
 
 
-\subsection{前后端交互（新）}
+\subsection{{\bf 前后端交互（新）}}
 
 （原）
 
@@ -282,17 +453,17 @@
 
 前后端交互是通过{\bf Request}和{\bf Response}实现的。当前端页面收到一个访问请求或者功能请求时，前端会向后端发送相应的{\bf Request}，后端在接收到{\bf Request}后，根据请求的内容进行相应的处理，并将处理的结果通过{\bf Response}发送给前端，前端进行相应的显示。
 
-当收到一个访问请求时，前端会发送一个{\bf GET}请求给后端，后端收到请求后，渲染初始模板后，将相应的页面传输给前端显示。当收到一个功能请求时，例如编译、调试命令，前端会发送一个{\bf POST}请求给后端，这里使用POST请求是因为可以更方便的传递较大的参数（代码、调试命令）；后端接受{\bf POST}请求后，会调用CPU进行处理。
+当收到一个访问请求时，前端会发送一个{\bf GET}请求给后端，后端收到请求后，渲染初始模板后，将相应的页面传输给前端显示。当收到一个功能请求时，例如编译、调试命令，前端会发送一个{\bf POST}请求给后端，这里使用{\bf POST}请求是因为可以更方便的传递较大的参数（代码、调试命令）；后端接受{\bf POST}请求后，会调用CPU进行处理。
 
 因为我们不希望在每次命令后都要刷新来显示，所以我们在前端中使用了{\bf Ajax}来进行异步的局部刷新。但是这就需要同时返回几个{\bf HTML}版面，在后端中直接使用模板渲染只能返回一个{\bf HTML}版面，所以最后不得已我们还是选择了写{\bf Python}代码去得到{\bf HTML}代码，而非采用模板渲染。通过{\bf Python}代码得到几个部分的{\bf HTML}代码后，通过{\bf JSON}传输格式发送到前端，前端解析后再分别加载到页面的每个部分。
 
-\subsection{存储器结构（新）}
+\subsection{{\bf 存储器结构（新）}}
 
-第三阶段我们模拟了cache的机制，在写内存时采用的是写回和写分配的策略。用python提供的list和dictionary实现cache的结构非常直观简单，功能写起来也很容易。唯一遇到的一个Bug是python的list和dictionary做乘法时只复制了值的引用，所以一个修改时所有的都被改变了，要用for循环的写法规避这个问题。
+第三阶段我们模拟了Cache的机制，在写内存时采用的是写回和写分配的策略。用Python提供的list和dictionary实现Cache的结构非常直观简单，功能写起来也很容易。唯一遇到的一个Bug是Python的list和dictionary做乘法时只复制了值的引用，所以一个修改时所有的都被改变了，要用for循环的写法规避这个问题。
 
-另外，我们提供了让用户自定义cache结构的功能，用户可以在前端输入期望的set数、block大小和每个set行数，我们会判断是否合法并修改cache结构。
+另外，我们提供了让用户自定义Cache结构的功能，用户可以在前端输入期望的set数、block大小和每个set行数，我们会判断是否合法并修改Cache结构。
 
-\subsection{多线程Y86-64模拟器（新）}
+\subsection{{\bf 多线程Y86-64模拟器（新）}}
 
 在最初的Y86实现版本中，虽然我们的五个阶段是在同一个Cycle中完成的，但是我们并没有实现五个阶段的同时执行。阶段三的任务之一就是通过各种语言自带的多线程函数，实现五个阶段的并行。
 
@@ -305,7 +476,7 @@ Python中提供了threading库来实现多线程，在每个Cycle开始时，为
 \item {\bf 函数返回值：}直接使用Python的threading函数是不能得到执行函数的返回值的，而我们的代码中Execute阶段的返回值是必要的。查阅资料后，我们使用了重新实现的MyThread类，以得到函数的返回值。
 \end{itemize}
 
-\subsection{并行过程的前端显示（新）}
+\subsection{{\bf 并行过程的前端显示（新）}}
 
 为了更好地可视化五个阶段并行的过程，我们在前端加入了显示功能。在每个阶段开始执行时，相应的阶段按钮会亮起，结束时会再熄灭。因为在实际的执行过程中，并行过程非常快，所以我们不能按实际时间来执行。
 
@@ -320,7 +491,7 @@ Python中提供了threading库来实现多线程，在每个Cycle开始时，为
 
 本节将叙述对模拟器的测试和性能评估。
 
-\subsection{测试样例}
+\subsection{{\bf 测试样例}}
 
 为了更好地检验Y86模拟器的正确性，我们构造了几组数据，收录于{\bf test/new}目录下，说明如下：
 
@@ -342,7 +513,7 @@ Python中提供了threading库来实现多线程，在每个Cycle开始时，为
 \end{tabular}
 \end{table}
 
-\subsection{性能分析}
+\subsection{{\bf 性能分析}}
 
 暂未完成。
 
@@ -351,7 +522,7 @@ Python中提供了threading库来实现多线程，在每个Cycle开始时，为
 
 本节将叙述Project的详细开发过程、遇到的问题和感想。
 
-\subsection{开发流程}
+\subsection{{\bf 开发流程}}
 
 从学长们那里得到的开发经验，如果两人明确分工一人做前端，一人做后端的话，工作量可能差异较大，并且两个人不能并行工作，效率很低。而且因为两个人都有必要熟悉流水线的逻辑，同时也需要掌握前端的开发技术，所以最后决定两人不做明确分工，在开发的过程中共同处理遇到的问题。
 
@@ -386,7 +557,7 @@ Python中提供了threading库来实现多线程，在每个Cycle开始时，为
 \item Latex
 \end{itemize}
 
-\subsection{踩过的坑}
+\subsection{{\bf 踩过的坑}}
 
 \begin{itemize}
 \item 课本中的溢出标志只考虑了正数的情况，所以不能直接引用。
@@ -398,7 +569,7 @@ Python中提供了threading库来实现多线程，在每个Cycle开始时，为
 \item HTML排版时最好用百分比确定元素的大小以适应不用尺寸的屏幕。
 \end{itemize}
 
-\subsection{感想}
+\subsection{{\bf 感想}}
 
 \subsubsection{张作柏}
  
