@@ -85,15 +85,15 @@ Y86 Assembly IDE提供书写Y86汇编代码与动态调试的基本功能：
 
 Y86汇编IDE开发基于Django框架，运行需要安装Python 2.7与Django 1.10。
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Figure  1
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[htbp]
-\begin{center}
-\includegraphics[width=.6\linewidth]{asset/1.png}
-\end{center}
-\end{figure}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Figure  1
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{figure}[htbp]
+%\begin{center}
+%\includegraphics[width=.6\linewidth]{asset/1.png}
+%\end{center}
+%\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 使用时，需在Y86/Y86\_Assembly\_IDE目录下打开命令行，输入指令 python manage.py runserver 。运行成功后，打开浏览器，输入地址 http://localhost:8000/IDE即可进入IDE界面。
 
@@ -117,26 +117,26 @@ Y86汇编IDE开发基于Django框架，运行需要安装Python 2.7与Django 1.1
 为方便阅读，书写代码时会自动添加行号。未进行编译时，左侧边框为黄色，点击编译按钮后，边框变为绿色，表示已完成编译。
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Figure  3 & 4
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}[htbp]
-\centering
-\subfigure{
-\begin{minipage}[t]{0.4\linewidth}
-\centering
-\includegraphics[width=\linewidth]{asset/3.png}
-\end{minipage}%
-}%
-\subfigure{
-\begin{minipage}[t]{0.6\linewidth}
-\centering
-\includegraphics[width=.8\linewidth]{asset/4.png}
-\end{minipage}%
-}%
-\centering
-\end{figure}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Figure  3 & 4
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{figure}[htbp]
+%\centering
+%\subfigure{
+%\begin{minipage}[t]{0.4\linewidth}
+%\centering
+%\includegraphics[width=\linewidth]{asset/3.png}
+%\end{minipage}%
+%}%
+%\subfigure{
+%\begin{minipage}[t]{0.6\linewidth}
+%\centering
+%\includegraphics[width=.8\linewidth]{asset/4.png}
+%\end{minipage}%
+%}%
+%\centering
+%\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 右下方{\bf Error Info}一栏显示编译信息：编译成功时，显示Success；编译失败时，显示Failed，并弹出错误列表。错误列表将显示错误的行号，并返回详细错误。双击该错误，可使.yo代码中相应行高亮显示。
 
