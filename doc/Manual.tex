@@ -28,7 +28,7 @@
 \usepackage{array} % for better arrays (eg matrices) in maths
 \usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
 \usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
-\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
+\usepackage{subfigure} % make it possible to include more than one captioned figure/table in a single float
 % These packages are all incorporated in the memoir class to one degree or another...
 
 %%% HEADERS & FOOTERS
@@ -76,42 +76,187 @@
 
 Y86 Assembly IDE提供书写Y86汇编代码与动态调试的基本功能：
 \begin{itemize}
-\item 支持从文件载入汇编代码或指令码和动态输入代码
 \item 支持将汇编代码和指令码以.yo文件的形式输出
-\item 支持动态运行程序
 \item 支持运行中跳转至任意语句
 \item 支持设置断点
-\item 支持监视特定值
-\item 支持设置特定值
+\item 支持设置、监视特定值
 \item 强大的help功能
 \end{itemize}
 
-Y86汇编IDE开发基于Django框架，运行需要安装Python 2.7与Django 1.10。使用时，需在Y86/Y86\_Assembly\_IDE目录下打开命令行，输入指令 python manage.py runserver 。运行成功后，打开浏览器，输入地址 http://localhost:8000/IDE即可进入IDE界面。
+Y86汇编IDE开发基于Django框架，运行需要安装Python 2.7与Django 1.10。
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Figure  1
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=.6\linewidth]{asset/1.png}
+\end{center}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+使用时，需在Y86/Y86\_Assembly\_IDE目录下打开命令行，输入指令 python manage.py runserver 。运行成功后，打开浏览器，输入地址 http://localhost:8000/IDE即可进入IDE界面。
 
 \clearpage
 \section{界面说明}
 
 \subsection{代码界面}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Figure  2
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=\linewidth]{asset/2.png}
+\end{center}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 如上图，左侧为代码框，用于书写汇编代码，右侧为编译成功后的.yo代码。
 
 为方便阅读，书写代码时会自动添加行号。未进行编译时，左侧边框为黄色，点击编译按钮后，边框变为绿色，表示已完成编译。
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Figure  3 & 4
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[htbp]
+\centering
+\subfigure{
+\begin{minipage}[t]{0.4\linewidth}
+\centering
+\includegraphics[width=\linewidth]{asset/3.png}
+\end{minipage}%
+}%
+\subfigure{
+\begin{minipage}[t]{0.6\linewidth}
+\centering
+\includegraphics[width=.8\linewidth]{asset/4.png}
+\end{minipage}%
+}%
+\centering
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 右下方{\bf Error Info}一栏显示编译信息：编译成功时，显示Success；编译失败时，显示Failed，并弹出错误列表。错误列表将显示错误的行号，并返回详细错误。双击该错误，可使.yo代码中相应行高亮显示。
 
+\clearpage
 \subsection{Debug界面}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Figure  6
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=\linewidth]{asset/6.png}
+\end{center}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 点击页面左侧图标可切换至Debug界面。
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Figure  9
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{figure}[htbp]
+%\begin{center}
+%\includegraphics[width=.5\linewidth]{asset/9.png}
+%\end{center}
+%\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 页面{\bf 上方}为指令输入框，用于输入指令。
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Figure  7
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{figure}[htbp]
+%\begin{center}
+%\includegraphics[width=.9\linewidth]{asset/7.png}
+%\end{center}
+%\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 {\bf 左上方}为.yo代码框。汇编代码编译成功后，.yo代码会自动同步到此处。代码运行过程中，会高亮当前行，清晰显示代码运行过程。
 
+%\clearpage
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Figure  8 & 10
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{figure}[htbp]
+%\centering
+%\subfigure{
+%\begin{minipage}[t]{0.55\linewidth}
+%\centering
+%\includegraphics[width=0.95\linewidth]{asset/8.png}
+%\end{minipage}%
+%}%
+%\subfigure{
+%\begin{minipage}[t]{0.45\linewidth}
+%\centering
+%\includegraphics[width=0.95\linewidth]{asset/10.png}
+%\end{minipage}%
+%}%
+%\centering
+%\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 {\bf 左下方}为流水线寄存器的信息显示，将鼠标放在数字上，可显示对应的含义。指令执行过程中，五个Stage图标会闪烁，亮起表示正在执行，熄灭表示执行完毕，以此来可视化并行过程。
+
+
 
 {\bf 右下方}为{\bf CMD}窗口，返回指令执行信息，可显示输入指令及返回的运行结果。
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Figure  11 & 12 & 13
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{figure}[htbp]
+%\centering
+%\subfigure{
+%\begin{minipage}[t]{0.3\linewidth}
+%\centering
+%\includegraphics[width=0.95\linewidth]{asset/11.png}
+%\end{minipage}%
+%}%
+%\subfigure{
+%\begin{minipage}[t]{0.4\linewidth}
+%\centering
+%\includegraphics[width=0.95\linewidth]{asset/12.png}
+%\end{minipage}%
+%}%
+%\subfigure{
+%\begin{minipage}[t]{0.3\linewidth}
+%\centering
+%\includegraphics[width=0.95\linewidth]{asset/13.png}
+%\end{minipage}%
+%}%
+%\centering
+%\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 {\bf 正中}为运行状态窗口，可分别显示运行的状态(Cycle数，Status，CPI，条件码)、栈中元素、寄存器的值。
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Figure  14 & 15
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\begin{figure}[htbp]
+%\centering
+%\subfigure{
+%\begin{minipage}[t]{0.4\linewidth}
+%\centering
+%\includegraphics[width=0.9\linewidth]{asset/14.png}
+%\end{minipage}%
+%}%
+%\subfigure{
+%\begin{minipage}[t]{0.3\linewidth}
+%\centering
+%\includegraphics[width=0.9\linewidth]{asset/15.png}
+%\end{minipage}%
+%}%
+%\centering
+%\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 {\bf 右上方}为显示窗口，可观察设置为Display的变量与Cache当前的存储信息。
 
