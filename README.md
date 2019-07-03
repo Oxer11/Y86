@@ -1,5 +1,7 @@
 # Y86 Assembly IDE
-Y86 Simulator and Assembly IDE for ICS2018 @ Fudan University, by Xinyi Zhou and Zuobai Zhang
+![Debug](README.asset/Debug.png)
+![IDE](README.asset/IDE.png)
+Y86 Simulator and Assembly IDE for *Introduction to Computer System* 2018 @ Fudan University, by  [**Xinyi Zhou**](<https://github.com/veghen>) and [**Zuobai Zhang**](<https://oxer11.github.io/>).
 
 ## 1 简介
 
